@@ -1,0 +1,22 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded purple background -->
+  <rect width="512" height="512" rx="80" fill="#5B5FC7"/>
+  
+  <!-- Magnifying glass circle -->
+  <circle cx="240" cy="230" r="130" stroke="white" stroke-width="14" fill="none" opacity="0.9"/>
+  
+  <!-- Magnifying glass handle -->
+  <line x1="340" y1="330" x2="430" y2="420" stroke="white" stroke-width="14" stroke-linecap="round" opacity="0.9"/>
+  
+  <!-- Graduation cap - top diamond -->
+  <polygon points="240,160 310,195 240,230 170,195" fill="white" opacity="0.7"/>
+  
+  <!-- Graduation cap - brim/body -->
+  <path d="M185 210 L185 260 C185 260 210 290 240 290 C270 290 295 260 295 260 L295 210" stroke="white" stroke-width="10" fill="none" opacity="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Graduation cap - tassel line -->
+  <line x1="310" y1="195" x2="310" y2="270" stroke="white" stroke-width="10" stroke-linecap="round" opacity="0.7"/>
+  
+  <!-- Graduation cap - tassel end -->
+  <circle cx="310" cy="275" r="8" fill="white" opacity="0.7"/>
+</svg>
