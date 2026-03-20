@@ -67,9 +67,9 @@ EXTRACTION_SCHEMA = {
     "properties": {
         "is_opportunity":   {"type": "boolean"},
         "title":            {"type": "string"},
-        "title_km":         {"type": "string"},
+        "title_kh":         {"type": "string"},
         "description":      {"type": "string"},
-        "description_km":   {"type": "string"},
+        "description_kh":   {"type": "string"},
         "opportunity_type": {"type": "string", "enum": ["scholarship", "internship", "volunteer", "event", "course", "job", "other"]},
         "organization":     {"type": "string"},
         "price_range":      {"type": "string"},
@@ -110,9 +110,9 @@ _SHARED_EXTRACTION_RULES = """\
 - contact_info: extract phone numbers or email addresses only. Never extract URLs, map links, or location references as contact info.
 - For price_range, extract the exact price or fee as stated in the post (e.g. "Free", "$50", "200000 KHR"). Return null if not mentioned.
 - title: English title, translate from Khmer if needed.
-- title_km: Khmer title, translate from English if needed.
+- title_kh: Khmer title, translate from English if needed.
 - description: Write 6-8 sentences in English. Cover what the opportunity is, who it is for (eligibility: age, nationality, year of study), available roles or tracks, what participants gain (benefits, certificate, experience), format (online/onsite/hybrid), and any notable requirements. Only include what is explicitly stated in the post. Do NOT repeat deadline, location, or application link.
-- description_km: Same content as description, written in Khmer.
+- description_kh: Same content as description, written in Khmer.
 - subject_tags: choose only from this fixed list, select all that apply:
   scholarship, internship, volunteer, event, workshop, seminar, training,
   course, bootcamp, competition, job, exchange, grant, conference, hackathon,
@@ -396,9 +396,9 @@ def build_db_record(merged: dict, raw_post_id: int, source: dict, image_url: str
     return {
         "raw_post_id":      raw_post_id,
         "title":            merged.get("title"),
-        "title_km":         merged.get("title_km"),
+        "title_kh":         merged.get("title_kh"),
         "description":      merged.get("description"),
-        "description_km":   merged.get("description_km"),
+        "description_kh":   merged.get("description_kh"),
         "type":             merged.get("opportunity_type"),
         "organization":     merged.get("organization"),
         "deadline":         sanitize_date(merged.get("deadline")),
