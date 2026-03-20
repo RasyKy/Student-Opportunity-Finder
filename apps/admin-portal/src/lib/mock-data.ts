@@ -39,11 +39,14 @@ export type ContentItem = {
 
 export type UserAccount = {
   id: string;
-  name: string;
-  email: string;
-  role: "admin" | "organizer" | "student";
-  status: "active" | "pending" | "suspended";
-  joinedAt: string;
+  brandName: string;
+  contact: string;
+  postCount: number;
+  category: string;
+  documentStatus: "submitted" | "none";
+  submittedAt: string;
+  status: "verified" | "pending" | "suspended";
+  flagged: boolean;
 };
 
 export type AuthUser = {
@@ -96,14 +99,61 @@ export const contentItems: ContentItem[] = [
 ];
 
 export const userAccounts: UserAccount[] = [
-  { id: "1", name: "Sovann Chea", email: "sovann@sof.com", role: "admin", status: "active", joinedAt: "2025-01-15" },
-  { id: "2", name: "Dara Kim", email: "dara@techacademy.com", role: "organizer", status: "active", joinedAt: "2025-03-20" },
-  { id: "3", name: "Sokha Ly", email: "sokha@student.edu", role: "student", status: "active", joinedAt: "2025-06-10" },
-  { id: "4", name: "Vicheka Phan", email: "vicheka@aiinstitute.com", role: "organizer", status: "pending", joinedAt: "2026-02-01" },
-  { id: "5", name: "Bopha Sorn", email: "bopha@student.edu", role: "student", status: "active", joinedAt: "2025-09-15" },
-  { id: "6", name: "Rithy Mao", email: "rithy@startup.io", role: "organizer", status: "active", joinedAt: "2025-07-22" },
-  { id: "7", name: "Chanthy Keo", email: "chanthy@student.edu", role: "student", status: "suspended", joinedAt: "2025-04-11" },
-  { id: "8", name: "Nary Heng", email: "nary@designschool.com", role: "organizer", status: "pending", joinedAt: "2026-03-05" },
+  {
+    id: "1",
+    brandName: "Kirirom Institute of Technology",
+    contact: "kit@email.com",
+    postCount: 1,
+    category: "Technology",
+    documentStatus: "submitted",
+    submittedAt: "15 Jan 2026",
+    status: "verified",
+    flagged: false,
+  },
+  {
+    id: "2",
+    brandName: "Kirirom Institute of Technology",
+    contact: "website.com/asdf",
+    postCount: 3,
+    category: "Finance",
+    documentStatus: "none",
+    submittedAt: "1 Jan 2026",
+    status: "pending",
+    flagged: false,
+  },
+  {
+    id: "3",
+    brandName: "Kirirom Institute of Technology",
+    contact: "smth@gmail.com",
+    postCount: 5,
+    category: "Climate",
+    documentStatus: "none",
+    submittedAt: "15 Dec 2025",
+    status: "suspended",
+    flagged: true,
+  },
+  {
+    id: "4",
+    brandName: "Kirirom Institute of Technology",
+    contact: "a@yahoo.com",
+    postCount: 0,
+    category: "Social",
+    documentStatus: "submitted",
+    submittedAt: "1 Dec 2025",
+    status: "verified",
+    flagged: false,
+  },
+  {
+    id: "5",
+    brandName: "Kirirom Institute of Technology",
+    contact: "c@gmail.com",
+    postCount: 1,
+    category: "Technology",
+    documentStatus: "none",
+    submittedAt: "15 Nov 2025",
+    status: "pending",
+    flagged: false,
+  },
 ];
 
 // ─── Mock Credentials ────────────────────────────────────────────────
