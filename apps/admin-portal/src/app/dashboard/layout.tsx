@@ -5,12 +5,19 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import Sidebar from "@/components/sidebar";
 
+const STORAGE_KEY = "sof-admin-user";
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (isLoading || user) {
+      return;
+    }
+
+    const storedUser = localStorage.getItem(STORAGE_KEY);
+    if (!storedUser) {
       router.push("/login");
     }
   }, [user, isLoading, router]);

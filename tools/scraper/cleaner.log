@@ -1,0 +1,172 @@
+2026-03-15 10:34:39,046 [INFO] Processing 11 items...
+2026-03-15 10:34:44,670 [INFO] Image compressed: 273KB -> 246KB
+2026-03-15 10:34:48,295 [ERROR] Failed 34: {'message': "Could not find the 'end_date' column of 'opportunities' in the schema cache", 'code': 'PGRST204', 'hint': None, 'details': None}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 533, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': "Could not find the 'end_date' column of 'opportunities' in the schema cache", 'code': 'PGRST204', 'hint': None, 'details': None}
+2026-03-15 10:34:51,988 [INFO] Image kept original: 97KB (compression would increase size)
+2026-03-15 10:34:53,185 [ERROR] Failed 36: {'message': "Could not find the 'end_date' column of 'opportunities' in the schema cache", 'code': 'PGRST204', 'hint': None, 'details': None}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 533, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': "Could not find the 'end_date' column of 'opportunities' in the schema cache", 'code': 'PGRST204', 'hint': None, 'details': None}
+2026-03-15 10:34:56,500 [ERROR] Failed 37: {'message': "Could not find the 'end_date' column of 'opportunities' in the schema cache", 'code': 'PGRST204', 'hint': None, 'details': None}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 533, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': "Could not find the 'end_date' column of 'opportunities' in the schema cache", 'code': 'PGRST204', 'hint': None, 'details': None}
+2026-03-15 10:34:56,710 [INFO] Skipped 38: too short
+2026-03-15 10:35:00,608 [INFO] Skipped 39: not an opportunity
+2026-03-15 10:35:04,242 [INFO] Skipped 40: not an opportunity
+2026-03-15 10:37:37,438 [ERROR] Failed 35: Gemini Vision returned no result
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 445, in process_queue
+    raise ValueError("Gemini Vision returned no result")
+ValueError: Gemini Vision returned no result
+2026-03-15 10:37:44,147 [INFO] Image kept original: 181KB (compression would increase size)
+2026-03-15 10:37:45,963 [INFO] Processed: 43 | image=yes
+2026-03-15 10:37:52,922 [INFO] Image kept original: 144KB (compression would increase size)
+2026-03-15 10:37:53,705 [INFO] Duplicate skipped: 41 matches existing 5bc599b3-7ccc-4938-8ba2-f0b5fd130c9a
+2026-03-15 10:37:58,690 [INFO] Image kept original: 159KB (compression would increase size)
+2026-03-15 10:37:59,831 [INFO] Duplicate skipped: 42 matches existing c7374077-8e3d-4a3c-8da4-426f874eea63
+2026-03-15 10:38:03,636 [INFO] Image kept original: 186KB (compression would increase size)
+2026-03-15 10:38:04,774 [INFO] Updated deadline for existing opportunity 5bc599b3-7ccc-4938-8ba2-f0b5fd130c9a -> 2026-03-13
+2026-03-15 10:41:16,851 [INFO] No pending items.
+2026-03-15 10:50:20,902 [INFO] Processing 4 items...
+2026-03-15 10:50:25,527 [INFO] Image compressed: 273KB -> 246KB
+2026-03-15 10:50:25,798 [INFO] Duplicate image for 34, reusing existing URL
+2026-03-15 10:50:27,132 [INFO] Processed: 34 | image=yes
+2026-03-15 10:50:30,291 [INFO] Image kept original: 97KB (compression would increase size)
+2026-03-15 10:50:30,471 [INFO] Duplicate image for 36, reusing existing URL
+2026-03-15 10:50:31,562 [INFO] Processed: 36 | image=yes
+2026-03-15 10:50:34,675 [INFO] Processed: 37 | image=no
+2026-03-15 10:53:08,897 [ERROR] Failed 35: the JSON object must be str, bytes or bytearray, not NoneType
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 433, in process_queue
+    ai_result = await asyncio.to_thread(call_gemini_vision, image_bytes)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 225, in call_gemini_vision
+    return json.loads(response.text)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\json\__init__.py", line 345, in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                    f'not {s.__class__.__name__}')
+TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+2026-03-15 11:33:07,071 [INFO] Processing 1 items...
+2026-03-15 11:35:44,521 [WARNING] Gemini Vision returned empty response (safety filter or unreadable image)
+2026-03-15 11:35:44,522 [ERROR] Failed 35: Gemini Vision returned no result
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 441, in process_queue
+    raise ValueError("Gemini Vision returned no result")
+ValueError: Gemini Vision returned no result
+2026-03-15 11:44:44,804 [INFO] Processing 1 items...
+2026-03-15 11:46:46,028 [WARNING] Gemini Vision returned empty response (safety filter or unreadable image)
+2026-03-15 11:46:46,028 [ERROR] Failed 35: Gemini Vision returned no result
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 442, in process_queue
+    raise ValueError("Gemini Vision returned no result")
+ValueError: Gemini Vision returned no result
+2026-03-15 11:56:50,504 [INFO] Processing 1 items...
+2026-03-15 11:59:26,851 [WARNING] Gemini Vision returned empty response (safety filter or unreadable image)
+2026-03-15 11:59:26,853 [ERROR] Failed 35: Gemini Vision returned no result
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 442, in process_queue
+    raise ValueError("Gemini Vision returned no result")
+ValueError: Gemini Vision returned no result
+2026-03-15 12:27:37,592 [INFO] Processing 1 items...
+2026-03-15 12:29:49,994 [WARNING] Gemini Vision returned empty response (safety filter or unreadable image)
+2026-03-15 12:29:50,758 [WARNING] Skipped 35: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-15 12:35:35,105 [INFO] Processing 1 items...
+2026-03-15 12:37:57,406 [WARNING] Gemini Vision returned empty response (safety filter or unreadable image)
+2026-03-15 12:37:58,144 [WARNING] Skipped 35: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-15 12:41:25,623 [INFO] Processing 1 items...
+2026-03-15 12:43:40,263 [WARNING] Gemini Vision returned empty response (safety filter or unreadable image)
+2026-03-15 12:43:40,862 [WARNING] Skipped 35: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-15 13:04:51,783 [INFO] Processing 1 items...
+2026-03-15 13:06:17,610 [WARNING] Gemini Vision RECITATION block — falling back to free-text OCR
+2026-03-15 13:09:10,934 [INFO] Fallback OCR extracted 135907 chars, parsing as text...
+2026-03-15 13:09:14,566 [INFO] Skipped 35: not an opportunity (OCR)
+2026-03-17 10:48:49,087 [INFO] Processing 28 items...
+2026-03-17 10:48:54,472 [INFO] Image compressed: 244KB -> 244KB
+2026-03-17 10:48:57,264 [INFO] Processed: 45 | image=yes
+2026-03-17 10:49:05,699 [INFO] Image kept original: 198KB (compression would increase size)
+2026-03-17 10:49:07,815 [INFO] Processed: 48 | image=yes
+2026-03-17 10:49:11,636 [INFO] Image kept original: 146KB (compression would increase size)
+2026-03-17 10:49:13,080 [INFO] Processed: 47 | image=yes
+2026-03-17 10:49:17,431 [INFO] Image compressed: 146KB -> 142KB
+2026-03-17 10:49:19,079 [INFO] Processed: 46 | image=yes
+2026-03-17 10:49:22,470 [INFO] Skipped 52: not an opportunity
+2026-03-17 10:49:27,063 [INFO] Image kept original: 151KB (compression would increase size)
+2026-03-17 10:49:28,167 [INFO] Processed: 49 | image=yes
+2026-03-17 10:49:35,168 [INFO] Image kept original: 161KB (compression would increase size)
+2026-03-17 10:49:36,803 [INFO] Processed: 50 | image=yes
+2026-03-17 10:49:40,446 [INFO] Image kept original: 153KB (compression would increase size)
+2026-03-17 10:49:41,667 [INFO] Processed: 51 | image=yes
+2026-03-17 10:49:44,069 [INFO] Skipped 58: not an opportunity
+2026-03-17 10:49:49,361 [INFO] Image kept original: 162KB (compression would increase size)
+2026-03-17 10:49:51,225 [INFO] Processed: 55 | image=yes
+2026-03-17 10:49:52,834 [INFO] Skipped 59: not an opportunity
+2026-03-17 10:49:54,542 [INFO] Skipped 60: not an opportunity
+2026-03-17 10:49:58,343 [INFO] Skipped 61: not an opportunity
+2026-03-17 10:50:02,343 [INFO] Image compressed: 477KB -> 347KB
+2026-03-17 10:50:04,438 [INFO] Processed: 62 | image=yes
+2026-03-17 10:50:07,682 [INFO] Skipped 57: not an opportunity
+2026-03-17 10:50:13,022 [INFO] Image kept original: 117KB (compression would increase size)
+2026-03-17 10:50:15,122 [INFO] Processed: 56 | image=yes
+2026-03-17 10:50:18,517 [INFO] Skipped 54: not an opportunity
+2026-03-17 10:50:21,694 [INFO] Skipped 53: not an opportunity
+2026-03-17 10:50:25,857 [INFO] Image kept original: 128KB (compression would increase size)
+2026-03-17 10:50:27,262 [INFO] Processed: 71 | image=yes
+2026-03-17 10:50:31,415 [INFO] Image kept original: 146KB (compression would increase size)
+2026-03-17 10:50:31,558 [INFO] Duplicate image for 63, reusing existing URL
+2026-03-17 10:50:32,224 [INFO] Processed: 63 | image=yes
+2026-03-17 10:50:36,024 [INFO] Image kept original: 97KB (compression would increase size)
+2026-03-17 10:50:36,185 [INFO] Duplicate image for 65, reusing existing URL
+2026-03-17 10:50:36,736 [INFO] Processed: 65 | image=yes
+2026-03-17 10:50:40,681 [INFO] Image kept original: 177KB (compression would increase size)
+2026-03-17 10:50:41,931 [INFO] Duplicate skipped: 66 matches existing 101de12e-ad40-4f92-ae4b-32e50428e097
+2026-03-17 10:50:46,382 [INFO] Image kept original: 228KB (compression would increase size)
+2026-03-17 10:50:47,627 [INFO] Processed: 67 | image=yes
+2026-03-17 10:50:51,105 [INFO] Image compressed: 230KB -> 223KB
+2026-03-17 10:50:52,227 [INFO] Processed: 68 | image=yes
+2026-03-17 10:50:55,796 [INFO] Image compressed: 282KB -> 272KB
+2026-03-17 10:50:57,104 [INFO] Processed: 69 | image=yes
+2026-03-17 10:50:57,231 [INFO] Skipped 70: too short
+2026-03-17 10:51:00,310 [INFO] Image kept original: 171KB (compression would increase size)
+2026-03-17 10:51:01,956 [INFO] Processed: 72 | image=yes
+2026-03-17 10:53:56,541 [WARNING] Gemini Vision RECITATION block — falling back to free-text OCR
+2026-03-17 10:55:44,648 [INFO] Fallback OCR extracted 65770 chars, parsing as text...
+2026-03-17 10:55:48,070 [INFO] Skipped 64: not an opportunity (OCR)
