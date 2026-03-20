@@ -36,7 +36,7 @@ function checkDuplicate(item: ContentItem, allItems: ContentItem[]): boolean {
       other.id !== item.id &&
       other.title.toLowerCase() === item.title.toLowerCase() &&
       other.organization.toLowerCase() === item.organization.toLowerCase() &&
-      other.type === item.type
+      other.type === item.type,
   );
 }
 
@@ -78,8 +78,12 @@ export default function ContentManagementPage() {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState<"all" | ContentItem["status"]>("all");
-  const [filterSource, setFilterSource] = useState<"all" | ContentItem["source"]>("all");
+  const [filterStatus, setFilterStatus] = useState<
+    "all" | ContentItem["status"]
+  >("all");
+  const [filterSource, setFilterSource] = useState<
+    "all" | ContentItem["source"]
+  >("all");
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
@@ -89,7 +93,10 @@ export default function ContentManagementPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Toast
-  const [toast, setToast] = useState<{ message: string; description: string } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    description: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchContentItems().then((data) => {
@@ -100,7 +107,7 @@ export default function ContentManagementPage() {
 
   const selectedItem = useMemo(
     () => items.find((i) => i.id === selectedItemId) ?? null,
-    [items, selectedItemId]
+    [items, selectedItemId],
   );
 
   // Pre-compute duplicates
@@ -112,21 +119,30 @@ export default function ContentManagementPage() {
     return ids;
   }, [items]);
 
-  const isDuplicate = selectedItem ? selectedItem.flagged && duplicateIds.has(selectedItem.id) : false;
+  const isDuplicate = selectedItem
+    ? selectedItem.flagged && duplicateIds.has(selectedItem.id)
+    : false;
 
   // Toast when opening a duplicate
   useEffect(() => {
     if (isDuplicate && selectedItem) {
-      setToast({ message: "Possible Duplicate", description: "Your preferences have been updated" });
+      setToast({
+        message: "Possible Duplicate",
+        description: "Your preferences have been updated",
+      });
     }
   }, [isDuplicate, selectedItem?.id]);
 
-  const stats = useMemo(() => {
-    const total = items.length;
-    const pending = items.filter((i) => i.status === "pending").length;
-    const flagged = items.filter((i) => i.flagged).length;
-    return { total, pending, flagged };
-  }, [items]);
+  const stats = useMemo(
+    () => ({
+      total: items.length,
+      published: items.filter((i) => i.status === "published").length,
+      pending: items.filter((i) => i.status === "pending").length,
+      private: items.filter((i) => i.status === "private").length,
+      flagged: items.filter((i) => i.flagged).length,
+    }),
+    [items],
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -144,7 +160,7 @@ export default function ContentManagementPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
   const paginatedItems = filtered.slice(
     (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
+    currentPage * rowsPerPage,
   );
 
   // Handlers
@@ -163,7 +179,9 @@ export default function ContentManagementPage() {
   }, []);
 
   const handleSave = useCallback((updated: ContentItem) => {
-    setItems((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
+    setItems((prev) =>
+      prev.map((item) => (item.id === updated.id ? updated : item)),
+    );
   }, []);
 
   const handleDelete = useCallback(
@@ -174,7 +192,7 @@ export default function ContentManagementPage() {
         setIsFullscreen(false);
       }
     },
-    [selectedItemId]
+    [selectedItemId],
   );
 
   const handleToggleStatus = useCallback((id: string) => {
@@ -182,9 +200,13 @@ export default function ContentManagementPage() {
       prev.map((item) => {
         if (item.id !== id) return item;
         const next: ContentItem["status"] =
-          item.status === "published" ? "pending" : item.status === "pending" ? "private" : "published";
+          item.status === "published"
+            ? "pending"
+            : item.status === "pending"
+              ? "private"
+              : "published";
         return { ...item, status: next };
-      })
+      }),
     );
   }, []);
 
@@ -198,42 +220,79 @@ export default function ContentManagementPage() {
       {/* Header */}
       <header className="flex h-14 shrink-0 items-center border-b border-gray-200 bg-white px-6">
         <FileText className="mr-2 h-4 w-4 text-gray-500" />
-        <h1 className="text-sm font-semibold text-gray-900">Content Management</h1>
+        <h1 className="text-sm font-semibold text-gray-900">
+          Content Management
+        </h1>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* ─── Left: Table list ─────────────────────────────────── */}
         {showList && (
-          <div className={`overflow-y-auto p-6 ${showPanel ? "w-[55%] border-r border-gray-200" : "flex-1"}`}>
+          <div
+            className={`overflow-y-auto p-6 ${showPanel ? "w-[55%] border-r border-gray-200" : "flex-1"}`}
+          >
             {/* Summary bar + New Post */}
             <div className="mb-5 flex items-center justify-between">
-              <div className="flex items-center gap-5 bg-gray-400/10 px-4 py-2 rounded-lg">
-                <span className="text-sm text-gray-700">
-                  Total Posts{" "}
-                  <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-lg bg-white px-1.5 text-xs font-semibold text-gray-700 py-0.5">
-                    {stats.total}
-                  </span>
-                </span>
-                <span className="text-sm text-gray-700">
-                  Pending Review{" "}
-                  <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-lg bg-[#FFE8A3] px-1.5 text-xs font-semibold text-black-700">
-                    {stats.pending}
-                  </span>
-                </span>
-                <span className="text-sm text-gray-700">
-                  Flagged{" "}
-                  <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-lg bg-[#FCB3AD] px-1.5 text-xs font-semibold text-black-600">
-                    {stats.flagged}
-                  </span>
-                </span>
+              <div className="flex items-center gap-1 bg-gray-400/10 px-1 py-1 rounded-lg">
+                {[
+                  {
+                    label: "Total",
+                    value: "all",
+                    count: stats.total,
+                    bg: "bg-white",
+                  },
+                  {
+                    label: "Published",
+                    value: "published",
+                    count: stats.published,
+                    bg: "bg-[#AFF4C6]",
+                  },
+                  {
+                    label: "Pending",
+                    value: "pending",
+                    count: stats.pending,
+                    bg: "bg-[#FFE8A3]",
+                  },
+                  {
+                    label: "Private",
+                    value: "private",
+                    count: stats.private,
+                    bg: "bg-white ring-1 ring-gray-300",
+                  },
+                  {
+                    label: "Flagged",
+                    value: "flagged",
+                    count: stats.flagged,
+                    bg: "bg-[#FCB3AD]",
+                  },
+                ].map(({ label, value, count, bg }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() =>
+                      setFilterStatus(
+                        value === filterStatus
+                          ? "all"
+                          : (value as typeof filterStatus),
+                      )
+                    }
+                    className={`text-sm text-gray-700 transition-all rounded-md px-3 py-1.5 ${
+                      filterStatus === value
+                        ? "bg-white shadow-sm"
+                        : filterStatus !== "all" && filterStatus !== value
+                          ? "opacity-40"
+                          : ""
+                    }`}
+                  >
+                    {label}{" "}
+                    <span
+                      className={`ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-lg ${bg} px-1.5 text-xs font-semibold text-gray-700`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                ))}
               </div>
-              <button
-                type="button"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-violet-700"
-              >
-                <Plus className="h-4 w-4" />
-                New Post
-              </button>
             </div>
 
             {/* Search & Filters */}
@@ -250,21 +309,10 @@ export default function ContentManagementPage() {
               </div>
               <div className="relative">
                 <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)}
-                  className="appearance-none rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
-                >
-                  <option value="all">All Status</option>
-                  <option value="published">Published</option>
-                  <option value="pending">Pending</option>
-                  <option value="private">Private</option>
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
-              </div>
-              <div className="relative">
-                <select
                   value={filterSource}
-                  onChange={(e) => setFilterSource(e.target.value as typeof filterSource)}
+                  onChange={(e) =>
+                    setFilterSource(e.target.value as typeof filterSource)
+                  }
                   className="appearance-none rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 >
                   <option value="all">All Sources</option>
@@ -292,17 +340,27 @@ export default function ContentManagementPage() {
               </div>
             ) : (
               <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-                <table className="w-full">
+                <table className="w-full table-fixed">
+                  <colgroup>
+                    <col className="w-[45%]" />
+                    <col className="w-[15%]" />
+                    <col className="w-[20%]" />
+                    <col className="w-[15%]" />
+                    <col className="w-[5%]" />
+                  </colgroup>
                   <thead>
                     <tr className="border-b border-gray-100 bg-gray-50/60">
                       <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                         Title / Org
                       </th>
                       <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                        Type
+                      </th>
+                      <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                         Status
                       </th>
                       <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
-                        Date
+                        Deadline
                       </th>
                       <th className="w-10 px-3 py-3" />
                     </tr>
@@ -314,13 +372,16 @@ export default function ContentManagementPage() {
                         onClick={() => handleRowClick(item.id)}
                         className={`cursor-pointer hover:bg-gray-50/50 ${selectedItemId === item.id ? "bg-violet-50/60" : ""}`}
                       >
-                        <td className="px-5 py-3.5">
-                          <p className="text-sm font-medium text-gray-900">{item.title}</p>
-                          <p className="text-xs text-gray-500 truncate">
-                            {item.organization.length > 15
-                              ? item.organization.substring(0, 15) + "..."
-                              : item.organization}
+                        <td className="px-5 py-3.5 max-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {item.title}
                           </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {item.organization || "\u00A0"}
+                          </p>
+                        </td>
+                        <td className="px-5 py-3.5 text-sm text-gray-500 capitalize">
+                          {item.type}
                         </td>
                         <td className="px-5 py-3.5">
                           <span
@@ -334,7 +395,7 @@ export default function ContentManagementPage() {
                           </span>
                         </td>
                         <td className="px-5 py-3.5 text-sm text-gray-500">
-                          {formatDate(item.createdAt)}
+                          {item.deadline ? formatDate(item.deadline) : "—"}
                         </td>
                         <td className="px-3 py-3.5 text-right">
                           {item.flagged && duplicateIds.has(item.id) && (
@@ -345,7 +406,10 @@ export default function ContentManagementPage() {
                     ))}
                     {filtered.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="px-5 py-10 text-center text-sm text-gray-500">
+                        <td
+                          colSpan={5}
+                          className="px-5 py-10 text-center text-sm text-gray-500"
+                        >
                           No posts found.
                         </td>
                       </tr>
@@ -365,7 +429,9 @@ export default function ContentManagementPage() {
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
-                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        onClick={() =>
+                          setCurrentPage((p) => Math.max(1, p - 1))
+                        }
                         disabled={currentPage === 1}
                         className="rounded-md border border-gray-200 p-1.5 text-gray-500 transition-colors hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
@@ -373,7 +439,9 @@ export default function ContentManagementPage() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        onClick={() =>
+                          setCurrentPage((p) => Math.min(totalPages, p + 1))
+                        }
                         disabled={currentPage === totalPages}
                         className="rounded-md border border-gray-200 p-1.5 text-gray-500 transition-colors hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
                       >
@@ -389,7 +457,9 @@ export default function ContentManagementPage() {
 
         {/* ─── Right: Edit Post Panel ───────────────────────────── */}
         {showPanel && selectedItem && (
-          <div className={`${isFullscreen ? "flex-1" : "w-[45%]"} overflow-hidden border-l border-gray-200`}>
+          <div
+            className={`${isFullscreen ? "flex-1" : "w-[45%]"} overflow-hidden border-l border-gray-200`}
+          >
             <EditPostPanel
               item={selectedItem}
               isFullscreen={isFullscreen}
@@ -405,7 +475,13 @@ export default function ContentManagementPage() {
       </div>
 
       {/* Toast */}
-      {toast && <Toast message={toast.message} description={toast.description} onDismiss={handleDismissToast} />}
+      {toast && (
+        <Toast
+          message={toast.message}
+          description={toast.description}
+          onDismiss={handleDismissToast}
+        />
+      )}
     </>
   );
 }
