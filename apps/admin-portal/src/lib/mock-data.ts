@@ -46,7 +46,7 @@ export type ContentItem = {
   source_platform: string;
   eligibility: string;
   target_group: string[];
-  format: string;
+  format: "online" | "onsite" | "hybrid" | "unknown" | "";
   contact_info: string;
 };
 

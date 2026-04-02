@@ -3,7 +3,7 @@ import asyncio
 import hashlib
 import logging
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 from telethon import TelegramClient
 from telethon.tl.types import MessageMediaPhoto
 from telethon.errors import FloodWaitError, UsernameInvalidError, ChannelPrivateError
@@ -236,6 +236,16 @@ async def fetch_and_store():
 
 
 def main():
+    LOCK_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "last_run.txt")
+    today = str(date.today())
+    if os.path.exists(LOCK_FILE):
+        with open(LOCK_FILE, "r") as f:
+            if f.read().strip() == today:
+                log.info("Already ran today, exiting.")
+                return
+    with open(LOCK_FILE, "w") as f:
+        f.write(today)
+
     try:
         api_id = int(_require_env("API_ID"))
     except ValueError:

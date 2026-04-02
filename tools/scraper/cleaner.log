@@ -170,3 +170,48 @@ ValueError: Gemini Vision returned no result
 2026-03-17 10:53:56,541 [WARNING] Gemini Vision RECITATION block — falling back to free-text OCR
 2026-03-17 10:55:44,648 [INFO] Fallback OCR extracted 65770 chars, parsing as text...
 2026-03-17 10:55:48,070 [INFO] Skipped 64: not an opportunity (OCR)
+2026-03-23 10:12:29,560 [INFO] Processing 50 items...
+2026-03-23 10:12:33,075 [INFO] Image compressed: 303KB -> 275KB
+2026-03-23 10:12:34,973 [INFO] Processed: 78 | image=yes
+2026-03-23 10:12:37,685 [INFO] Image compressed: 362KB -> 334KB
+2026-03-23 10:12:38,772 [INFO] Processed: 76 | image=yes
+2026-03-23 10:12:41,773 [INFO] Image compressed: 352KB -> 326KB
+2026-03-23 10:12:42,686 [INFO] Duplicate skipped: 73 matches existing 5d7e0501-0960-4647-92b0-ebb3f8170c22
+2026-03-23 10:12:45,880 [INFO] Image kept original: 265KB (compression would increase size)
+2026-03-23 10:12:47,052 [INFO] Processed: 79 | image=yes
+2026-03-23 10:12:48,941 [INFO] Skipped 75: not an opportunity
+2026-03-23 10:12:51,581 [INFO] Image compressed: 137KB -> 134KB
+2026-03-23 10:12:52,783 [INFO] Processed: 82 | image=yes
+2026-03-23 10:12:56,122 [INFO] Image compressed: 180KB -> 172KB
+2026-03-23 10:12:57,483 [INFO] Processed: 81 | image=yes
+2026-03-23 10:13:00,372 [INFO] Skipped 74: not an opportunity
+2026-03-23 10:13:03,136 [INFO] Image compressed: 292KB -> 265KB
+2026-03-23 10:13:04,227 [INFO] Processed: 80 | image=yes
+2026-03-23 10:13:07,447 [INFO] Image compressed: 305KB -> 276KB
+2026-03-23 10:13:08,285 [INFO] Duplicate skipped: 77 matches existing 11aa1178-e0a7-41cc-9a69-23c0b2e05e64
+2026-03-23 10:13:11,367 [INFO] Image kept original: 166KB (compression would increase size)
+2026-03-23 10:13:12,517 [INFO] Processed: 85 | image=yes
+2026-03-23 10:13:15,097 [INFO] Image compressed: 239KB -> 224KB
+2026-03-23 10:13:16,798 [INFO] Processed: 86 | image=yes
+2026-03-23 10:13:18,576 [INFO] Skipped 83: not an opportunity
+2026-03-23 10:13:21,945 [INFO] Image compressed: 182KB -> 172KB
+2026-03-23 10:13:23,636 [INFO] Processed: 84 | image=yes
+2026-03-23 10:13:26,511 [INFO] Skipped 87: not an opportunity
+2026-03-23 10:13:30,855 [INFO] Skipped 100: not an opportunity (OCR)
+2026-03-23 10:13:36,571 [INFO] Image kept original: 133KB (compression would increase size)
+2026-03-23 10:13:38,266 [INFO] Processed: 99 | image=yes
+2026-03-23 10:13:42,392 [INFO] Skipped 95: not an opportunity (OCR)
+2026-03-23 10:13:48,067 [INFO] Skipped 88: not an opportunity (OCR)
+2026-03-23 10:13:52,816 [INFO] Skipped 96: not an opportunity (OCR)
+2026-03-23 10:15:34,530 [WARNING] Skipped 91: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-23 10:15:37,515 [INFO] Skipped 97: not an opportunity
+2026-03-23 10:17:11,394 [WARNING] Skipped 93: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-23 10:19:30,309 [WARNING] Skipped 92: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-23 10:19:33,253 [INFO] Skipped 90: not an opportunity (OCR)
+2026-03-23 10:19:38,632 [INFO] Skipped 98: not an opportunity (OCR)
+2026-03-23 10:19:41,542 [INFO] Skipped 103: not an opportunity
+2026-03-23 10:22:06,702 [WARNING] Skipped 94: Gemini Vision could not read image (safety filter or unreadable)
+2026-03-23 10:22:11,852 [INFO] Image kept original: 135KB (compression would increase size)
+2026-03-23 10:22:13,738 [INFO] Processed: 102 | image=yes
+2026-03-23 10:22:19,488 [INFO] Image kept original: 140KB (compression would increase size)
+2026-03-23 10:22:20,587 [INFO] Duplicate skipped: 101 matches existing c065f8b0-e52c-4ff1-a39a-99769988afe6

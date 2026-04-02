@@ -14,6 +14,7 @@ import type { ContentItem } from "@/lib/mock-data";
 type EditPostPanelProps = {
   item: ContentItem;
   isFullscreen: boolean;
+  isNew?: boolean;
   onToggleFullscreen: () => void;
   onClose: () => void;
   onSave: (updated: ContentItem) => void;
@@ -32,9 +33,18 @@ const typeOptions = [
 
 function formatDateForInput(dateStr: string) {
   if (!dateStr) return "";
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+  const [year, month, day] = dateStr.split("-");
+  if (!year || !month || !day) return dateStr;
+  return `${day}/${month}/${year}`;
+}
+
+function formatDateForAPI(dateStr: string) {
+  if (!dateStr) return "";
+  const parts = dateStr.split("/");
+  if (parts.length !== 3) return dateStr;
+  const [day, month, year] = parts;
+  if (!day || !month || !year) return dateStr;
+  return `${year}-${month}-${day}`;
 }
 
 function InputField({
@@ -64,9 +74,63 @@ function InputField({
   );
 }
 
+function LinkField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const isValidUrl = () => {
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  };
+
+  return (
+    <div>
+      <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+        {label}
+      </label>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+        <a
+          href={isValidUrl() ? value : undefined}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-disabled={!isValidUrl()}
+          className={`inline-flex items-center rounded-lg border px-3 py-2 text-sm transition-colors ${
+            isValidUrl()
+              ? "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 cursor-pointer"
+              : "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed pointer-events-none"
+          }`}
+        >
+          Open
+        </a>
+      </div>
+      {value && !isValidUrl() && (
+        <p className="mt-1 text-xs text-red-400">
+          Must be a valid https:// URL
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function EditPostPanel({
   item,
   isFullscreen,
+  isNew,
   onToggleFullscreen,
   onClose,
   onSave,
@@ -100,31 +164,7 @@ export default function EditPostPanel({
   const [targetGroupInput, setTargetGroupInput] = useState("");
   const [format, setFormat] = useState(item.format);
   const [contact_info, setContactInfo] = useState(item.contact_info);
-
-  useEffect(() => {
-    setTitle(item.title);
-    setTitleKh(item.title_kh);
-    setOrganization(item.organization);
-    setSubjectTags(item.subjectTags);
-    setStartDate(formatDateForInput(item.startDate));
-    setDeadline(formatDateForInput(item.deadline));
-    setType(item.type);
-    setDescription(item.description);
-    setDescriptionKh(item.description_kh);
-    setLocation(item.location);
-    setApplicationLink(item.application_link);
-    setIsFree(item.is_free);
-    setImageUrl(item.image_url);
-    setLanguage(item.language);
-    setSourceName(item.source_name);
-    setSourcePlatform(item.source_platform);
-    setEligibility(item.eligibility);
-    setTargetGroup(item.target_group);
-    setFormat(item.format);
-    setContactInfo(item.contact_info);
-    setTagInput("");
-    setTargetGroupInput("");
-  }, [item]);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const removeTag = useCallback((index: number) => {
     setSubjectTags((prev) => prev.filter((_, i) => i !== index));
@@ -157,8 +197,8 @@ export default function EditPostPanel({
       title_kh,
       organization,
       subjectTags,
-      startDate,
-      deadline,
+      startDate: formatDateForAPI(startDate),
+      deadline: formatDateForAPI(deadline),
       type,
       description,
       description_kh,
@@ -227,7 +267,9 @@ export default function EditPostPanel({
     <div className="flex h-full flex-col bg-white">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-        <h2 className="text-base font-semibold text-gray-900">Edit Post</h2>
+        <h2 className="text-base font-semibold text-gray-900">
+          {isNew ? "New Post" : "Edit Post"}
+        </h2>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -262,7 +304,6 @@ export default function EditPostPanel({
         )}
 
         <div className="space-y-5">
-          {/* Title */}
           <InputField label="Title" value={title} onChange={setTitle} />
           <InputField
             label="Title (KH)"
@@ -270,7 +311,6 @@ export default function EditPostPanel({
             onChange={setTitleKh}
           />
 
-          {/* Org & Subject Tags */}
           <div className="grid grid-cols-2 gap-4">
             <InputField
               label="Organisation"
@@ -292,21 +332,21 @@ export default function EditPostPanel({
             </div>
           </div>
 
-          {/* Start, Deadline, Type, Format */}
           <div className="grid grid-cols-2 gap-4">
             <InputField
               label="Start Date"
               value={startDate}
               onChange={setStartDate}
-              placeholder="MM/DD/YYYY"
+              placeholder="DD/MM/YYYY"
             />
             <InputField
               label="Deadline"
               value={deadline}
               onChange={setDeadline}
-              placeholder="MM/DD/YYYY"
+              placeholder="DD/MM/YYYY"
             />
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -324,10 +364,31 @@ export default function EditPostPanel({
                 ))}
               </select>
             </div>
-            <InputField label="Format" value={format} onChange={setFormat} />
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                Format
+              </label>
+              <select
+                value={format}
+                onChange={(e) =>
+                  setFormat(
+                    e.target.value as
+                      | "online"
+                      | "onsite"
+                      | "hybrid"
+                      | "unknown",
+                  )
+                }
+                className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
+              >
+                <option value="unknown">Unknown</option>
+                <option value="online">Online</option>
+                <option value="onsite">Onsite</option>
+                <option value="hybrid">Hybrid</option>
+              </select>
+            </div>
           </div>
 
-          {/* Location & Language */}
           <div className="grid grid-cols-2 gap-4">
             <InputField
               label="Location"
@@ -341,7 +402,6 @@ export default function EditPostPanel({
             />
           </div>
 
-          {/* Is Free */}
           <div className="flex items-center gap-3">
             <label className="text-xs font-semibold uppercase tracking-wide text-gray-500">
               Free
@@ -360,12 +420,12 @@ export default function EditPostPanel({
             </span>
           </div>
 
-          {/* Eligibility & Target Group */}
           <InputField
             label="Eligibility"
             value={eligibility}
             onChange={setEligibility}
           />
+
           <div>
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
               Target Group
@@ -380,26 +440,47 @@ export default function EditPostPanel({
             )}
           </div>
 
-          {/* Application Link & Contact Info */}
-          <InputField
+          <LinkField
             label="Application Link"
             value={application_link}
             onChange={setApplicationLink}
           />
-          <InputField
+          <LinkField
             label="Contact Info"
             value={contact_info}
             onChange={setContactInfo}
           />
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Image URL
+            </label>
+            <input
+              type="text"
+              value={image_url}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+            {image_url && (
+              <div className="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                <a
+                  href={image_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <img
+                    src={image_url}
+                    alt="Preview"
+                    className="h-40 w-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                </a>
+              </div>
+            )}
+          </div>
 
-          {/* Image URL */}
-          <InputField
-            label="Image URL"
-            value={image_url}
-            onChange={setImageUrl}
-          />
-
-          {/* Source */}
           <div className="grid grid-cols-2 gap-4">
             <InputField
               label="Source Name"
@@ -413,7 +494,6 @@ export default function EditPostPanel({
             />
           </div>
 
-          {/* Description */}
           <div>
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
               Description
@@ -426,7 +506,6 @@ export default function EditPostPanel({
             />
           </div>
 
-          {/* Description KH */}
           <div>
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
               Description (KH)
@@ -441,6 +520,37 @@ export default function EditPostPanel({
         </div>
       </div>
 
+      {confirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-80 rounded-xl bg-white p-6 shadow-xl">
+            <h3 className="text-base font-semibold text-gray-900">
+              Delete Post?
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              This action cannot be undone.
+            </p>
+            <div className="mt-5 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(false)}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onDelete(item.id);
+                  setConfirmDelete(false);
+                }}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Footer */}
       <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
         <div className="flex items-center gap-3">
@@ -466,7 +576,7 @@ export default function EditPostPanel({
         </div>
         <button
           type="button"
-          onClick={() => onDelete(item.id)}
+          onClick={() => setConfirmDelete(true)}
           className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-red-700"
         >
           Delete

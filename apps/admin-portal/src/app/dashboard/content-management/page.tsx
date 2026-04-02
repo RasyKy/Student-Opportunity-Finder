@@ -10,7 +10,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { fetchContentItems } from "@/lib/api";
+import {
+  fetchContentItems,
+  updateContent,
+  updateContentStatus,
+  deleteContent,
+  createContent,
+} from "@/lib/api";
 import type { ContentItem } from "@/lib/mock-data";
 import EditPostPanel from "@/components/edit-post-panel";
 
@@ -91,6 +97,7 @@ export default function ContentManagementPage() {
   // Edit panel
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   // Toast
   const [toast, setToast] = useState<{
@@ -145,7 +152,7 @@ export default function ContentManagementPage() {
   );
 
   useEffect(() => {
-    setCurrentPage(1);
+    setTimeout(() => setCurrentPage(1), 0);
   }, [search, filterStatus, filterSource, rowsPerPage]);
 
   const filtered = items.filter((item) => {
@@ -166,6 +173,7 @@ export default function ContentManagementPage() {
   // Handlers
   const handleRowClick = useCallback((id: string) => {
     setSelectedItemId(id);
+    setIsCreating(false);
     setIsFullscreen(false);
   }, []);
 
@@ -174,18 +182,56 @@ export default function ContentManagementPage() {
     setIsFullscreen(false);
   }, []);
 
+  const handleSave = useCallback(async (updated: ContentItem) => {
+    if (!updated.id) {
+      const created = await createContent(updated);
+      setItems((prev) => [created, ...prev]);
+      setIsCreating(false);
+    } else {
+      await updateContent(updated);
+      setItems((prev) =>
+        prev.map((item) => (item.id === updated.id ? updated : item)),
+      );
+    }
+  }, []);
+
   const handleToggleFullscreen = useCallback(() => {
     setIsFullscreen((prev) => !prev);
   }, []);
 
-  const handleSave = useCallback((updated: ContentItem) => {
-    setItems((prev) =>
-      prev.map((item) => (item.id === updated.id ? updated : item)),
-    );
-  }, []);
+  function createEmptyItem(): ContentItem {
+    return {
+      id: "",
+      title: "",
+      title_kh: "",
+      organization: "",
+      type: "course",
+      status: "pending",
+      source: "internal",
+      flagged: false,
+      createdAt: "",
+      subjectTags: [],
+      startDate: "",
+      deadline: "",
+      description: "",
+      description_kh: "",
+      location: "",
+      application_link: "",
+      is_free: false,
+      image_url: "",
+      language: "",
+      source_name: "",
+      source_platform: "",
+      eligibility: "",
+      target_group: [],
+      format: "unknown",
+      contact_info: "",
+    };
+  }
 
   const handleDelete = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      await deleteContent(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       if (selectedItemId === id) {
         setSelectedItemId(null);
@@ -293,6 +339,18 @@ export default function ContentManagementPage() {
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCreating(true);
+                  setSelectedItemId(null);
+                  setIsFullscreen(true);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-violet-700"
+              >
+                <Plus className="h-4 w-4" />
+                New Post
+              </button>
             </div>
 
             {/* Search & Filters */}
@@ -456,19 +514,24 @@ export default function ContentManagementPage() {
         )}
 
         {/* ─── Right: Edit Post Panel ───────────────────────────── */}
-        {showPanel && selectedItem && (
+        {(showPanel || isCreating) && (selectedItem || isCreating) && (
           <div
             className={`${isFullscreen ? "flex-1" : "w-[45%]"} overflow-hidden border-l border-gray-200`}
           >
             <EditPostPanel
-              item={selectedItem}
+              key={isCreating ? "new" : selectedItem?.id}
+              item={isCreating ? createEmptyItem() : selectedItem!}
               isFullscreen={isFullscreen}
               onToggleFullscreen={handleToggleFullscreen}
-              onClose={handleClosePanel}
+              onClose={() => {
+                handleClosePanel();
+                setIsCreating(false);
+              }}
               onSave={handleSave}
               onDelete={handleDelete}
               onToggleStatus={handleToggleStatus}
               isDuplicate={isDuplicate}
+              isNew={isCreating}
             />
           </div>
         )}
