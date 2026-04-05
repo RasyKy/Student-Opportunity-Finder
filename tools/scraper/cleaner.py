@@ -161,6 +161,59 @@ def clean_text(text: str) -> str | None:
     return text[:2000]
 
 
+# ── Social-only URL patterns (these alone don't count as actionable) ──────────
+_SOCIAL_URL_PATTERN = re.compile(
+    r"https?://("
+    r"t\.me/|telegram\.me/|"
+    r"(www\.)?facebook\.com/|fb\.com/|"
+    r"(www\.)?instagram\.com/|"
+    r"(www\.)?twitter\.com/|"
+    r"(www\.)?tiktok\.com/|"
+    r"(www\.)?youtube\.com/|"
+    r"(www\.)?linkedin\.com/"
+    r")",
+    re.IGNORECASE
+)
+
+# Phone: Cambodian format
+_PHONE_PATTERN = re.compile(r"(?:\+855|0)[1-9]\d{7,8}")
+
+# Email
+_EMAIL_PATTERN = re.compile(r"[\w.+-]+@[\w-]+\.\w+")
+
+# Telegram handle used as contact/apply instruction (e.g. @someone, not a URL)
+_HANDLE_PATTERN = re.compile(r"@[A-Za-z]\w{3,}")
+
+# Any URL
+_ANY_URL_PATTERN = re.compile(r"https?://\S+")
+
+
+def has_actionable_signal(text: str) -> bool:
+    """
+    Returns True if the post has at least one signal that suggests
+    a person can take action: non-social URL, phone, email, or contact handle.
+    """
+    # Check for non-social URLs
+    urls = _ANY_URL_PATTERN.findall(text)
+    for url in urls:
+        if not _SOCIAL_URL_PATTERN.match(url):
+            return True
+
+    # Check for phone number
+    if _PHONE_PATTERN.search(text):
+        return True
+
+    # Check for email
+    if _EMAIL_PATTERN.search(text):
+        return True
+
+    # Check for Telegram handle (used as contact, not a URL)
+    if _HANDLE_PATTERN.search(text):
+        return True
+
+    return False
+
+
 EXCLUDED_URL_PATTERNS = re.compile(
     r"(maps\.google\.|goo\.gl/maps|google\.com/maps|t\.me/|telegram\.me/|"
     r"facebook\.com|fb\.com|instagram\.com|twitter\.com|youtube\.com|tiktok\.com)",
@@ -181,7 +234,6 @@ def pre_extract_rules(text: str) -> dict:
 
 # ── AI calls ──────────────────────────────────────────────────────────────────
 def _prepare_image_for_gemini(image_bytes: bytes, mime_type: str) -> tuple[bytes, str]:
-    """Convert PNG or oversized images to JPEG to avoid Gemini timeouts."""
     try:
         img = Image.open(io.BytesIO(image_bytes))
         needs_convert = mime_type != "image/jpeg" or img.format == "PNG" or len(image_bytes) > 1_500_000
@@ -233,7 +285,6 @@ def call_gemini(text: str) -> dict | None:
     retry=retry_if_exception_type((exceptions.ResourceExhausted, exceptions.ServiceUnavailable))
 )
 def call_gemini_vision(image_bytes: bytes, mime_type: str = "image/jpeg") -> dict | None:
-    # Convert PNG/large images to JPEG before sending — PNGs can cause Gemini timeouts
     image_bytes, mime_type = _prepare_image_for_gemini(image_bytes, mime_type)
     response = gemini.models.generate_content(
         model="gemini-2.5-flash-lite",
@@ -250,7 +301,6 @@ def call_gemini_vision(image_bytes: bytes, mime_type: str = "image/jpeg") -> dic
     )
     try:
         if not response.text:
-            # Check if RECITATION block — fall back to free-text OCR then parse as text
             finish_reason = None
             if response.candidates:
                 finish_reason = str(response.candidates[0].finish_reason)
@@ -265,7 +315,6 @@ def call_gemini_vision(image_bytes: bytes, mime_type: str = "image/jpeg") -> dic
 
 
 def _call_gemini_vision_freetext_fallback(image_bytes: bytes, mime_type: str) -> dict | None:
-    """Fallback: extract text freely from image, then parse as text post."""
     try:
         response = gemini.models.generate_content(
             model="gemini-2.5-flash-lite",
@@ -447,7 +496,6 @@ async def download_image(tg_client: TelegramClient, source_chat_id: str, source_
 
 
 def _escape_ilike(text: str) -> str:
-    """Escape special Postgres ILIKE characters to prevent injection."""
     return text.replace("%", "\\%").replace("_", "\\_")
 
 
@@ -492,7 +540,7 @@ async def process_queue():
                             "processing_status": "skipped",
                             "skip_reason":       "gemini_vision_unreadable"
                         }).eq("id", item_id).execute()
-                        log.warning(f"Skipped {item_id}: Gemini Vision could not read image (safety filter or unreadable)")
+                        log.warning(f"Skipped {item_id}: Gemini Vision could not read image")
                         continue
 
                     if not ai_result.get("is_opportunity", False):
@@ -503,7 +551,6 @@ async def process_queue():
                         log.info(f"Skipped {item_id}: not an opportunity (OCR)")
                         continue
 
-                    # Valid opportunity — upload image
                     image_url = await asyncio.to_thread(upload_image_to_storage, image_bytes, item_id)
                     if image_url:
                         supabase.table("raw_opportunities").update({
@@ -525,6 +572,15 @@ async def process_queue():
                         log.info(f"Skipped {item_id}: too short")
                         continue
 
+                    # ── Pre-filter: skip Gemini if no actionable signal ────────
+                    if not has_actionable_signal(cleaned):
+                        supabase.table("raw_opportunities").update({
+                            "processing_status": "skipped",
+                            "skip_reason":       "no_actionable_signal"
+                        }).eq("id", item_id).execute()
+                        log.info(f"Skipped {item_id}: no actionable signal (no URL, phone, email, or handle)")
+                        continue
+
                     rule_result = pre_extract_rules(cleaned)
 
                     ai_result = await asyncio.to_thread(call_gemini, cleaned)
@@ -541,7 +597,6 @@ async def process_queue():
 
                     merged = merge_results(rule_result, ai_result)
 
-                    # Download image only if valid opportunity and has media
                     if item.get("has_media"):
                         image_bytes = await download_image(tg_client, item["source_chat_id"], item["source_message_id"])
                         if image_bytes:

@@ -13,12 +13,11 @@ from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_excep
 try:
     from postgrest.exceptions import APIError as PostgrestAPIError
 except ImportError:
-    PostgrestAPIError = OSError  # fallback if not available
+    PostgrestAPIError = OSError
 
 load_dotenv()
 
 # ── Logging ───────────────────────────────────────────────────────────────────
-# Scoped logger so Telethon/httpx logs don't flood the log file
 LOG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scraper.log")
 log = logging.getLogger("telegram_scraper")
 log.setLevel(logging.INFO)
@@ -44,13 +43,11 @@ MAX_MESSAGES_PER_RUN = 200
 CHUNK_SIZE           = 50
 RATE_LIMIT_SLEEP     = 1.0
 
-# Transient errors worth retrying — includes Supabase HTTP-level errors (5xx)
 _TRANSIENT_ERRORS = (ConnectionError, TimeoutError, OSError, PostgrestAPIError)
 
 
 def make_content_hash(text: str, source_chat_id: str, msg_id: int = None) -> str:
     normalized = text.strip().lower() if text else ""
-    # Photo-only messages have no text — include msg_id so each gets a unique hash
     if not normalized and msg_id:
         normalized = f"__media_only_{msg_id}__"
     return hashlib.sha256(f"{source_chat_id}:{normalized}".encode()).hexdigest()
@@ -62,7 +59,7 @@ def parse_last_id(last_id) -> int:
     try:
         return int(last_id)
     except (ValueError, TypeError):
-        log.warning(f"  last_message_id has unexpected value '{last_id}', resetting to 0 (will re-scrape as new channel).")
+        log.warning(f"  last_message_id has unexpected value '{last_id}', resetting to 0.")
         return 0
 
 
@@ -105,7 +102,6 @@ def touch_source_timestamp(source_id: str):
 
 
 async def get_entity_safe(tg_client: TelegramClient, chat_id_str: str):
-    """Try int first, fall back to username string if not numeric."""
     try:
         return await tg_client.get_entity(int(chat_id_str))
     except ValueError:
@@ -137,7 +133,6 @@ async def fetch_and_store():
 
                 log.info(f"--- Processing: {source_name} ---")
 
-                # Guard: skip sources with missing external_id
                 if not chat_id_str:
                     log.warning(f"  Skipping '{source_name}': missing external_id.")
                     total_errors += 1
@@ -146,14 +141,11 @@ async def fetch_and_store():
                 try:
                     entity = await get_entity_safe(tg_client, chat_id_str)
 
-                    msgs_to_save = []
+                    msgs_to_save   = []
+                    group_captions = {}  # grouped_id -> caption text
                     min_id         = parse_last_id(last_id)
                     is_new_channel = min_id == 0
-
-                    # New channel: fetch only 10 most recent to avoid backfilling
-                    # old history on first run. Subsequent runs fetch up to
-                    # MAX_MESSAGES_PER_RUN messages since the last checkpoint.
-                    limit = 10 if is_new_channel else MAX_MESSAGES_PER_RUN
+                    limit          = 10 if is_new_channel else MAX_MESSAGES_PER_RUN
 
                     log.info(f"  {'New channel' if is_new_channel else 'Incremental'} scrape | limit={limit} | min_id={min_id}")
 
@@ -163,6 +155,11 @@ async def fetch_and_store():
                             has_photo = isinstance(message.media, MessageMediaPhoto)
                             if not has_text and not has_photo:
                                 continue
+
+                            # cache caption from grouped messages
+                            if message.grouped_id and has_text:
+                                group_captions[message.grouped_id] = message.text.strip()
+
                             msgs_to_save.append({
                                 "message":   message,
                                 "has_text":  has_text,
@@ -171,7 +168,6 @@ async def fetch_and_store():
                     except FloodWaitError as e:
                         log.warning(f"  FloodWaitError on iter_messages for {source_name}: waiting {e.seconds}s")
                         await asyncio.sleep(e.seconds)
-                        # Fall through — process whatever messages were already collected
 
                     if not msgs_to_save:
                         log.info(f"  No new messages for {source_name}.")
@@ -179,11 +175,18 @@ async def fetch_and_store():
                         await asyncio.sleep(RATE_LIMIT_SLEEP)
                         continue
 
-                    # Build bulk data
+                    # second pass: fill in missing captions from group siblings
+                    for item in msgs_to_save:
+                        msg = item["message"]
+                        if not item["has_text"] and msg.grouped_id and msg.grouped_id in group_captions:
+                            item["caption"] = group_captions[msg.grouped_id]
+                        else:
+                            item["caption"] = ""
+
                     bulk_data = []
                     for item in msgs_to_save:
                         msg  = item["message"]
-                        text = msg.text or ""
+                        text = msg.text or item["caption"] or ""
                         content_hash = make_content_hash(text, chat_id_str, msg.id)
                         bulk_data.append({
                             "source_id":          source_id,
@@ -197,10 +200,9 @@ async def fetch_and_store():
                                 "has_media": item["has_photo"],
                             },
                             "has_media":          item["has_photo"],
-                            "processing_status":  "pending" if item["has_text"] else "pending_ocr",
+                            "processing_status":  "pending" if (item["has_text"] or item["caption"]) else "pending_ocr",
                         })
 
-                    # Upsert in chunks with retry
                     source_saved = 0
                     for i in range(0, len(bulk_data), CHUNK_SIZE):
                         chunk = bulk_data[i:i + CHUNK_SIZE]

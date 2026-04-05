@@ -215,3 +215,664 @@ ValueError: Gemini Vision returned no result
 2026-03-23 10:22:13,738 [INFO] Processed: 102 | image=yes
 2026-03-23 10:22:19,488 [INFO] Image kept original: 140KB (compression would increase size)
 2026-03-23 10:22:20,587 [INFO] Duplicate skipped: 101 matches existing c065f8b0-e52c-4ff1-a39a-99769988afe6
+2026-04-02 14:45:47,584 [INFO] Processing 50 items...
+2026-04-02 14:45:48,642 [INFO] Skipped 89: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:45:51,469 [INFO] Skipped 106: not an opportunity
+2026-04-02 14:45:56,037 [INFO] Processed: 105 | image=no
+2026-04-02 14:45:58,727 [INFO] Skipped 112: not an opportunity
+2026-04-02 14:46:01,013 [INFO] Skipped 111: not an opportunity
+2026-04-02 14:46:03,353 [INFO] Skipped 108: not an opportunity
+2026-04-02 14:46:05,615 [INFO] Skipped 110: not an opportunity
+2026-04-02 14:46:08,483 [INFO] Duplicate skipped: 104 matches existing 1219803c-d81a-42e5-bf66-af9b24d47b9c
+2026-04-02 14:46:10,490 [INFO] Skipped 107: not an opportunity
+2026-04-02 14:46:12,367 [INFO] Skipped 113: not an opportunity
+2026-04-02 14:46:14,123 [INFO] Skipped 109: not an opportunity
+2026-04-02 14:46:17,041 [INFO] Image kept original: 99KB (compression would increase size)
+2026-04-02 14:46:19,905 [INFO] Processed: 116 | image=yes
+2026-04-02 14:46:24,467 [INFO] Processed: 122 | image=no
+2026-04-02 14:46:28,575 [INFO] Image kept original: 101KB (compression would increase size)
+2026-04-02 14:46:30,484 [INFO] Processed: 121 | image=yes
+2026-04-02 14:46:34,726 [INFO] Image kept original: 132KB (compression would increase size)
+2026-04-02 14:46:36,995 [INFO] Processed: 120 | image=yes
+2026-04-02 14:46:40,542 [INFO] Image kept original: 131KB (compression would increase size)
+2026-04-02 14:46:42,610 [INFO] Processed: 119 | image=yes
+2026-04-02 14:46:46,110 [INFO] Image kept original: 102KB (compression would increase size)
+2026-04-02 14:46:47,925 [INFO] Processed: 118 | image=yes
+2026-04-02 14:46:51,299 [INFO] Image kept original: 138KB (compression would increase size)
+2026-04-02 14:46:52,949 [INFO] Processed: 117 | image=yes
+2026-04-02 14:46:57,391 [INFO] Image kept original: 103KB (compression would increase size)
+2026-04-02 14:46:59,328 [INFO] Processed: 123 | image=yes
+2026-04-02 14:47:02,542 [INFO] Processed: 114 | image=no
+2026-04-02 14:47:02,688 [INFO] Skipped 115: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:47:06,194 [INFO] Processed: 126 | image=no
+2026-04-02 14:47:09,508 [INFO] Image compressed: 183KB -> 176KB
+2026-04-02 14:47:12,008 [ERROR] Failed 125: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (61b6792a-fa41-4a5f-9678-bd0bbaf548d0, 125, Federation University Logo Quiz and Registration, សំណួរកម្រងសំណួររូបសញ្..., event, 2026-03-19, Free, Onsite prize collection, https://forms.gle/aaN152jDSsCYF5fb7), info@eevs.com.kh, {event,study_abroad,education}, This is a quiz and registration opportunity related to Federatio..., នេះជាឱកាសប្រឡងប្រជែង ន..., kh, Expert Education & Visa Services Cambodia, telegram, 0.9, pending_review, 2026-04-02 07:47:12.307044+00, 2026-04-02 07:47:12.307044+00, https://tomzxkwrtmktcdjkzuqz.supabase.co/storage/v1/object/publi..., Open to participants who can identify the correct logo and regis..., {youth,cambodians_only}, Federation University, unknown, t, 2026-03-19, 2026-03-19).'}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 641, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (61b6792a-fa41-4a5f-9678-bd0bbaf548d0, 125, Federation University Logo Quiz and Registration, សំណួរកម្រងសំណួររូបសញ្..., event, 2026-03-19, Free, Onsite prize collection, https://forms.gle/aaN152jDSsCYF5fb7), info@eevs.com.kh, {event,study_abroad,education}, This is a quiz and registration opportunity related to Federatio..., នេះជាឱកាសប្រឡងប្រជែង ន..., kh, Expert Education & Visa Services Cambodia, telegram, 0.9, pending_review, 2026-04-02 07:47:12.307044+00, 2026-04-02 07:47:12.307044+00, https://tomzxkwrtmktcdjkzuqz.supabase.co/storage/v1/object/publi..., Open to participants who can identify the correct logo and regis..., {youth,cambodians_only}, Federation University, unknown, t, 2026-03-19, 2026-03-19).'}
+2026-04-02 14:47:12,393 [INFO] Skipped 124: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:47:15,690 [INFO] Image kept original: 133KB (compression would increase size)
+2026-04-02 14:47:17,249 [INFO] Processed: 133 | image=yes
+2026-04-02 14:47:21,258 [INFO] Image compressed: 197KB -> 183KB
+2026-04-02 14:47:23,149 [INFO] Processed: 132 | image=yes
+2026-04-02 14:47:26,721 [INFO] Image compressed: 155KB -> 149KB
+2026-04-02 14:47:28,532 [INFO] Processed: 131 | image=yes
+2026-04-02 14:47:31,334 [INFO] Image compressed: 178KB -> 175KB
+2026-04-02 14:47:33,420 [INFO] Duplicate skipped: 130 matches existing ce32e07f-8516-4e8c-89c4-471ed414b6c8
+2026-04-02 14:47:36,926 [INFO] Processed: 128 | image=no
+2026-04-02 14:47:37,078 [INFO] Skipped 127: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:47:41,118 [INFO] Image compressed: 180KB -> 167KB
+2026-04-02 14:47:43,587 [INFO] Processed: 129 | image=yes
+2026-04-02 14:47:46,956 [INFO] Processed: 141 | image=no
+2026-04-02 14:47:50,010 [INFO] Image compressed: 151KB -> 150KB
+2026-04-02 14:47:52,284 [INFO] Processed: 137 | image=yes
+2026-04-02 14:47:52,395 [INFO] Skipped 138: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:47:52,505 [INFO] Skipped 136: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:47:57,157 [INFO] Image compressed: 56KB -> 56KB
+2026-04-02 14:47:59,381 [INFO] Processed: 135 | image=yes
+2026-04-02 14:48:02,629 [INFO] Image kept original: 56KB (compression would increase size)
+2026-04-02 14:48:04,303 [INFO] Processed: 134 | image=yes
+2026-04-02 14:48:06,585 [INFO] Skipped 140: not an opportunity
+2026-04-02 14:48:06,825 [INFO] Skipped 139: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:48:11,790 [INFO] Image compressed: 78KB -> 77KB
+2026-04-02 14:48:13,589 [INFO] Processed: 142 | image=yes
+2026-04-02 14:48:16,728 [INFO] Processed: 143 | image=no
+2026-04-02 14:48:20,655 [INFO] Image kept original: 164KB (compression would increase size)
+2026-04-02 14:48:23,421 [INFO] Processed: 149 | image=yes
+2026-04-02 14:48:25,835 [INFO] Image compressed: 156KB -> 153KB
+2026-04-02 14:48:27,753 [INFO] Processed: 147 | image=yes
+2026-04-02 14:48:31,571 [INFO] Image compressed: 88KB -> 86KB
+2026-04-02 14:48:33,477 [INFO] Processed: 146 | image=yes
+2026-04-02 14:48:37,276 [INFO] Image compressed: 136KB -> 136KB
+2026-04-02 14:48:39,226 [INFO] Processed: 145 | image=yes
+2026-04-02 14:48:43,353 [INFO] Image compressed: 130KB -> 129KB
+2026-04-02 14:48:45,159 [INFO] Processed: 144 | image=yes
+2026-04-02 14:48:48,384 [INFO] Image kept original: 110KB (compression would increase size)
+2026-04-02 14:48:49,843 [INFO] Duplicate skipped: 153 matches existing 8ccad02c-5a5e-4cda-b4a8-d6442f87cfa8
+2026-04-02 14:48:50,085 [INFO] Skipped 152: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:48:53,254 [INFO] Image kept original: 65KB (compression would increase size)
+2026-04-02 14:48:54,523 [INFO] Processed: 150 | image=yes
+2026-04-02 14:48:58,738 [INFO] Image compressed: 242KB -> 223KB
+2026-04-02 14:49:01,104 [INFO] Processed: 151 | image=yes
+2026-04-02 14:53:34,790 [INFO] Processing 50 items...
+2026-04-02 14:53:38,996 [INFO] Image compressed: 186KB -> 177KB
+2026-04-02 14:53:42,376 [INFO] Duplicate skipped: 148 matches existing f2aa38bc-f92a-4820-b7b0-ceb34aabd168
+2026-04-02 14:53:42,845 [INFO] Skipped 158: too short
+2026-04-02 14:53:45,617 [INFO] Skipped 156: not an opportunity
+2026-04-02 14:53:45,818 [INFO] Skipped 159: too short
+2026-04-02 14:53:45,938 [INFO] Skipped 155: too short
+2026-04-02 14:53:46,065 [INFO] Skipped 157: too short
+2026-04-02 14:53:46,225 [INFO] Skipped 154: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:53:49,051 [INFO] Image kept original: 87KB (compression would increase size)
+2026-04-02 14:53:52,076 [INFO] Processed: 163 | image=yes
+2026-04-02 14:53:55,310 [INFO] Image kept original: 95KB (compression would increase size)
+2026-04-02 14:53:56,999 [INFO] Duplicate skipped: 164 matches existing d03bc7a6-b48f-4237-be9f-9f3f5515ccdc
+2026-04-02 14:54:00,156 [INFO] Image kept original: 105KB (compression would increase size)
+2026-04-02 14:54:01,810 [INFO] Duplicate skipped: 161 matches existing d03bc7a6-b48f-4237-be9f-9f3f5515ccdc
+2026-04-02 14:54:05,363 [INFO] Image kept original: 145KB (compression would increase size)
+2026-04-02 14:54:07,333 [INFO] Processed: 167 | image=yes
+2026-04-02 14:54:09,855 [INFO] Image kept original: 87KB (compression would increase size)
+2026-04-02 14:54:11,128 [INFO] Duplicate skipped: 166 matches existing d03bc7a6-b48f-4237-be9f-9f3f5515ccdc
+2026-04-02 14:54:14,303 [INFO] Image kept original: 118KB (compression would increase size)
+2026-04-02 14:54:15,838 [INFO] Updated deadline for existing opportunity 833714c5-31b6-4dcf-bebc-48b07f1f75a7 -> 2026-03-27
+2026-04-02 14:54:19,191 [INFO] Image kept original: 62KB (compression would increase size)
+2026-04-02 14:54:22,089 [INFO] Duplicate skipped: 162 matches existing d03bc7a6-b48f-4237-be9f-9f3f5515ccdc
+2026-04-02 14:54:25,235 [INFO] Image kept original: 73KB (compression would increase size)
+2026-04-02 14:54:27,149 [INFO] Duplicate skipped: 165 matches existing d03bc7a6-b48f-4237-be9f-9f3f5515ccdc
+2026-04-02 14:54:27,444 [INFO] Skipped 168: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:54:27,565 [INFO] Skipped 169: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:54:30,952 [INFO] Skipped 172: not an opportunity
+2026-04-02 14:54:33,542 [INFO] Skipped 173: not an opportunity
+2026-04-02 14:54:37,851 [INFO] Skipped 176: not an opportunity
+2026-04-02 14:54:41,883 [INFO] Skipped 177: not an opportunity
+2026-04-02 14:54:43,725 [INFO] Skipped 174: not an opportunity
+2026-04-02 14:54:48,061 [INFO] Skipped 178: not an opportunity
+2026-04-02 14:54:51,783 [INFO] Skipped 180: not an opportunity
+2026-04-02 14:54:54,974 [INFO] Skipped 179: not an opportunity
+2026-04-02 14:54:57,652 [INFO] Skipped 171: not an opportunity
+2026-04-02 14:55:00,649 [INFO] Skipped 170: not an opportunity
+2026-04-02 14:55:03,560 [INFO] Skipped 181: not an opportunity
+2026-04-02 14:55:06,279 [INFO] Skipped 175: not an opportunity
+2026-04-02 14:55:12,064 [INFO] Image kept original: 151KB (compression would increase size)
+2026-04-02 14:55:15,286 [INFO] Processed: 182 | image=yes
+2026-04-02 14:55:19,058 [INFO] Image kept original: 129KB (compression would increase size)
+2026-04-02 14:55:21,551 [INFO] Processed: 185 | image=yes
+2026-04-02 14:55:25,187 [INFO] Image kept original: 141KB (compression would increase size)
+2026-04-02 14:55:26,387 [INFO] Duplicate skipped: 184 matches existing a9e2013c-daaa-4e44-a38e-83d3c3f25c42
+2026-04-02 14:55:30,981 [INFO] Image kept original: 195KB (compression would increase size)
+2026-04-02 14:55:33,899 [INFO] Processed: 188 | image=yes
+2026-04-02 14:55:38,329 [INFO] Image compressed: 230KB -> 218KB
+2026-04-02 14:55:41,222 [INFO] Processed: 189 | image=yes
+2026-04-02 14:55:43,914 [INFO] Duplicate skipped: 187 matches existing d6ab379d-cc6d-4ddc-848a-e66b53272d67
+2026-04-02 14:55:47,575 [INFO] Image kept original: 118KB (compression would increase size)
+2026-04-02 14:55:49,283 [INFO] Duplicate skipped: 183 matches existing a9e2013c-daaa-4e44-a38e-83d3c3f25c42
+2026-04-02 14:55:53,012 [INFO] Image kept original: 150KB (compression would increase size)
+2026-04-02 14:55:54,335 [INFO] Duplicate skipped: 186 matches existing a9e2013c-daaa-4e44-a38e-83d3c3f25c42
+2026-04-02 14:55:57,040 [INFO] Skipped 190: not an opportunity
+2026-04-02 14:55:57,187 [INFO] Skipped 219: too short
+2026-04-02 14:55:57,304 [INFO] Skipped 218: too short
+2026-04-02 14:55:57,439 [INFO] Skipped 214: too short
+2026-04-02 14:55:57,562 [INFO] Skipped 217: too short
+2026-04-02 14:55:57,711 [INFO] Skipped 216: too short
+2026-04-02 14:55:57,842 [INFO] Skipped 213: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:55:58,054 [INFO] Skipped 212: too short
+2026-04-02 14:56:00,554 [INFO] Skipped 198: not an opportunity
+2026-04-02 14:56:00,679 [INFO] Skipped 197: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:56:00,783 [INFO] Skipped 196: too short
+2026-04-02 14:56:00,923 [INFO] Skipped 211: too short
+2026-04-02 14:56:01,081 [INFO] Skipped 225: too short
+2026-04-02 14:56:33,233 [INFO] Processing 50 items...
+2026-04-02 14:56:34,070 [INFO] Skipped 222: too short
+2026-04-02 14:56:34,225 [INFO] Skipped 240: too short
+2026-04-02 14:56:34,368 [INFO] Skipped 223: too short
+2026-04-02 14:56:34,559 [INFO] Skipped 204: too short
+2026-04-02 14:56:41,901 [INFO] Image kept original: 64KB (compression would increase size)
+2026-04-02 14:56:44,879 [INFO] Processed: 202 | image=yes
+2026-04-02 14:56:45,003 [INFO] Skipped 209: too short
+2026-04-02 14:56:45,133 [INFO] Skipped 210: too short
+2026-04-02 14:56:45,266 [INFO] Skipped 215: too short
+2026-04-02 14:56:45,410 [INFO] Skipped 191: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:56:45,565 [INFO] Skipped 220: too short
+2026-04-02 14:56:45,692 [INFO] Skipped 203: too short
+2026-04-02 14:56:49,695 [INFO] Image kept original: 155KB (compression would increase size)
+2026-04-02 14:56:51,964 [ERROR] Failed 192: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (6fb2aaee-d26b-4176-b71f-e38a6c32be1e, 192, Romduol Scholars Challenge - Final Round Registration, Romduol Scholars Challenge - ចុះឈ្មោះចូល..., scholarship, 2024-07-01, Free, null, https://forms.gle/NzKZTeGUpnqXQhr86, @Romduolscholars_Edu, {scholarship,event,competition,education}, This post announces the final call for registration for the Romd..., ប្រកាសនេះជូនដំណឹងអំពី..., kh, Romduol Scholars Challenge, telegram, 0.9, pending_review, 2026-04-02 07:56:52.284248+00, 2026-04-02 07:56:52.284248+00, https://tomzxkwrtmktcdjkzuqz.supabase.co/storage/v1/object/publi..., Open to participants for the final round of the Romduol Scholars..., {youth,cambodians_only}, Romduol Scholars, unknown, t, null, null).'}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 641, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (6fb2aaee-d26b-4176-b71f-e38a6c32be1e, 192, Romduol Scholars Challenge - Final Round Registration, Romduol Scholars Challenge - ចុះឈ្មោះចូល..., scholarship, 2024-07-01, Free, null, https://forms.gle/NzKZTeGUpnqXQhr86, @Romduolscholars_Edu, {scholarship,event,competition,education}, This post announces the final call for registration for the Romd..., ប្រកាសនេះជូនដំណឹងអំពី..., kh, Romduol Scholars Challenge, telegram, 0.9, pending_review, 2026-04-02 07:56:52.284248+00, 2026-04-02 07:56:52.284248+00, https://tomzxkwrtmktcdjkzuqz.supabase.co/storage/v1/object/publi..., Open to participants for the final round of the Romduol Scholars..., {youth,cambodians_only}, Romduol Scholars, unknown, t, null, null).'}
+2026-04-02 14:56:52,249 [INFO] Skipped 221: too short
+2026-04-02 14:56:57,186 [INFO] Image compressed: 716KB -> 403KB
+2026-04-02 14:56:59,729 [INFO] Processed: 194 | image=yes
+2026-04-02 14:56:59,844 [INFO] Skipped 195: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:57:03,419 [ERROR] Failed 199: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (657280b6-1777-496e-8d62-ef97d74695e2, 199, Final Round Competition Registration, ចុះឈ្មោះវគ្គផ្តាច់ព្រ..., other, null, $20, null, https://forms.gle/NzKZTeGUpnqXQhr86, null, {education,scholarship,competition}, This post announces the registration for a final round competiti..., ប្រកាសពីការចុះឈ្មោះសម..., kh, Romduol Scholars Challenge, telegram, 0.9, pending_review, 2026-04-02 07:57:03.758048+00, 2026-04-02 07:57:03.758048+00, null, null, {"null"}, null, unknown, f, null, null).'}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 641, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (657280b6-1777-496e-8d62-ef97d74695e2, 199, Final Round Competition Registration, ចុះឈ្មោះវគ្គផ្តាច់ព្រ..., other, null, $20, null, https://forms.gle/NzKZTeGUpnqXQhr86, null, {education,scholarship,competition}, This post announces the registration for a final round competiti..., ប្រកាសពីការចុះឈ្មោះសម..., kh, Romduol Scholars Challenge, telegram, 0.9, pending_review, 2026-04-02 07:57:03.758048+00, 2026-04-02 07:57:03.758048+00, null, null, {"null"}, null, unknown, f, null, null).'}
+2026-04-02 14:57:03,685 [INFO] Skipped 200: too short
+2026-04-02 14:57:03,832 [INFO] Skipped 201: too short
+2026-04-02 14:57:06,550 [INFO] Image kept original: 85KB (compression would increase size)
+2026-04-02 14:57:09,017 [INFO] Processed: 193 | image=yes
+2026-04-02 14:57:09,176 [INFO] Skipped 207: too short
+2026-04-02 14:57:09,397 [INFO] Skipped 206: too short
+2026-04-02 14:57:09,505 [INFO] Skipped 205: too short
+2026-04-02 14:57:09,658 [INFO] Skipped 224: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:57:09,780 [INFO] Skipped 226: too short
+2026-04-02 14:57:09,979 [INFO] Skipped 208: too short
+2026-04-02 14:57:10,230 [INFO] Skipped 227: too short
+2026-04-02 14:57:10,386 [INFO] Skipped 228: too short
+2026-04-02 14:57:10,499 [INFO] Skipped 229: too short
+2026-04-02 14:57:10,658 [INFO] Skipped 230: too short
+2026-04-02 14:57:10,773 [INFO] Skipped 231: too short
+2026-04-02 14:57:10,950 [INFO] Skipped 232: too short
+2026-04-02 14:57:11,182 [INFO] Skipped 233: too short
+2026-04-02 14:57:11,418 [INFO] Skipped 234: too short
+2026-04-02 14:57:11,536 [INFO] Skipped 235: too short
+2026-04-02 14:57:11,662 [INFO] Skipped 236: too short
+2026-04-02 14:57:11,776 [INFO] Skipped 237: too short
+2026-04-02 14:57:11,891 [INFO] Skipped 238: too short
+2026-04-02 14:57:12,026 [INFO] Skipped 239: too short
+2026-04-02 14:57:12,141 [INFO] Skipped 250: too short
+2026-04-02 14:57:12,264 [INFO] Skipped 249: too short
+2026-04-02 14:57:12,383 [INFO] Skipped 248: too short
+2026-04-02 14:57:12,510 [INFO] Skipped 246: too short
+2026-04-02 14:57:12,623 [INFO] Skipped 245: too short
+2026-04-02 14:57:12,745 [INFO] Skipped 244: too short
+2026-04-02 14:57:12,912 [INFO] Skipped 243: too short
+2026-04-02 14:57:13,036 [INFO] Skipped 247: too short
+2026-04-02 14:57:13,174 [INFO] Skipped 242: too short
+2026-04-02 14:57:13,296 [INFO] Skipped 241: too short
+2026-04-02 14:57:13,476 [INFO] Skipped 251: too short
+2026-04-02 14:57:13,594 [INFO] Skipped 252: too short
+2026-04-02 14:57:25,143 [INFO] Processing 50 items...
+2026-04-02 14:57:26,084 [INFO] Skipped 272: too short
+2026-04-02 14:57:26,218 [INFO] Skipped 289: too short
+2026-04-02 14:57:26,346 [INFO] Skipped 254: too short
+2026-04-02 14:57:26,509 [INFO] Skipped 261: too short
+2026-04-02 14:57:26,667 [INFO] Skipped 290: too short
+2026-04-02 14:57:26,924 [INFO] Skipped 257: too short
+2026-04-02 14:57:27,294 [INFO] Skipped 258: too short
+2026-04-02 14:57:27,512 [INFO] Skipped 259: too short
+2026-04-02 14:57:27,658 [INFO] Skipped 275: too short
+2026-04-02 14:57:27,791 [INFO] Skipped 273: too short
+2026-04-02 14:57:27,992 [INFO] Skipped 271: too short
+2026-04-02 14:57:28,113 [INFO] Skipped 256: too short
+2026-04-02 14:57:28,238 [INFO] Skipped 264: too short
+2026-04-02 14:57:28,373 [INFO] Skipped 265: too short
+2026-04-02 14:57:28,526 [INFO] Skipped 266: too short
+2026-04-02 14:57:28,727 [INFO] Skipped 267: too short
+2026-04-02 14:57:28,941 [INFO] Skipped 268: too short
+2026-04-02 14:57:32,599 [INFO] Processed: 269 | image=no
+2026-04-02 14:57:32,801 [INFO] Skipped 270: too short
+2026-04-02 14:57:33,037 [INFO] Skipped 255: too short
+2026-04-02 14:57:33,183 [INFO] Skipped 262: too short
+2026-04-02 14:57:33,344 [INFO] Skipped 274: too short
+2026-04-02 14:57:33,604 [INFO] Skipped 253: too short
+2026-04-02 14:57:33,779 [INFO] Skipped 260: too short
+2026-04-02 14:57:33,998 [INFO] Skipped 276: too short
+2026-04-02 14:57:34,237 [INFO] Skipped 263: too short
+2026-04-02 14:57:37,510 [INFO] Processed: 277 | image=no
+2026-04-02 14:57:37,722 [INFO] Skipped 278: too short
+2026-04-02 14:57:37,920 [INFO] Skipped 279: too short
+2026-04-02 14:57:38,105 [INFO] Skipped 280: too short
+2026-04-02 14:57:38,251 [INFO] Skipped 281: too short
+2026-04-02 14:57:38,369 [INFO] Skipped 282: too short
+2026-04-02 14:57:38,545 [INFO] Skipped 283: too short
+2026-04-02 14:57:38,692 [INFO] Skipped 284: too short
+2026-04-02 14:57:38,925 [INFO] Skipped 285: too short
+2026-04-02 14:57:39,153 [INFO] Skipped 286: too short
+2026-04-02 14:57:39,445 [INFO] Skipped 287: too short
+2026-04-02 14:57:39,603 [INFO] Skipped 288: too short
+2026-04-02 14:57:39,772 [INFO] Skipped 299: too short
+2026-04-02 14:57:40,006 [INFO] Skipped 298: too short
+2026-04-02 14:57:40,336 [INFO] Skipped 297: too short
+2026-04-02 14:57:40,587 [INFO] Skipped 300: too short
+2026-04-02 14:57:40,754 [INFO] Skipped 296: too short
+2026-04-02 14:57:40,861 [INFO] Skipped 295: too short
+2026-04-02 14:57:40,978 [INFO] Skipped 294: too short
+2026-04-02 14:57:41,119 [INFO] Skipped 293: too short
+2026-04-02 14:57:41,338 [INFO] Skipped 292: too short
+2026-04-02 14:57:43,386 [INFO] Skipped 291: not an opportunity
+2026-04-02 14:57:43,603 [INFO] Skipped 324: too short
+2026-04-02 14:57:43,848 [INFO] Skipped 301: too short
+2026-04-02 14:58:03,460 [INFO] Processing 50 items...
+2026-04-02 14:58:04,284 [INFO] Skipped 303: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:58:04,430 [INFO] Skipped 340: too short
+2026-04-02 14:58:04,552 [INFO] Skipped 302: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 14:58:04,724 [INFO] Skipped 320: too short
+2026-04-02 14:58:04,929 [INFO] Skipped 318: too short
+2026-04-02 14:58:05,055 [INFO] Skipped 305: too short
+2026-04-02 14:58:05,348 [INFO] Skipped 306: too short
+2026-04-02 14:58:05,566 [INFO] Skipped 307: too short
+2026-04-02 14:58:05,704 [INFO] Skipped 310: too short
+2026-04-02 14:58:05,841 [INFO] Skipped 309: too short
+2026-04-02 14:58:05,986 [INFO] Skipped 319: too short
+2026-04-02 14:58:06,113 [INFO] Skipped 311: too short
+2026-04-02 14:59:32,733 [ERROR] Failed 312: AI returned no result
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 588, in process_queue
+    raise ValueError("AI returned no result")
+ValueError: AI returned no result
+2026-04-02 14:59:34,244 [INFO] Skipped 313: too short
+2026-04-02 14:59:34,412 [INFO] Skipped 314: too short
+2026-04-02 14:59:34,670 [INFO] Skipped 315: too short
+2026-04-02 14:59:34,829 [INFO] Skipped 316: too short
+2026-04-02 14:59:34,968 [INFO] Skipped 317: too short
+2026-04-02 14:59:35,109 [INFO] Skipped 308: too short
+2026-04-02 14:59:35,320 [INFO] Skipped 323: too short
+2026-04-02 14:59:35,519 [INFO] Skipped 322: too short
+2026-04-02 15:00:07,792 [INFO] Processing 50 items...
+2026-04-02 15:00:09,762 [INFO] Skipped 333: too short
+2026-04-02 15:00:10,175 [INFO] Skipped 329: too short
+2026-04-02 15:00:11,375 [INFO] Skipped 326: too short
+2026-04-02 15:00:12,089 [INFO] Skipped 334: too short
+2026-04-02 15:00:12,574 [INFO] Skipped 335: too short
+2026-04-02 15:00:13,403 [INFO] Skipped 337: too short
+2026-04-02 15:00:13,988 [INFO] Skipped 330: too short
+2026-04-02 15:00:14,565 [INFO] Skipped 338: too short
+2026-04-02 15:00:15,236 [INFO] Skipped 336: too short
+2026-04-02 15:00:15,519 [INFO] Skipped 327: too short
+2026-04-02 15:02:10,916 [WARNING] Skipped 321: Gemini Vision could not read image
+2026-04-02 15:02:11,145 [INFO] Skipped 331: too short
+2026-04-02 15:02:11,393 [INFO] Skipped 325: too short
+2026-04-02 15:02:11,653 [INFO] Skipped 328: too short
+2026-04-02 15:02:11,907 [INFO] Skipped 304: too short
+2026-04-02 15:02:12,197 [INFO] Skipped 332: too short
+2026-04-02 15:02:12,446 [INFO] Skipped 339: too short
+2026-04-02 15:02:12,691 [INFO] Skipped 351: too short
+2026-04-02 15:02:15,493 [INFO] Processed: 350 | image=no
+2026-04-02 15:02:15,627 [INFO] Skipped 349: too short
+2026-04-02 15:02:15,745 [INFO] Skipped 347: too short
+2026-04-02 15:02:15,927 [INFO] Skipped 345: too short
+2026-04-02 15:02:16,048 [INFO] Skipped 346: too short
+2026-04-02 15:02:16,166 [INFO] Skipped 363: too short
+2026-04-02 15:02:16,295 [INFO] Skipped 344: too short
+2026-04-02 15:02:16,409 [INFO] Skipped 348: too short
+2026-04-02 15:02:16,527 [INFO] Skipped 343: too short
+2026-04-02 15:02:16,644 [INFO] Skipped 342: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:02:16,758 [INFO] Skipped 362: too short
+2026-04-02 15:02:16,871 [INFO] Skipped 352: too short
+2026-04-02 15:02:16,994 [INFO] Skipped 361: too short
+2026-04-02 15:02:17,244 [INFO] Skipped 341: too short
+2026-04-02 15:02:17,366 [INFO] Skipped 359: too short
+2026-04-02 15:02:17,485 [INFO] Skipped 358: too short
+2026-04-02 15:02:17,648 [INFO] Skipped 357: too short
+2026-04-02 15:02:17,748 [INFO] Skipped 356: too short
+2026-04-02 15:02:17,847 [INFO] Skipped 355: too short
+2026-04-02 15:02:17,975 [INFO] Skipped 360: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:02:21,358 [ERROR] Failed 354: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (3278bc39-ae30-46bd-8eff-d89aa9808afd, 354, Final Round Examination Program, កម្មវិធីប្រឡងវគ្គផ្តា..., other, 2026-04-01, $20, Cam-ASEAN Foreign Language School (Boeung Kak Branch), https://forms.gle/NzKZTeGUpnqXQhr86, N/A, {education,competition}, This program is a final round examination for an unspecified com..., កម្មវិធីនេះគឺជាការប្រ..., kh, Romduol Scholars Challenge, telegram, 0.9, pending_review, 2026-04-02 08:02:21.678131+00, 2026-04-02 08:02:21.678131+00, null, N/A, {open_to_all}, Cam-ASEAN Foreign Language School, onsite, f, 2026-05-02, 2026-05-03).'}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 641, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (3278bc39-ae30-46bd-8eff-d89aa9808afd, 354, Final Round Examination Program, កម្មវិធីប្រឡងវគ្គផ្តា..., other, 2026-04-01, $20, Cam-ASEAN Foreign Language School (Boeung Kak Branch), https://forms.gle/NzKZTeGUpnqXQhr86, N/A, {education,competition}, This program is a final round examination for an unspecified com..., កម្មវិធីនេះគឺជាការប្រ..., kh, Romduol Scholars Challenge, telegram, 0.9, pending_review, 2026-04-02 08:02:21.678131+00, 2026-04-02 08:02:21.678131+00, null, N/A, {open_to_all}, Cam-ASEAN Foreign Language School, onsite, f, 2026-05-02, 2026-05-03).'}
+2026-04-02 15:02:21,620 [INFO] Skipped 353: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:02:24,955 [INFO] Skipped 372: not an opportunity
+2026-04-02 15:02:27,769 [INFO] Skipped 368: not an opportunity
+2026-04-02 15:02:30,597 [INFO] Skipped 364: not an opportunity
+2026-04-02 15:02:33,349 [INFO] Skipped 373: not an opportunity
+2026-04-02 15:02:36,176 [INFO] Skipped 366: not an opportunity
+2026-04-02 15:02:38,870 [INFO] Skipped 367: not an opportunity
+2026-04-02 15:02:41,641 [INFO] Skipped 365: not an opportunity
+2026-04-02 15:02:44,471 [INFO] Skipped 370: not an opportunity
+2026-04-02 15:02:47,428 [INFO] Skipped 371: not an opportunity
+2026-04-02 15:02:50,275 [INFO] Skipped 369: not an opportunity
+2026-04-02 15:09:41,510 [INFO] Processing 200 items...
+2026-04-02 15:09:45,750 [INFO] Skipped 381: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,008 [INFO] Skipped 382: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,248 [INFO] Skipped 383: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,498 [INFO] Skipped 380: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,592 [INFO] Skipped 378: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,702 [INFO] Skipped 374: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,800 [INFO] Skipped 375: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:46,961 [INFO] Skipped 376: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:47,110 [INFO] Skipped 379: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:09:47,209 [INFO] Skipped 377: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:10:33,040 [INFO] Image kept original: 150KB (compression would increase size)
+2026-04-02 15:10:38,045 [INFO] Processed: 385 | image=yes
+2026-04-02 15:10:44,136 [INFO] Image kept original: 116KB (compression would increase size)
+2026-04-02 15:10:45,685 [INFO] Duplicate skipped: 384 matches existing 833714c5-31b6-4dcf-bebc-48b07f1f75a7
+2026-04-02 15:10:49,582 [ERROR] Failed 393: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 537, in process_queue
+    ai_result = await asyncio.to_thread(call_gemini_vision, image_bytes)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 289, in call_gemini_vision
+    response = gemini.models.generate_content(
+        model="gemini-2.5-flash-lite",
+    ...<9 lines>...
+        )
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\models.py", line 5709, in generate_content
+    response = self._generate_content(
+        model=model, contents=contents, config=parsed_config
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\models.py", line 4371, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1401, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1237, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1214, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\errors.py", line 134, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\errors.py", line 159, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key expired. Please renew the API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key expired. Please renew the API key.'}]}}
+2026-04-02 15:11:17,012 [INFO] Skipped 397: not an opportunity (OCR)
+2026-04-02 15:11:33,975 [INFO] Skipped 388: not an opportunity (OCR)
+2026-04-02 15:11:54,246 [INFO] Skipped 396: not an opportunity (OCR)
+2026-04-02 15:12:09,553 [ERROR] Failed 398: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 537, in process_queue
+    ai_result = await asyncio.to_thread(call_gemini_vision, image_bytes)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 289, in call_gemini_vision
+    response = gemini.models.generate_content(
+        model="gemini-2.5-flash-lite",
+    ...<9 lines>...
+        )
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\models.py", line 5709, in generate_content
+    response = self._generate_content(
+        model=model, contents=contents, config=parsed_config
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\models.py", line 4371, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1401, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1237, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1214, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\errors.py", line 134, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\errors.py", line 161, in raise_error
+    raise ServerError(status_code, response_json, response)
+google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+2026-04-02 15:19:22,489 [INFO] Processing 50 items...
+2026-04-02 15:19:23,113 [INFO] Skipped 386: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:19:27,707 [INFO] Processed: 399 | image=no
+2026-04-02 15:19:32,218 [INFO] Skipped 395: not an opportunity (OCR)
+2026-04-02 15:19:37,932 [INFO] Skipped 400: not an opportunity (OCR)
+2026-04-02 15:19:44,016 [INFO] Skipped 392: not an opportunity (OCR)
+2026-04-02 15:19:49,189 [INFO] Image kept original: 106KB (compression would increase size)
+2026-04-02 15:19:53,167 [INFO] Processed: 404 | image=yes
+2026-04-02 15:19:57,756 [INFO] Image kept original: 169KB (compression would increase size)
+2026-04-02 15:19:59,173 [INFO] Processed: 401 | image=yes
+2026-04-02 15:20:05,442 [INFO] Image kept original: 162KB (compression would increase size)
+2026-04-02 15:20:06,775 [INFO] Processed: 402 | image=yes
+2026-04-02 15:20:11,067 [INFO] Skipped 394: not an opportunity (OCR)
+2026-04-02 15:20:16,494 [INFO] Skipped 390: not an opportunity (OCR)
+2026-04-02 15:20:24,036 [INFO] Image kept original: 113KB (compression would increase size)
+2026-04-02 15:20:25,292 [INFO] Processed: 403 | image=yes
+2026-04-02 15:20:30,434 [INFO] Skipped 389: not an opportunity (OCR)
+2026-04-02 15:20:34,707 [INFO] Skipped 391: not an opportunity (OCR)
+2026-04-02 15:20:38,625 [INFO] Image kept original: 207KB (compression would increase size)
+2026-04-02 15:20:40,936 [INFO] Updated deadline for existing opportunity 9ef8d337-1b64-4254-85a7-f37ba69a2bd5 -> 2026-02-28
+2026-04-02 15:20:44,419 [INFO] Skipped 387: not an opportunity (OCR)
+2026-04-02 15:20:44,613 [INFO] Skipped 406: too short
+2026-04-02 15:20:48,897 [INFO] Image kept original: 113KB (compression would increase size)
+2026-04-02 15:20:50,383 [INFO] Processed: 407 | image=yes
+2026-04-02 15:20:55,972 [INFO] Image kept original: 79KB (compression would increase size)
+2026-04-02 15:20:57,204 [INFO] Processed: 426 | image=yes
+2026-04-02 15:21:03,633 [INFO] Skipped 427: not an opportunity (OCR)
+2026-04-02 15:21:07,474 [INFO] Skipped 421: not an opportunity (OCR)
+2026-04-02 15:21:08,017 [INFO] Skipped 413: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:14,132 [INFO] Skipped 424: not an opportunity (OCR)
+2026-04-02 15:21:17,143 [INFO] Updated deadline for existing opportunity d6ab379d-cc6d-4ddc-848a-e66b53272d67 -> 2026-03-27
+2026-04-02 15:21:17,376 [INFO] Skipped 416: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:19,824 [INFO] Image compressed: 219KB -> 206KB
+2026-04-02 15:21:21,479 [ERROR] Failed 410: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (ca8fa0cd-67c9-4251-a886-2ad192ae2e45, 410, Macquarie University Consultation Program and Giveaway, កម្មវិធីប្រឹក្សាយោបល់..., event, 2026-03-26, Free, In-person prize collection, https://forms.gle/1sjwGuzQGrt7Zgq27), info@eevs.com.kh, {event,consultation,"study abroad"}, This post announces a consultation program with Macquarie Univer..., ប្រកាសនេះប្រកាសពីកម្ម..., kh, Expert Education & Visa Services Cambodia, telegram, 0.9, pending_review, 2026-04-02 08:21:21.79707+00, 2026-04-02 08:21:21.79707+00, https://tomzxkwrtmktcdjkzuqz.supabase.co/storage/v1/object/publi..., Open to those who can answer the question about the Macquarie Un..., {youth,cambodians_only}, Macquarie University, unknown, t, 2026-03-26, 2026-03-26).'}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 641, in process_queue
+    supabase.table("opportunities").insert(record).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 53, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'new row for relation "opportunities" violates check constraint "opportunities_language_check"', 'code': '23514', 'hint': None, 'details': 'Failing row contains (ca8fa0cd-67c9-4251-a886-2ad192ae2e45, 410, Macquarie University Consultation Program and Giveaway, កម្មវិធីប្រឹក្សាយោបល់..., event, 2026-03-26, Free, In-person prize collection, https://forms.gle/1sjwGuzQGrt7Zgq27), info@eevs.com.kh, {event,consultation,"study abroad"}, This post announces a consultation program with Macquarie Univer..., ប្រកាសនេះប្រកាសពីកម្ម..., kh, Expert Education & Visa Services Cambodia, telegram, 0.9, pending_review, 2026-04-02 08:21:21.79707+00, 2026-04-02 08:21:21.79707+00, https://tomzxkwrtmktcdjkzuqz.supabase.co/storage/v1/object/publi..., Open to those who can answer the question about the Macquarie Un..., {youth,cambodians_only}, Macquarie University, unknown, t, 2026-03-26, 2026-03-26).'}
+2026-04-02 15:21:21,951 [INFO] Skipped 418: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:22,152 [INFO] Skipped 429: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:22,295 [INFO] Skipped 417: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:26,049 [INFO] Image compressed: 234KB -> 221KB
+2026-04-02 15:21:27,358 [INFO] Duplicate skipped: 408 matches existing b0d0bfeb-9020-4e54-8ede-6e6822ddf39b
+2026-04-02 15:21:27,621 [INFO] Skipped 430: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:27,720 [INFO] Skipped 428: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:27,823 [INFO] Skipped 412: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:35,206 [INFO] Skipped 423: not an opportunity (OCR)
+2026-04-02 15:21:35,301 [INFO] Skipped 420: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:35,411 [INFO] Skipped 414: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:39,366 [ERROR] Failed 425: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+Traceback (most recent call last):
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 537, in process_queue
+    ai_result = await asyncio.to_thread(call_gemini_vision, image_bytes)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\cleaner.py", line 289, in call_gemini_vision
+    response = gemini.models.generate_content(
+        model="gemini-2.5-flash-lite",
+    ...<9 lines>...
+        )
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\models.py", line 5709, in generate_content
+    response = self._generate_content(
+        model=model, contents=contents, config=parsed_config
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\models.py", line 4371, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1401, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1237, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\rasyy\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\_api_client.py", line 1214, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\errors.py", line 134, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\KIT - Software Engineering\Year 3\IC Internship\SOF\student-opportunity-finder\tools\scraper\venv\Lib\site-packages\google\genai\errors.py", line 161, in raise_error
+    raise ServerError(status_code, response_json, response)
+google.genai.errors.ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+2026-04-02 15:21:39,611 [INFO] Skipped 419: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:39,722 [INFO] Skipped 411: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:45,868 [INFO] Skipped 422: not an opportunity (OCR)
+2026-04-02 15:21:45,969 [INFO] Skipped 415: no actionable signal (no URL, phone, email, or handle)
+2026-04-02 15:21:50,311 [INFO] Image compressed: 95KB -> 94KB
+2026-04-02 15:21:51,301 [INFO] Duplicate skipped: 431 matches existing 3886f10f-cba9-4d28-9e8e-642a476442ec
+2026-04-02 15:21:51,483 [INFO] Skipped 450: too short
+2026-04-02 15:21:54,247 [INFO] Processed: 449 | image=no
+2026-04-02 15:21:54,364 [INFO] Skipped 448: too short
+2026-04-02 15:21:54,455 [INFO] Skipped 447: too short
+2026-04-02 15:21:54,566 [INFO] Skipped 446: too short
+2026-04-02 15:22:01,866 [INFO] Image kept original: 76KB (compression would increase size)
+2026-04-02 15:22:03,412 [INFO] Processed: 445 | image=yes
+2026-04-02 15:22:12,273 [WARNING] Gemini Vision RECITATION block — falling back to free-text OCR
+2026-04-02 15:22:13,882 [INFO] Fallback OCR extracted 334 chars, parsing as text...
+2026-04-02 15:22:16,606 [INFO] Skipped 444: not an opportunity (OCR)
+2026-04-02 15:22:16,717 [INFO] Skipped 443: too short
+2026-04-02 15:22:16,838 [INFO] Skipped 442: too short
