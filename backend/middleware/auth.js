@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken'
 import { supabase } from '../config/database.js'
 
 export const authenticate = async (req, res, next) => {
@@ -9,17 +8,31 @@ export const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: 'No token provided' })
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = decoded
-
     // Verify token with Supabase
-    const { data: user, error } = await supabase.auth.getUser(token)
+    const { data: { user }, error } = await supabase.auth.getUser(token)
 
     if (error || !user) {
       return res.status(401).json({ error: 'Invalid token' })
     }
 
-    req.supabaseUser = user.user
+    // Get user profile for roles
+    const { data: profile, error: profileError } = await supabase
+      .from('users')
+      .select('account_type')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError || !profile) {
+      return res.status(401).json({ error: 'User profile not found' })
+    }
+
+    req.user = {
+      id: user.id,
+      email: user.email,
+      role: profile.account_type,
+    }
+    
+    req.supabaseUser = user
     next()
   } catch (error) {
     res.status(401).json({ error: 'Authentication failed', details: error.message })

@@ -1,19 +1,24 @@
 import express from 'express'
 import { supabase, supabaseAdmin } from '../config/database.js'
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
+import { body, validationResult } from 'express-validator'
 
 const router = express.Router()
 
 // Register - Student or Organizer
-router.post('/register', async (req, res) => {
+router.post('/register', [
+  body('email').isEmail().withMessage('Enter a valid email address'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('accountType').isIn(['student', 'organizer']).withMessage('Invalid account type'),
+  body('firstName').notEmpty().trim().escape(),
+  body('lastName').notEmpty().trim().escape()
+], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
+
   try {
     const { email, password, accountType, firstName, lastName } = req.body
-
-    // Validate input
-    if (!email || !password || !accountType || !['student', 'organizer'].includes(accountType)) {
-      return res.status(400).json({ error: 'Invalid input' })
-    }
 
     // Create user in Supabase Auth
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -45,20 +50,8 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: profileError.message })
     }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      {
-        id: authUser.user.id,
-        email,
-        role: accountType,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    )
-
     res.status(201).json({
-      message: 'User registered successfully',
-      token,
+      message: 'User registered successfully. Please log in.',
       user: profile[0],
     })
   } catch (error) {
@@ -67,13 +60,17 @@ router.post('/register', async (req, res) => {
 })
 
 // Login
-router.post('/login', async (req, res) => {
+router.post('/login', [
+  body('email').isEmail().withMessage('Enter a valid email address'),
+  body('password').notEmpty().withMessage('Password is required')
+], async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() })
+  }
+
   try {
     const { email, password } = req.body
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' })
-    }
 
     // Sign in with Supabase
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -92,20 +89,9 @@ router.post('/login', async (req, res) => {
       .eq('id', data.user.id)
       .single()
 
-    // Generate JWT token
-    const token = jwt.sign(
-      {
-        id: data.user.id,
-        email: data.user.email,
-        role: profile.account_type,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    )
-
     res.json({
       message: 'Login successful',
-      token,
+      token: data.session.access_token,
       user: profile,
     })
   } catch (error) {

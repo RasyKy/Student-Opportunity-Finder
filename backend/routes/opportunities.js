@@ -98,7 +98,7 @@ router.post('/', authenticate, authorize(['organizer', 'admin']), async (req, re
 router.put('/:id', authenticate, async (req, res) => {
   try {
     // Check if user owns the opportunity or is admin
-    const { data: opportunity, error: fetchError } = await supabase
+    const { data: opportunity, error: fetchError } = await supabaseAdmin
       .from('opportunities')
       .select('created_by')
       .eq('id', req.params.id)
@@ -133,7 +133,7 @@ router.put('/:id', authenticate, async (req, res) => {
 // Delete opportunity (Creator or Admin only)
 router.delete('/:id', authenticate, async (req, res) => {
   try {
-    const { data: opportunity, error: fetchError } = await supabase
+    const { data: opportunity, error: fetchError } = await supabaseAdmin
       .from('opportunities')
       .select('created_by')
       .eq('id', req.params.id)
