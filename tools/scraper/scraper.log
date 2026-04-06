@@ -1,0 +1,442 @@
+2026-03-15 10:00:13,871 [INFO] Starting scrape run for 3 source(s).
+2026-03-15 10:00:14,285 [INFO] --- Processing: DataU Academy ---
+2026-03-15 10:00:14,340 [INFO]   Incremental scrape | limit=200 | min_id=655
+2026-03-15 10:00:16,162 [INFO]   Saved 1 messages. Checkpoint: 656
+2026-03-15 10:00:17,175 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-15 10:00:17,233 [INFO]   Incremental scrape | limit=200 | min_id=9843
+2026-03-15 10:00:18,265 [INFO]   Saved 6 messages. Checkpoint: 9849
+2026-03-15 10:00:19,267 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-15 10:00:19,323 [INFO]   Incremental scrape | limit=200 | min_id=1009
+2026-03-15 10:00:20,171 [INFO]   Saved 4 messages. Checkpoint: 1013
+2026-03-15 10:00:21,183 [INFO] Run complete | sources=3 | saved=11 | errors=0 | duration=10.6s
+2026-03-17 10:44:16,754 [INFO] Starting scrape run for 5 source(s).
+2026-03-17 10:44:17,174 [INFO] --- Processing: DataU Academy ---
+2026-03-17 10:44:17,225 [INFO]   Incremental scrape | limit=200 | min_id=656
+2026-03-17 10:44:18,100 [INFO]   Saved 1 messages. Checkpoint: 657
+2026-03-17 10:44:19,104 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-17 10:44:19,157 [INFO]   Incremental scrape | limit=200 | min_id=9849
+2026-03-17 10:44:19,834 [INFO]   Saved 3 messages. Checkpoint: 9855
+2026-03-17 10:44:20,836 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-17 10:44:20,936 [INFO]   Incremental scrape | limit=200 | min_id=1013
+2026-03-17 10:44:21,431 [INFO]   Saved 4 messages. Checkpoint: 1017
+2026-03-17 10:44:22,433 [INFO] --- Processing: DGY News ---
+2026-03-17 10:44:22,552 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-17 10:44:22,887 [INFO]   Saved 10 messages. Checkpoint: 3822
+2026-03-17 10:44:23,897 [INFO] --- Processing: small labs ---
+2026-03-17 10:44:23,951 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-17 10:44:24,238 [INFO]   Saved 10 messages. Checkpoint: 141
+2026-03-17 10:44:25,246 [INFO] Run complete | sources=5 | saved=28 | errors=0 | duration=10.1s
+2026-03-17 10:59:56,522 [INFO] Starting scrape run for 6 source(s).
+2026-03-17 10:59:56,964 [INFO] --- Processing: DataU Academy ---
+2026-03-17 10:59:57,015 [INFO]   Incremental scrape | limit=200 | min_id=657
+2026-03-17 10:59:57,303 [INFO]   No new messages for DataU Academy.
+2026-03-17 10:59:58,616 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-17 10:59:58,706 [INFO]   Incremental scrape | limit=200 | min_id=9855
+2026-03-17 10:59:59,037 [INFO]   No new messages for NICC - National Incubation Center of Cambodia.
+2026-03-17 11:00:00,411 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-17 11:00:00,472 [INFO]   Incremental scrape | limit=200 | min_id=1017
+2026-03-17 11:00:00,706 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-03-17 11:00:01,976 [INFO] --- Processing: DGY News ---
+2026-03-17 11:00:02,069 [INFO]   Incremental scrape | limit=200 | min_id=3822
+2026-03-17 11:00:02,317 [INFO]   No new messages for DGY News.
+2026-03-17 11:00:03,736 [INFO] --- Processing: small labs ---
+2026-03-17 11:00:03,792 [INFO]   Incremental scrape | limit=200 | min_id=141
+2026-03-17 11:00:04,018 [INFO]   No new messages for small labs.
+2026-03-17 11:00:05,189 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-03-17 11:00:05,312 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-17 11:00:05,957 [INFO]   Saved 10 messages. Checkpoint: 372
+2026-03-17 11:00:06,959 [INFO] Run complete | sources=6 | saved=10 | errors=0 | duration=11.6s
+2026-03-19 09:35:56,574 [INFO] Starting scrape run for 12 source(s).
+2026-03-19 09:35:56,995 [INFO] --- Processing: DataU Academy ---
+2026-03-19 09:35:57,050 [INFO]   Incremental scrape | limit=200 | min_id=657
+2026-03-19 09:35:57,661 [INFO]   Saved 4 messages. Checkpoint: 661
+2026-03-19 09:35:58,661 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-19 09:35:58,724 [INFO]   Incremental scrape | limit=200 | min_id=9855
+2026-03-19 09:35:59,406 [INFO]   Saved 1 messages. Checkpoint: 9856
+2026-03-19 09:36:00,413 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-19 09:36:00,470 [INFO]   Incremental scrape | limit=200 | min_id=1017
+2026-03-19 09:36:00,874 [INFO]   Saved 16 messages. Checkpoint: 1033
+2026-03-19 09:36:01,884 [INFO] --- Processing: DGY News ---
+2026-03-19 09:36:01,936 [INFO]   Incremental scrape | limit=200 | min_id=3822
+2026-03-19 09:36:02,184 [INFO]   No new messages for DGY News.
+2026-03-19 09:36:03,288 [INFO] --- Processing: small labs ---
+2026-03-19 09:36:03,450 [INFO]   Incremental scrape | limit=200 | min_id=141
+2026-03-19 09:36:03,665 [INFO]   No new messages for small labs.
+2026-03-19 09:36:04,766 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-03-19 09:36:04,817 [INFO]   Incremental scrape | limit=200 | min_id=372
+2026-03-19 09:36:05,112 [INFO]   No new messages for Open Development Cambodia Organixation (ODC).
+2026-03-19 09:36:06,266 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-03-19 09:36:06,380 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-19 09:36:06,651 [INFO]   Saved 10 messages. Checkpoint: 124
+2026-03-19 09:36:07,665 [INFO] --- Processing: AmCam Exchange ---
+2026-03-19 09:36:07,769 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-19 09:36:08,075 [INFO]   Saved 10 messages. Checkpoint: 46
+2026-03-19 09:36:09,080 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-03-19 09:36:09,227 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-19 09:36:09,554 [INFO]   Saved 10 messages. Checkpoint: 2160
+2026-03-19 09:36:10,563 [INFO] --- Processing: Career Kickstart ---
+2026-03-19 09:36:10,615 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-19 09:36:10,918 [INFO]   Saved 10 messages. Checkpoint: 1226
+2026-03-19 09:36:11,927 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-03-19 09:36:12,057 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-19 09:36:12,383 [INFO]   Saved 10 messages. Checkpoint: 308
+2026-03-19 09:36:13,394 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-03-19 09:36:13,569 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-19 09:36:13,848 [INFO]   Saved 6 messages. Checkpoint: 16662
+2026-03-19 09:36:14,858 [INFO] Run complete | sources=12 | saved=77 | errors=0 | duration=20.2s
+2026-03-23 10:09:38,464 [INFO] Starting scrape run for 14 source(s).
+2026-03-23 10:10:40,634 [INFO] Starting scrape run for 14 source(s).
+2026-03-23 10:10:57,878 [INFO] --- Processing: DataU Academy ---
+2026-03-23 10:10:58,010 [INFO]   Incremental scrape | limit=200 | min_id=661
+2026-03-23 10:10:58,350 [INFO]   No new messages for DataU Academy.
+2026-03-23 10:10:59,772 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-23 10:10:59,873 [INFO]   Incremental scrape | limit=200 | min_id=9856
+2026-03-23 10:11:00,763 [INFO]   Saved 8 messages. Checkpoint: 9864
+2026-03-23 10:11:01,779 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-23 10:11:01,885 [INFO]   Incremental scrape | limit=200 | min_id=1033
+2026-03-23 10:11:02,131 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-03-23 10:11:03,307 [INFO] --- Processing: DGY News ---
+2026-03-23 10:11:03,407 [INFO]   Incremental scrape | limit=200 | min_id=3822
+2026-03-23 10:11:03,995 [INFO]   Saved 1 messages. Checkpoint: 3823
+2026-03-23 10:11:05,009 [INFO] --- Processing: small labs ---
+2026-03-23 10:11:05,063 [INFO]   Incremental scrape | limit=200 | min_id=141
+2026-03-23 10:11:05,246 [INFO]   No new messages for small labs.
+2026-03-23 10:11:06,462 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-03-23 10:11:06,569 [INFO]   Incremental scrape | limit=200 | min_id=372
+2026-03-23 10:11:07,474 [INFO]   Saved 1 messages. Checkpoint: 373
+2026-03-23 10:11:08,489 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-03-23 10:11:08,688 [INFO]   Incremental scrape | limit=200 | min_id=124
+2026-03-23 10:11:09,162 [INFO]   Saved 12 messages. Checkpoint: 136
+2026-03-23 10:11:10,172 [INFO] --- Processing: AmCam Exchange ---
+2026-03-23 10:11:10,276 [INFO]   Incremental scrape | limit=200 | min_id=46
+2026-03-23 10:11:10,666 [INFO]   Saved 1 messages. Checkpoint: 47
+2026-03-23 10:11:11,670 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-03-23 10:11:11,822 [INFO]   Incremental scrape | limit=200 | min_id=2160
+2026-03-23 10:11:12,294 [INFO]   Saved 7 messages. Checkpoint: 2168
+2026-03-23 10:11:13,306 [INFO] --- Processing: Career Kickstart ---
+2026-03-23 10:11:13,490 [INFO]   Incremental scrape | limit=200 | min_id=1226
+2026-03-23 10:11:13,756 [INFO]   No new messages for Career Kickstart.
+2026-03-23 10:11:14,962 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-03-23 10:11:15,180 [INFO]   Incremental scrape | limit=200 | min_id=308
+2026-03-23 10:11:15,909 [INFO]   Saved 1 messages. Checkpoint: 309
+2026-03-23 10:11:16,923 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-03-23 10:11:17,080 [INFO]   Incremental scrape | limit=200 | min_id=16662
+2026-03-23 10:11:18,256 [INFO]   Saved 173 messages. Checkpoint: 19631
+2026-03-23 10:11:19,263 [INFO] --- Processing: Techo Startup Center ---
+2026-03-23 10:11:19,336 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-23 10:11:19,658 [INFO]   Saved 10 messages. Checkpoint: 11056
+2026-03-23 10:11:20,669 [INFO] --- Processing: Entrepreneurship Network ---
+2026-03-23 10:11:20,952 [INFO]   New channel scrape | limit=10 | min_id=0
+2026-03-23 10:11:21,331 [INFO]   Saved 10 messages. Checkpoint: 1374
+2026-03-23 10:11:22,344 [INFO] Run complete | sources=14 | saved=224 | errors=0 | duration=42.6s
+2026-03-25 13:27:27,078 [INFO] Starting scrape run for 14 source(s).
+2026-03-25 13:27:27,771 [INFO] --- Processing: DataU Academy ---
+2026-03-25 13:27:27,839 [INFO]   Incremental scrape | limit=200 | min_id=661
+2026-03-25 13:27:28,239 [INFO]   No new messages for DataU Academy.
+2026-03-25 13:27:29,547 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-25 13:27:29,611 [INFO]   Incremental scrape | limit=200 | min_id=9864
+2026-03-25 13:27:30,573 [INFO]   Saved 2 messages. Checkpoint: 9873
+2026-03-25 13:27:31,581 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-25 13:27:31,661 [INFO]   Incremental scrape | limit=200 | min_id=1033
+2026-03-25 13:27:32,218 [INFO]   Saved 20 messages. Checkpoint: 1060
+2026-03-25 13:27:33,226 [INFO] --- Processing: DGY News ---
+2026-03-25 13:27:33,280 [INFO]   Incremental scrape | limit=200 | min_id=3823
+2026-03-25 13:27:33,535 [INFO]   No new messages for DGY News.
+2026-03-25 13:27:34,765 [INFO] --- Processing: small labs ---
+2026-03-25 13:27:34,820 [INFO]   Incremental scrape | limit=200 | min_id=141
+2026-03-25 13:27:35,293 [INFO]   Saved 1 messages. Checkpoint: 142
+2026-03-25 13:27:36,297 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-03-25 13:27:36,645 [INFO]   Incremental scrape | limit=200 | min_id=373
+2026-03-25 13:27:37,054 [INFO]   No new messages for Open Development Cambodia Organixation (ODC).
+2026-03-25 13:27:38,178 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-03-25 13:27:38,240 [INFO]   Incremental scrape | limit=200 | min_id=136
+2026-03-25 13:27:38,478 [INFO]   No new messages for AUPP Community for Southeast Asian Studies (CSEAS).
+2026-03-25 13:27:39,628 [INFO] --- Processing: AmCam Exchange ---
+2026-03-25 13:27:39,693 [INFO]   Incremental scrape | limit=200 | min_id=47
+2026-03-25 13:27:40,127 [INFO]   Saved 1 messages. Checkpoint: 48
+2026-03-25 13:27:41,143 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-03-25 13:27:41,213 [INFO]   Incremental scrape | limit=200 | min_id=2168
+2026-03-25 13:27:41,691 [INFO]   Saved 23 messages. Checkpoint: 2192
+2026-03-25 13:27:42,694 [INFO] --- Processing: Career Kickstart ---
+2026-03-25 13:27:42,748 [INFO]   Incremental scrape | limit=200 | min_id=1226
+2026-03-25 13:27:43,194 [INFO]   Saved 1 messages. Checkpoint: 1227
+2026-03-25 13:27:44,196 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-03-25 13:27:44,250 [INFO]   Incremental scrape | limit=200 | min_id=309
+2026-03-25 13:27:44,756 [INFO]   No new messages for Internship Hub (Cambodia).
+2026-03-25 13:27:45,874 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-03-25 13:27:45,932 [INFO]   Incremental scrape | limit=200 | min_id=19631
+2026-03-25 13:27:46,946 [INFO]   Saved 169 messages. Checkpoint: 20176
+2026-03-25 13:27:47,948 [INFO] --- Processing: Techo Startup Center ---
+2026-03-25 13:27:48,024 [INFO]   Incremental scrape | limit=200 | min_id=11056
+2026-03-25 13:27:48,502 [INFO]   Saved 9 messages. Checkpoint: 11065
+2026-03-25 13:27:49,503 [INFO] --- Processing: Entrepreneurship Network ---
+2026-03-25 13:27:49,563 [INFO]   Incremental scrape | limit=200 | min_id=1374
+2026-03-25 13:27:49,757 [INFO]   No new messages for Entrepreneurship Network.
+2026-03-25 13:27:50,878 [INFO] Run complete | sources=14 | saved=226 | errors=0 | duration=25.8s
+2026-03-26 14:34:35,981 [INFO] Starting scrape run for 14 source(s).
+2026-03-26 14:34:37,735 [INFO] --- Processing: DGY News ---
+2026-03-26 14:34:38,499 [INFO]   Incremental scrape | limit=200 | min_id=3823
+2026-03-26 14:34:40,313 [INFO]   No new messages for DGY News.
+2026-03-26 14:34:41,672 [INFO] --- Processing: small labs ---
+2026-03-26 14:34:41,992 [INFO]   Incremental scrape | limit=200 | min_id=142
+2026-03-26 14:34:42,968 [INFO]   No new messages for small labs.
+2026-03-26 14:34:44,282 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-03-26 14:34:44,616 [INFO]   Incremental scrape | limit=200 | min_id=373
+2026-03-26 14:34:49,197 [INFO]   Saved 1 messages. Checkpoint: 374
+2026-03-26 14:34:50,208 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-03-26 14:34:50,284 [INFO]   Incremental scrape | limit=200 | min_id=136
+2026-03-26 14:34:51,041 [INFO]   No new messages for AUPP Community for Southeast Asian Studies (CSEAS).
+2026-03-26 14:34:52,209 [INFO] --- Processing: AmCam Exchange ---
+2026-03-26 14:34:52,882 [INFO]   Incremental scrape | limit=200 | min_id=48
+2026-03-26 14:34:55,484 [INFO]   No new messages for AmCam Exchange.
+2026-03-26 14:34:57,037 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-03-26 14:34:57,385 [INFO]   Incremental scrape | limit=200 | min_id=2192
+2026-03-26 14:34:58,471 [INFO]   Saved 2 messages. Checkpoint: 2194
+2026-03-26 14:34:59,481 [INFO] --- Processing: Career Kickstart ---
+2026-03-26 14:34:59,811 [INFO]   Incremental scrape | limit=200 | min_id=1227
+2026-03-26 14:35:00,173 [INFO]   No new messages for Career Kickstart.
+2026-03-26 14:35:01,350 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-03-26 14:35:01,495 [INFO]   Incremental scrape | limit=200 | min_id=309
+2026-03-26 14:35:02,564 [INFO]   No new messages for Internship Hub (Cambodia).
+2026-03-26 14:35:03,718 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-03-26 14:35:03,827 [INFO]   Incremental scrape | limit=200 | min_id=20176
+2026-03-26 14:35:04,676 [INFO]   Saved 2 messages. Checkpoint: 20178
+2026-03-26 14:35:05,687 [INFO] --- Processing: Techo Startup Center ---
+2026-03-26 14:35:05,760 [INFO]   Incremental scrape | limit=200 | min_id=11065
+2026-03-26 14:35:06,220 [INFO]   No new messages for Techo Startup Center.
+2026-03-26 14:35:07,474 [INFO] --- Processing: Entrepreneurship Network ---
+2026-03-26 14:35:07,640 [INFO]   Incremental scrape | limit=200 | min_id=1374
+2026-03-26 14:35:08,392 [INFO]   No new messages for Entrepreneurship Network.
+2026-03-26 14:35:09,557 [INFO] --- Processing: DataU Academy ---
+2026-03-26 14:35:09,769 [INFO]   Incremental scrape | limit=200 | min_id=661
+2026-03-26 14:35:10,419 [INFO]   No new messages for DataU Academy.
+2026-03-26 14:35:11,653 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-03-26 14:35:11,791 [INFO]   Incremental scrape | limit=200 | min_id=9873
+2026-03-26 14:35:12,639 [INFO]   Saved 1 messages. Checkpoint: 9874
+2026-03-26 14:35:13,649 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-03-26 14:35:13,724 [INFO]   Incremental scrape | limit=200 | min_id=1060
+2026-03-26 14:35:14,079 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-03-26 14:35:15,213 [INFO] Run complete | sources=14 | saved=6 | errors=0 | duration=42.1s
+2026-04-01 09:40:08,107 [INFO] Starting scrape run for 14 source(s).
+2026-04-01 09:40:08,908 [INFO] --- Processing: DGY News ---
+2026-04-01 09:40:08,987 [INFO]   Incremental scrape | limit=200 | min_id=3823
+2026-04-01 09:40:09,734 [INFO]   Saved 1 messages. Checkpoint: 3824
+2026-04-01 09:40:10,738 [INFO] --- Processing: small labs ---
+2026-04-01 09:40:10,823 [INFO]   Incremental scrape | limit=200 | min_id=142
+2026-04-01 09:40:11,418 [INFO]   Saved 1 messages. Checkpoint: 143
+2026-04-01 09:40:12,433 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-04-01 09:40:12,486 [INFO]   Incremental scrape | limit=200 | min_id=374
+2026-04-01 09:40:13,241 [INFO]   Saved 6 messages. Checkpoint: 380
+2026-04-01 09:40:14,253 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-04-01 09:40:14,408 [INFO]   Incremental scrape | limit=200 | min_id=136
+2026-04-01 09:40:14,986 [INFO]   Saved 1 messages. Checkpoint: 138
+2026-04-01 09:40:16,003 [INFO] --- Processing: AmCam Exchange ---
+2026-04-01 09:40:16,060 [INFO]   Incremental scrape | limit=200 | min_id=48
+2026-04-01 09:40:16,289 [INFO]   No new messages for AmCam Exchange.
+2026-04-01 09:40:17,476 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-04-01 09:40:17,536 [INFO]   Incremental scrape | limit=200 | min_id=2194
+2026-04-01 09:40:18,087 [INFO]   Saved 14 messages. Checkpoint: 2208
+2026-04-01 09:40:19,089 [INFO] --- Processing: Career Kickstart ---
+2026-04-01 09:40:19,146 [INFO]   Incremental scrape | limit=200 | min_id=1227
+2026-04-01 09:40:19,428 [INFO]   No new messages for Career Kickstart.
+2026-04-01 09:40:20,544 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-04-01 09:40:20,613 [INFO]   Incremental scrape | limit=200 | min_id=309
+2026-04-01 09:40:20,992 [INFO]   No new messages for Internship Hub (Cambodia).
+2026-04-01 09:40:22,098 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-04-01 09:40:22,157 [INFO]   Incremental scrape | limit=200 | min_id=20178
+2026-04-01 09:40:23,237 [INFO]   Saved 187 messages. Checkpoint: 20634
+2026-04-01 09:40:24,248 [INFO] --- Processing: Techo Startup Center ---
+2026-04-01 09:40:24,315 [INFO]   Incremental scrape | limit=200 | min_id=11065
+2026-04-01 09:40:24,805 [INFO]   Saved 37 messages. Checkpoint: 11104
+2026-04-01 09:40:25,807 [INFO] --- Processing: Entrepreneurship Network ---
+2026-04-01 09:40:25,894 [INFO]   Incremental scrape | limit=200 | min_id=1374
+2026-04-01 09:40:26,090 [INFO]   No new messages for Entrepreneurship Network.
+2026-04-01 09:40:27,219 [INFO] --- Processing: DataU Academy ---
+2026-04-01 09:40:27,308 [INFO]   Incremental scrape | limit=200 | min_id=661
+2026-04-01 09:40:27,866 [INFO]   Saved 1 messages. Checkpoint: 662
+2026-04-01 09:40:28,875 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-04-01 09:40:28,925 [INFO]   Incremental scrape | limit=200 | min_id=9874
+2026-04-01 09:40:29,527 [INFO]   Saved 21 messages. Checkpoint: 9901
+2026-04-01 09:40:30,537 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-04-01 09:40:30,595 [INFO]   Incremental scrape | limit=200 | min_id=1060
+2026-04-01 09:40:30,821 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-04-01 09:40:31,913 [INFO] Run complete | sources=14 | saved=269 | errors=0 | duration=26.1s
+2026-04-01 10:07:14,062 [INFO] Starting scrape run for 14 source(s).
+2026-04-01 10:07:14,434 [INFO] --- Processing: DGY News ---
+2026-04-01 10:07:14,492 [INFO]   Incremental scrape | limit=200 | min_id=3824
+2026-04-01 10:07:14,810 [INFO]   No new messages for DGY News.
+2026-04-01 10:07:16,035 [INFO] --- Processing: small labs ---
+2026-04-01 10:07:16,086 [INFO]   Incremental scrape | limit=200 | min_id=143
+2026-04-01 10:07:16,303 [INFO]   No new messages for small labs.
+2026-04-01 10:07:17,508 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-04-01 10:07:17,601 [INFO]   Incremental scrape | limit=200 | min_id=380
+2026-04-01 10:07:17,940 [INFO]   No new messages for Open Development Cambodia Organixation (ODC).
+2026-04-01 10:07:19,127 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-04-01 10:07:19,204 [INFO]   Incremental scrape | limit=200 | min_id=138
+2026-04-01 10:07:19,902 [INFO]   Saved 1 messages. Checkpoint: 139
+2026-04-01 10:07:20,910 [INFO] --- Processing: AmCam Exchange ---
+2026-04-01 10:07:20,954 [INFO]   Incremental scrape | limit=200 | min_id=48
+2026-04-01 10:07:21,108 [INFO]   No new messages for AmCam Exchange.
+2026-04-01 10:07:22,214 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-04-01 10:07:22,265 [INFO]   Incremental scrape | limit=200 | min_id=2208
+2026-04-01 10:07:22,472 [INFO]   No new messages for Expert Education & Visa Services Cambodia.
+2026-04-01 10:07:23,700 [INFO] --- Processing: Career Kickstart ---
+2026-04-01 10:07:23,746 [INFO]   Incremental scrape | limit=200 | min_id=1227
+2026-04-01 10:07:23,990 [INFO]   No new messages for Career Kickstart.
+2026-04-01 10:07:25,098 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-04-01 10:07:25,165 [INFO]   Incremental scrape | limit=200 | min_id=309
+2026-04-01 10:07:25,565 [INFO]   No new messages for Internship Hub (Cambodia).
+2026-04-01 10:07:26,643 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-04-01 10:07:26,694 [INFO]   Incremental scrape | limit=200 | min_id=20634
+2026-04-01 10:07:26,895 [INFO]   No new messages for Romduol Scholars Challenge.
+2026-04-01 10:07:28,006 [INFO] --- Processing: Techo Startup Center ---
+2026-04-01 10:07:28,052 [INFO]   Incremental scrape | limit=200 | min_id=11104
+2026-04-01 10:07:28,206 [INFO]   No new messages for Techo Startup Center.
+2026-04-01 10:07:29,336 [INFO] --- Processing: Entrepreneurship Network ---
+2026-04-01 10:07:29,402 [INFO]   Incremental scrape | limit=200 | min_id=1374
+2026-04-01 10:07:29,589 [INFO]   No new messages for Entrepreneurship Network.
+2026-04-01 10:07:30,702 [INFO] --- Processing: DataU Academy ---
+2026-04-01 10:07:30,755 [INFO]   Incremental scrape | limit=200 | min_id=662
+2026-04-01 10:07:31,183 [INFO]   No new messages for DataU Academy.
+2026-04-01 10:07:32,328 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-04-01 10:07:32,393 [INFO]   Incremental scrape | limit=200 | min_id=9901
+2026-04-01 10:07:32,702 [INFO]   No new messages for NICC - National Incubation Center of Cambodia.
+2026-04-01 10:07:33,857 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-04-01 10:07:33,900 [INFO]   Incremental scrape | limit=200 | min_id=1060
+2026-04-01 10:07:34,091 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-04-01 10:07:35,190 [INFO] Run complete | sources=14 | saved=1 | errors=0 | duration=23.1s
+2026-04-02 07:58:59,336 [INFO] Starting scrape run for 14 source(s).
+2026-04-02 07:58:59,769 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-04-02 07:58:59,816 [INFO]   Incremental scrape | limit=200 | min_id=20634
+2026-04-02 07:59:00,628 [INFO]   Saved 12 messages. Checkpoint: 20665
+2026-04-02 07:59:01,638 [INFO] --- Processing: Techo Startup Center ---
+2026-04-02 07:59:01,700 [INFO]   Incremental scrape | limit=200 | min_id=11104
+2026-04-02 07:59:02,153 [INFO]   Saved 19 messages. Checkpoint: 11123
+2026-04-02 07:59:03,157 [INFO] --- Processing: Entrepreneurship Network ---
+2026-04-02 07:59:03,202 [INFO]   Incremental scrape | limit=200 | min_id=1374
+2026-04-02 07:59:03,346 [INFO]   No new messages for Entrepreneurship Network.
+2026-04-02 07:59:04,449 [INFO] --- Processing: DataU Academy ---
+2026-04-02 07:59:04,494 [INFO]   Incremental scrape | limit=200 | min_id=662
+2026-04-02 07:59:04,813 [INFO]   No new messages for DataU Academy.
+2026-04-02 07:59:05,917 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-04-02 07:59:05,963 [INFO]   Incremental scrape | limit=200 | min_id=9901
+2026-04-02 07:59:06,422 [INFO]   Saved 19 messages. Checkpoint: 9920
+2026-04-02 07:59:07,426 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-04-02 07:59:07,470 [INFO]   Incremental scrape | limit=200 | min_id=1060
+2026-04-02 07:59:07,618 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-04-02 07:59:08,716 [INFO] --- Processing: DGY News ---
+2026-04-02 07:59:08,760 [INFO]   Incremental scrape | limit=200 | min_id=3824
+2026-04-02 07:59:08,972 [INFO]   No new messages for DGY News.
+2026-04-02 07:59:10,097 [INFO] --- Processing: small labs ---
+2026-04-02 07:59:10,141 [INFO]   Incremental scrape | limit=200 | min_id=143
+2026-04-02 07:59:10,315 [INFO]   No new messages for small labs.
+2026-04-02 07:59:11,417 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-04-02 07:59:11,466 [INFO]   Incremental scrape | limit=200 | min_id=380
+2026-04-02 07:59:11,819 [INFO]   No new messages for Open Development Cambodia Organixation (ODC).
+2026-04-02 07:59:12,914 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-04-02 07:59:12,978 [INFO]   Incremental scrape | limit=200 | min_id=139
+2026-04-02 07:59:13,171 [INFO]   No new messages for AUPP Community for Southeast Asian Studies (CSEAS).
+2026-04-02 07:59:14,262 [INFO] --- Processing: AmCam Exchange ---
+2026-04-02 07:59:14,407 [INFO]   Incremental scrape | limit=200 | min_id=48
+2026-04-02 07:59:14,550 [INFO]   No new messages for AmCam Exchange.
+2026-04-02 07:59:15,725 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-04-02 07:59:15,792 [INFO]   Incremental scrape | limit=200 | min_id=2208
+2026-04-02 07:59:16,319 [INFO]   Saved 1 messages. Checkpoint: 2209
+2026-04-02 07:59:17,338 [INFO] --- Processing: Career Kickstart ---
+2026-04-02 07:59:17,386 [INFO]   Incremental scrape | limit=200 | min_id=1227
+2026-04-02 07:59:17,678 [INFO]   Saved 1 messages. Checkpoint: 1228
+2026-04-02 07:59:18,683 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-04-02 07:59:18,730 [INFO]   Incremental scrape | limit=200 | min_id=309
+2026-04-02 07:59:19,104 [INFO]   No new messages for Internship Hub (Cambodia).
+2026-04-02 07:59:20,213 [INFO] Run complete | sources=14 | saved=52 | errors=0 | duration=22.9s
+2026-04-02 09:31:10,703 [INFO] Already ran today, exiting.
+2026-04-02 13:13:40,240 [INFO] Already ran today, exiting.
+2026-04-02 18:23:46,003 [INFO] Already ran today, exiting.
+2026-04-04 13:03:43,091 [INFO] Starting scrape run for 14 source(s).
+2026-04-04 13:03:43,807 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-04-04 13:03:43,888 [INFO]   Incremental scrape | limit=200 | min_id=20665
+2026-04-04 13:03:44,731 [INFO]   Saved 8 messages. Checkpoint: 20678
+2026-04-04 13:03:45,738 [INFO] --- Processing: Techo Startup Center ---
+2026-04-04 13:03:45,814 [INFO]   Incremental scrape | limit=200 | min_id=11123
+2026-04-04 13:03:46,432 [INFO]   Saved 20 messages. Checkpoint: 11143
+2026-04-04 13:03:47,442 [INFO] --- Processing: Entrepreneurship Network ---
+2026-04-04 13:03:47,542 [INFO]   Incremental scrape | limit=200 | min_id=1374
+2026-04-04 13:03:48,070 [INFO]   Saved 8 messages. Checkpoint: 1382
+2026-04-04 13:03:49,075 [INFO] --- Processing: DataU Academy ---
+2026-04-04 13:03:49,119 [INFO]   Incremental scrape | limit=200 | min_id=662
+2026-04-04 13:03:49,441 [INFO]   No new messages for DataU Academy.
+2026-04-04 13:03:50,591 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-04-04 13:03:50,636 [INFO]   Incremental scrape | limit=200 | min_id=9920
+2026-04-04 13:03:51,088 [INFO]   Saved 9 messages. Checkpoint: 9929
+2026-04-04 13:03:52,093 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-04-04 13:03:52,154 [INFO]   Incremental scrape | limit=200 | min_id=1060
+2026-04-04 13:03:52,360 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-04-04 13:03:53,551 [INFO] --- Processing: DGY News ---
+2026-04-04 13:03:53,653 [INFO]   Incremental scrape | limit=200 | min_id=3824
+2026-04-04 13:03:53,977 [INFO]   No new messages for DGY News.
+2026-04-04 13:03:55,115 [INFO] --- Processing: small labs ---
+2026-04-04 13:03:55,198 [INFO]   Incremental scrape | limit=200 | min_id=143
+2026-04-04 13:03:55,414 [INFO]   No new messages for small labs.
+2026-04-04 13:03:56,516 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-04-04 13:03:56,595 [INFO]   Incremental scrape | limit=200 | min_id=380
+2026-04-04 13:03:56,947 [INFO]   No new messages for Open Development Cambodia Organixation (ODC).
+2026-04-04 13:03:58,160 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-04-04 13:03:58,240 [INFO]   Incremental scrape | limit=200 | min_id=139
+2026-04-04 13:03:58,755 [INFO]   Saved 1 messages. Checkpoint: 140
+2026-04-04 13:03:59,761 [INFO] --- Processing: AmCam Exchange ---
+2026-04-04 13:03:59,849 [INFO]   Incremental scrape | limit=200 | min_id=48
+2026-04-04 13:04:00,148 [INFO]   No new messages for AmCam Exchange.
+2026-04-04 13:04:01,294 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-04-04 13:04:01,338 [INFO]   Incremental scrape | limit=200 | min_id=2209
+2026-04-04 13:04:01,770 [INFO]   Saved 2 messages. Checkpoint: 2211
+2026-04-04 13:04:03,134 [INFO] --- Processing: Career Kickstart ---
+2026-04-04 13:04:03,228 [INFO]   Incremental scrape | limit=200 | min_id=1228
+2026-04-04 13:04:03,774 [INFO]   Saved 1 messages. Checkpoint: 1229
+2026-04-04 13:04:04,790 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-04-04 13:04:04,833 [INFO]   Incremental scrape | limit=200 | min_id=309
+2026-04-04 13:04:05,357 [INFO]   Saved 1 messages. Checkpoint: 310
+2026-04-04 13:04:06,359 [INFO] Run complete | sources=14 | saved=50 | errors=0 | duration=25.5s
+2026-04-05 08:36:35,971 [INFO] Starting scrape run for 14 source(s).
+2026-04-05 08:36:36,324 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-04-05 08:36:36,373 [INFO]   Incremental scrape | limit=200 | min_id=20678
+2026-04-05 08:36:36,815 [INFO]   No new messages for Romduol Scholars Challenge.
+2026-04-05 08:36:38,028 [INFO] --- Processing: Techo Startup Center ---
+2026-04-05 08:36:38,074 [INFO]   Incremental scrape | limit=200 | min_id=11143
+2026-04-05 08:36:38,249 [INFO]   No new messages for Techo Startup Center.
+2026-04-05 08:36:39,473 [INFO] --- Processing: Entrepreneurship Network ---
+2026-04-05 08:36:39,627 [INFO]   Incremental scrape | limit=200 | min_id=1382
+2026-04-05 08:36:39,792 [INFO]   No new messages for Entrepreneurship Network.
+2026-04-05 08:36:41,095 [INFO] --- Processing: DataU Academy ---
+2026-04-05 08:36:41,159 [INFO]   Incremental scrape | limit=200 | min_id=662
+2026-04-05 08:36:41,477 [INFO]   No new messages for DataU Academy.
+2026-04-05 08:36:42,687 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-04-05 08:36:42,734 [INFO]   Incremental scrape | limit=200 | min_id=9929
+2026-04-05 08:36:42,947 [INFO]   No new messages for NICC - National Incubation Center of Cambodia.
+2026-04-05 08:36:44,077 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-04-05 08:36:44,124 [INFO]   Incremental scrape | limit=200 | min_id=1060
+2026-04-05 08:36:44,278 [INFO]   No new messages for STEM Education Organization for Cambodia (STEMEOC).
+2026-04-05 08:36:45,385 [INFO] --- Processing: DGY News ---
+2026-04-05 08:36:45,464 [INFO]   Incremental scrape | limit=200 | min_id=3824
+2026-04-05 08:36:45,833 [INFO]   No new messages for DGY News.
+2026-04-05 08:36:46,937 [INFO] --- Processing: small labs ---
+2026-04-05 08:36:46,983 [INFO]   Incremental scrape | limit=200 | min_id=143
+2026-04-05 08:36:47,165 [INFO]   No new messages for small labs.
+2026-04-05 08:36:48,269 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-04-05 08:36:48,314 [INFO]   Incremental scrape | limit=200 | min_id=380
+2026-04-05 08:36:48,616 [INFO]   No new messages for Open Development Cambodia Organixation (ODC).
+2026-04-05 08:36:49,707 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-04-05 08:36:49,753 [INFO]   Incremental scrape | limit=200 | min_id=140
+2026-04-05 08:36:50,223 [INFO]   Saved 1 messages. Checkpoint: 141
+2026-04-05 08:36:51,227 [INFO] --- Processing: AmCam Exchange ---
+2026-04-05 08:36:51,275 [INFO]   Incremental scrape | limit=200 | min_id=48
+2026-04-05 08:36:51,657 [INFO]   No new messages for AmCam Exchange.
+2026-04-05 08:36:52,755 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-04-05 08:36:52,816 [INFO]   Incremental scrape | limit=200 | min_id=2211
+2026-04-05 08:36:53,175 [INFO]   Saved 4 messages. Checkpoint: 2215
+2026-04-05 08:36:54,182 [INFO] --- Processing: Career Kickstart ---
+2026-04-05 08:36:54,246 [INFO]   Incremental scrape | limit=200 | min_id=1229
+2026-04-05 08:36:54,446 [INFO]   No new messages for Career Kickstart.
+2026-04-05 08:36:55,541 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-04-05 08:36:55,624 [INFO]   Incremental scrape | limit=200 | min_id=310
+2026-04-05 08:36:55,838 [INFO]   No new messages for Internship Hub (Cambodia).
+2026-04-05 08:36:56,930 [INFO] Run complete | sources=14 | saved=5 | errors=0 | duration=23.8s
