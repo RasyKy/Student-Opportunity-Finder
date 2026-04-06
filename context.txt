@@ -1,0 +1,268 @@
+Student Opportunity Finder - Context Map
+Generated: 2026-04-06
+Scope: /backend and /apps/admin-portal
+
+============================================================
+1) BACKEND MAP
+============================================================
+
+1.1 Purpose
+- Node.js + Express API backed by Supabase.
+- Handles auth, opportunity CRUD, profile/bookmark operations.
+- Uses role-based checks (student, organizer, admin) at API and DB (RLS) levels.
+
+1.2 Runtime Flow
+- Entry point: backend/server.js
+  - Loads env via dotenv.
+  - Applies CORS, JSON body parser, and global API rate limiter.
+  - Mounts route groups:
+    - /api/auth
+    - /api/opportunities
+    - /api/users
+  - Exposes GET /health.
+
+- Data access: backend/config/database.js
+  - supabaseAdmin: service-role client (full privileges, server-only operations).
+  - supabase: anon client (respects RLS for user-scoped operations).
+
+- Auth middleware: backend/middleware/auth.js
+  - authenticate:
+    - Reads Bearer token from Authorization header.
+    - Validates token with Supabase auth.getUser(token).
+    - Fetches account_type from users table.
+    - Attaches req.user = { id, email, role }.
+  - authorize(roles): blocks requests if req.user.role not in allowed roles.
+
+1.3 Route Logic
+- backend/routes/auth.js
+  - POST /register
+    - Validates email/password/accountType/firstName/lastName.
+    - Creates auth user with supabaseAdmin.auth.admin.createUser.
+    - Inserts matching profile row into users table.
+    - Returns created profile (no direct session token issued here).
+  - POST /login
+    - Validates email/password.
+    - Signs in using supabase.auth.signInWithPassword.
+    - Fetches user profile from users table.
+    - Returns access token + profile.
+  - POST /logout
+    - Calls supabase.auth.signOut.
+
+- backend/routes/opportunities.js
+  - GET /
+    - Supports search + category + pagination query params.
+    - Forces status=active visibility.
+    - Returns paginated opportunities.
+  - GET /:id
+    - Fetches one opportunity.
+  - POST /
+    - Requires authenticate + authorize(['organizer','admin']).
+    - Creates opportunity with created_by=req.user.id.
+  - PUT /:id
+    - Requires authenticate.
+    - Allows only creator or admin to update.
+  - DELETE /:id
+    - Requires authenticate.
+    - Allows only creator or admin to delete.
+
+- backend/routes/users.js
+  - GET /profile/:id
+    - Requires authenticate.
+    - Returns profile by id.
+  - PUT /profile/:id
+    - Requires authenticate.
+    - Only same user can update own profile.
+  - GET /:id/bookmarks
+    - Requires authenticate.
+    - Same user or admin can read bookmarks.
+  - POST /:id/bookmarks
+    - Requires authenticate.
+    - Same user can add bookmark.
+  - DELETE /:id/bookmarks/:opportunityId
+    - Requires authenticate.
+    - Same user can remove bookmark.
+
+1.4 Database and Security
+- backend/migrations/001_init_schema.sql
+  - Creates core tables: users, opportunities, bookmarks, applications, notifications.
+  - Adds indexes for query performance.
+  - Enables RLS on all key tables.
+
+- backend/migrations/002_rls_policies.sql
+  - Defines row-level access policies for each table.
+  - Examples:
+    - users: self-read/self-update (admin override for read).
+    - opportunities: public read for active, restricted create/update/delete by role/ownership.
+    - bookmarks/applications/notifications: user-scoped access.
+
+- backend/scripts/migrate.js
+  - Alternative migration script using RPC run_sql (requires admin capability configured in Supabase).
+  - Creates the same key tables programmatically.
+
+1.5 Utility and Config Files
+- backend/supabaseClient.js
+  - Simple Supabase client (URL + anon key) used by testConnection script.
+- backend/testConnection.js
+  - Quick connectivity check by selecting one row from users table.
+- backend/package.json
+  - Scripts: dev/start/migrate.
+  - Core deps: express, dotenv, cors, rate-limit, express-validator, supabase-js.
+- backend/.env.example
+  - Environment template for SUPABASE_URL/keys/JWT secret.
+- backend/README.md
+  - Setup and API usage guide.
+- backend/.gitignore
+  - Backend-specific git ignore rules.
+- backend/package-lock.json
+  - npm lockfile.
+
+
+============================================================
+2) APPS/ADMIN-PORTAL MAP
+============================================================
+
+2.1 Purpose
+- Next.js App Router admin UI for platform operations.
+- Provides:
+  - Login gate
+  - Dashboard metrics + chart
+  - Content management UI (list/edit/create/delete/status)
+  - Organizer account management UI
+- Currently hybrid data model:
+  - Auth and some dashboard/account data are mocked.
+  - Content management reads/writes Supabase directly via client SDK.
+
+2.2 App Shell and Navigation
+- apps/admin-portal/src/app/layout.tsx
+  - Global root layout.
+  - Loads Geist fonts, global CSS, wraps app in AuthProvider.
+
+- apps/admin-portal/src/app/page.tsx
+  - Redirects root route to /login.
+
+- apps/admin-portal/src/app/login/page.tsx
+  - Client-side login form.
+  - Calls useAuth().login(email,password).
+  - Displays loading + error state.
+
+- apps/admin-portal/src/app/signup/page.tsx
+  - Redirect-only page to /login (signup disabled in UI).
+
+- apps/admin-portal/src/app/dashboard/layout.tsx
+  - Protected layout for dashboard routes.
+  - Waits for auth context, validates local storage fallback, redirects to /login when not authenticated.
+  - Renders sidebar + main content area.
+
+- apps/admin-portal/src/components/sidebar.tsx
+  - Left nav for dashboard/content/account pages.
+  - Collapsible UI.
+  - Shows current user and logout action.
+
+2.3 Dashboard Logic
+- apps/admin-portal/src/app/dashboard/page.tsx
+  - Loads dashboard stats from fetchDashboardStats().
+  - Renders three stat cards and a bar chart.
+
+- apps/admin-portal/src/components/stat-card.tsx
+  - Presentation component for KPI cards with trend delta.
+
+- apps/admin-portal/src/components/bar-chart.tsx
+  - Custom SVG grouped bar chart.
+  - Period toggle (3 months / 30 days / 7 days) updates data source.
+
+2.4 Content Management Logic
+- apps/admin-portal/src/app/dashboard/content-management/page.tsx
+  - Fetches opportunities list through fetchContentItems().
+  - Supports:
+    - search/filter/pagination
+    - summary counts by status and flags
+    - row selection -> edit panel
+    - new post flow (fullscreen panel)
+    - duplicate detection heuristic (title+organization+type)
+    - toast notifications for duplicate warning
+  - Integrates EditPostPanel for create/edit actions.
+
+- apps/admin-portal/src/components/edit-post-panel.tsx
+  - Full form editor for one content item.
+  - Handles many fields (titles, dates, type, location, links, eligibility, tags, target group, etc.).
+  - Converts date formats between UI (DD/MM/YYYY) and API payload expectations.
+  - Save -> onSave callback.
+  - Status toggle -> onToggleStatus callback.
+  - Delete with confirmation modal -> onDelete callback.
+
+2.5 Account Management Logic
+- apps/admin-portal/src/app/dashboard/account-management/page.tsx
+  - Fetches user accounts from fetchUserAccounts().
+  - Supports:
+    - search + status filter
+    - pagination
+    - pending/flagged summary chips
+    - organizer detail modal with proof-of-association placeholder
+    - approve/reject status updates in local state
+  - Uses in-file mock metadata map (website/contact/document) for modal detail.
+
+2.6 Auth and Data Layer
+- apps/admin-portal/src/context/auth-context.tsx
+  - Stores user session in localStorage key: sof-admin-user.
+  - login(): calls loginUser(..., 'admin'), stores user, navigates to /dashboard.
+  - logout(): clears session and navigates to /login.
+
+- apps/admin-portal/src/lib/api.ts
+  - API abstraction layer with TODO markers for backend integration.
+  - Auth functions currently mocked with delay.
+  - Dashboard/chart/account management mostly return mock data.
+  - Content management uses Supabase directly:
+    - fetchContentItems: select from opportunities where status != deleted
+    - createContent: insert with status pending_review
+    - updateContent: update row by id
+    - updateContentStatus: maps pending <-> pending_review
+    - deleteContent: soft-delete by status=deleted
+
+- apps/admin-portal/src/lib/supabase.ts
+  - Creates browser Supabase client from NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.
+
+- apps/admin-portal/src/lib/mock-data.ts
+  - Type definitions and mock datasets for stats/chart/accounts/auth.
+  - contentItems mock array currently empty; primary content comes from Supabase query in api.ts.
+
+2.7 Styling and Config
+- apps/admin-portal/src/app/globals.css
+  - Tailwind import + base theme variables + slideUp animation.
+- apps/admin-portal/next.config.ts
+  - Default Next config placeholder.
+- apps/admin-portal/eslint.config.mjs
+  - Next core-web-vitals + TypeScript lint config.
+- apps/admin-portal/postcss.config.mjs
+  - PostCSS/Tailwind pipeline config.
+- apps/admin-portal/tsconfig.json
+  - TypeScript config for Next app.
+- apps/admin-portal/next-env.d.ts
+  - Next TypeScript environment declarations.
+- apps/admin-portal/package.json
+  - App scripts/dependencies.
+- apps/admin-portal/README.md
+  - Default Next scaffold docs.
+- apps/admin-portal/.env.local
+  - Local env variables for client app (includes Supabase public config).
+- apps/admin-portal/.gitignore
+  - App-specific ignore rules.
+
+2.8 Public Assets
+- apps/admin-portal/public/logo.svg, next.svg, vercel.svg, globe.svg, file.svg, window.svg
+  - Static assets/icons used in UI.
+- apps/admin-portal/src/app/favicon.ico
+  - Browser tab icon.
+
+
+============================================================
+3) INTEGRATION NOTES (Current State)
+============================================================
+
+- Backend exposes opportunity/user/auth APIs via Express routes.
+- Admin portal is not fully wired to those backend routes yet.
+- Current split:
+  - Auth in admin portal is mocked in api.ts (not using backend /api/auth/login yet).
+  - Content management directly hits Supabase from frontend (bypassing backend API).
+  - Dashboard and account management primarily use mock datasets.
+
+This file is intended as a quick architecture and logic map for onboarding and integration work.

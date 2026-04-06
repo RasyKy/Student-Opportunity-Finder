@@ -1,112 +1,183 @@
-import express from 'express'
-import { supabase, supabaseAdmin } from '../config/database.js'
-import { body, validationResult } from 'express-validator'
+import express from "express";
+import { supabase, supabaseAdmin } from "../config/database.js";
+import { body, validationResult } from "express-validator";
 
-const router = express.Router()
+const router = express.Router();
 
-// Register - Student or Organizer
-router.post('/register', [
-  body('email').isEmail().withMessage('Enter a valid email address'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('accountType').isIn(['student', 'organizer']).withMessage('Invalid account type'),
-  body('firstName').notEmpty().trim().escape(),
-  body('lastName').notEmpty().trim().escape()
-], async (req, res) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
+const COOKIE_NAME = "sof_admin_token";
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  maxAge: 60 * 60 * 1000, // 1 hour
+  path: "/",
+};
 
-  try {
-    const { email, password, accountType, firstName, lastName } = req.body
-
-    // Create user in Supabase Auth
-    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: false,
-    })
-
-    if (authError) {
-      return res.status(400).json({ error: authError.message })
+// Register - Student or Organizer only
+router.post(
+  "/register",
+  [
+    body("email").isEmail().withMessage("Enter a valid email address"),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters"),
+    body("accountType")
+      .isIn(["student", "organizer"])
+      .withMessage("Invalid account type"),
+    body("firstName").notEmpty().trim().escape(),
+    body("lastName").notEmpty().trim().escape(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    // Create user profile in database
-    const { data: profile, error: profileError } = await supabaseAdmin
-      .from('users')
-      .insert([
-        {
-          id: authUser.user.id,
+    try {
+      const { email, password, accountType, firstName, lastName } = req.body;
+
+      const { data: authUser, error: authError } =
+        await supabaseAdmin.auth.admin.createUser({
           email,
-          account_type: accountType,
-          first_name: firstName,
-          last_name: lastName,
-          created_at: new Date().toISOString(),
-        },
-      ])
-      .select()
+          password,
+          email_confirm: false,
+        });
 
-    if (profileError) {
-      return res.status(400).json({ error: profileError.message })
+      if (authError) {
+        return res.status(400).json({ error: authError.message });
+      }
+
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from("users")
+        .insert([
+          {
+            id: authUser.user.id,
+            email,
+            account_type: accountType,
+            first_name: firstName,
+            last_name: lastName,
+            created_at: new Date().toISOString(),
+          },
+        ])
+        .select();
+
+      if (profileError) {
+        return res.status(400).json({ error: profileError.message });
+      }
+
+      res.status(201).json({
+        message: "User registered successfully. Please log in.",
+        user: profile[0],
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+// Login - Admin only
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Enter a valid email address"),
+    body("password").notEmpty().withMessage("Password is required"),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    res.status(201).json({
-      message: 'User registered successfully. Please log in.',
-      user: profile[0],
-    })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
+    try {
+      const { email, password } = req.body;
 
-// Login
-router.post('/login', [
-  body('email').isEmail().withMessage('Enter a valid email address'),
-  body('password').notEmpty().withMessage('Password is required')
-], async (req, res) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
+      if (error) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from("users")
+        .select("id, email, name, role")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(401).json({ error: "User profile not found" });
+      }
+
+      if (profile.role !== "admin") {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      res.cookie(COOKIE_NAME, data.session.access_token, COOKIE_OPTIONS);
+
+      res.json({
+        message: "Login successful",
+        user: profile,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+// Me - validate session from cookie
+router.get("/me", async (req, res) => {
   try {
-    const { email, password } = req.body
+    const token = req.cookies?.[COOKIE_NAME];
 
-    // Sign in with Supabase
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (error) {
-      return res.status(401).json({ error: 'Invalid credentials' })
+    if (!token) {
+      return res.status(401).json({ error: "Not authenticated" });
     }
 
-    // Get user profile
-    const { data: profile } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', data.user.id)
-      .single()
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
 
-    res.json({
-      message: 'Login successful',
-      token: data.session.access_token,
-      user: profile,
-    })
+    if (error || !user) {
+      res.clearCookie(COOKIE_NAME, { path: "/" });
+      return res.status(401).json({ error: "Session expired" });
+    }
+
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from("users")
+      .select("id, email, first_name, last_name, role")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError || !profile || profile.role !== "admin") {
+      res.clearCookie(COOKIE_NAME, { path: "/" });
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    res.json({ user: profile });
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(500).json({ error: error.message });
   }
-})
+});
 
 // Logout
-router.post('/logout', async (req, res) => {
+router.post("/logout", async (req, res) => {
   try {
-    await supabase.auth.signOut()
-    res.json({ message: 'Logout successful' })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
+    const token = req.cookies?.[COOKIE_NAME];
 
-export default router
+    if (token) {
+      // Invalidate the session in Supabase using the token
+      await supabaseAdmin.auth.admin.signOut(token);
+    }
+
+    res.clearCookie(COOKIE_NAME, { path: "/" });
+    res.json({ message: "Logout successful" });
+  } catch (error) {
+    res.clearCookie(COOKIE_NAME, { path: "/" });
+    res.json({ message: "Logout successful" });
+  }
+});
+
+export default router;

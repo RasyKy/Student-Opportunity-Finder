@@ -62,13 +62,6 @@ export type UserAccount = {
   flagged: boolean;
 };
 
-export type AuthUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: "admin" | "organizer";
-};
-
 // ─── Mock Data ───────────────────────────────────────────────────────
 
 export const dashboardStats: DashboardStats = {

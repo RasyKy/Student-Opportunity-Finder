@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
+import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.js'
 import opportunityRoutes from './routes/opportunities.js'
 import userRoutes from './routes/users.js'
@@ -13,8 +14,8 @@ const PORT = process.env.PORT || 3001
 
 // Rate limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Too many requests from this IP, please try again later.'
 })
 
@@ -24,6 +25,7 @@ app.use(cors({
   credentials: true
 }))
 app.use(express.json())
+app.use(cookieParser())
 app.use('/api/', apiLimiter)
 
 // Routes
