@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser, signupUser } from "@/lib/api";
+import { loginUser } from "@/lib/api";
 import type { AuthUser } from "@/lib/mock-data";
 
 const STORAGE_KEY = "sof-admin-user";
@@ -17,8 +17,7 @@ const STORAGE_KEY = "sof-admin-user";
 type AuthContextType = {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (email: string, password: string, role: "admin" | "organizer") => Promise<void>;
-  signup: (name: string, email: string, password: string, role: "admin" | "organizer") => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 };
 
@@ -40,18 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(
-    async (email: string, password: string, role: "admin" | "organizer") => {
-      const u = await loginUser(email, password, role);
-      setUser(u);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
-      router.push("/dashboard");
-    },
-    [router]
-  );
-
-  const signup = useCallback(
-    async (name: string, email: string, password: string, role: "admin" | "organizer") => {
-      const u = await signupUser(name, email, password, role);
+    async (email: string, password: string) => {
+      const u = await loginUser(email, password, "admin");
       setUser(u);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
       router.push("/dashboard");
@@ -66,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
