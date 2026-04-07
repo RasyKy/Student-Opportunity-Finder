@@ -1,17 +1,12 @@
 // ─── API Layer ────────────────────────────────────────────────────────
-// Replace these functions with real fetch/axios calls when backend is ready.
-// Keep the function signatures and return types the same.
-
 import {
   dashboardStats,
   chartData,
-  contentItems,
   userAccounts,
   type DashboardStats,
   type ChartDataPoint,
   type ContentItem,
   type UserAccount,
-  type AuthUser,
 } from "./mock-data";
 import { supabase } from "./supabase";
 
@@ -19,39 +14,39 @@ const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // ─── Auth ────────────────────────────────────────────────────────────
 
-export async function loginUser(
-  email: string,
-  _password: string,
-  role: "admin" | "organizer",
-): Promise<AuthUser> {
-  await delay(400);
-  // TODO: Replace with POST /api/auth/login
-  if (!email || !_password) throw new Error("Email and password are required");
-  return {
-    id: "1",
-    name: role === "admin" ? "Admin User" : "Organizer User",
-    email,
-    role,
-  };
+export async function loginUser(email: string, password: string) {
+  const res = await fetch(`/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Login failed");
+  return data.user;
 }
 
-export async function signupUser(
-  name: string,
-  email: string,
-  _password: string,
-  role: "admin" | "organizer",
-): Promise<AuthUser> {
-  await delay(400);
-  // TODO: Replace with POST /api/auth/signup
-  if (!name || !email || !_password) throw new Error("All fields are required");
-  return { id: "2", name, email, role };
+export async function logoutUser() {
+  await fetch(`/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+}
+
+export async function getMe() {
+  const res = await fetch(`/api/auth/me`, {
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Not authenticated");
+  const data = await res.json();
+  return data.user;
 }
 
 // ─── Dashboard ───────────────────────────────────────────────────────
 
 export async function fetchDashboardStats(): Promise<DashboardStats> {
   await delay(200);
-  // TODO: Replace with GET /api/dashboard/stats
   return dashboardStats;
 }
 
@@ -59,7 +54,6 @@ export async function fetchChartData(
   _period: "3months" | "30days" | "7days" = "3months",
 ): Promise<ChartDataPoint[]> {
   await delay(200);
-  // TODO: Replace with GET /api/dashboard/chart?period=...
   if (_period === "7days") return chartData.slice(-2);
   if (_period === "30days") return chartData.slice(-4);
   return chartData;
@@ -119,28 +113,28 @@ export async function createContent(item: ContentItem): Promise<ContentItem> {
     .from("opportunities")
     .insert({
       title: item.title,
-      title_kh: item.title_kh,
-      organization: item.organization,
+      title_kh: item.title_kh || null,
+      organization: item.organization || null,
       type: item.type,
       status: "pending_review",
       subject_tags: item.subjectTags,
       start_date: parseDate(item.startDate),
       deadline: parseDate(item.deadline),
-      description: item.description,
-      description_kh: item.description_kh,
-      location: item.location,
-      application_link: item.application_link,
+      description: item.description || null,
+      description_kh: item.description_kh || null,
+      location: item.location || null,
+      application_link: item.application_link || null,
       is_free: item.is_free,
-      image_url: item.image_url,
-      language: item.language,
-      source_name: item.source_name,
-      source_platform: item.source_platform,
-      eligibility: item.eligibility,
+      image_url: item.image_url || null,
+      language: item.language || null,
+      source_name: item.source_name || null,
+      source_platform: item.source_platform || null,
+      eligibility: item.eligibility || null,
       target_group: item.target_group,
       format: ["online", "onsite", "hybrid", "unknown"].includes(item.format)
         ? item.format
         : "unknown",
-      contact_info: item.contact_info,
+      contact_info: item.contact_info || null,
     })
     .select()
     .single();
@@ -158,7 +152,7 @@ const parseDate = (dateStr: string) => {
 
 export async function updateContent(item: ContentItem): Promise<ContentItem> {
   const dbStatus = item.status === "pending" ? "pending_review" : item.status;
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("opportunities")
     .update({
       title: item.title,
@@ -244,18 +238,42 @@ export async function deleteContent(id: string): Promise<void> {
 // ─── Account Management ──────────────────────────────────────────────
 
 export async function fetchUserAccounts(): Promise<UserAccount[]> {
-  await delay(200);
-  // TODO: Replace with GET /api/users
-  return userAccounts;
+  const res = await fetch(`/api/organizers`, {
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch organizer accounts");
+  return res.json();
 }
 
 export async function updateUserStatus(
   id: string,
   status: UserAccount["status"],
-): Promise<UserAccount> {
-  await delay(300);
-  // TODO: Replace with PATCH /api/users/:id
-  const user = userAccounts.find((u) => u.id === id);
-  if (!user) throw new Error("User not found");
-  return { ...user, status };
+): Promise<void> {
+  const res = await fetch(`/api/organizers/${id}/status`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to update status");
+  }
+}
+
+export async function updateUserFlag(
+  id: string,
+  flagged: boolean,
+  flagged_reason?: string,
+): Promise<void> {
+  const res = await fetch(`/api/organizers/${id}/flag`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ flagged, flagged_reason }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to update flag");
+  }
 }

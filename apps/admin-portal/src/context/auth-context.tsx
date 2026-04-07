@@ -1,5 +1,4 @@
 "use client";
-
 import {
   createContext,
   useContext,
@@ -9,16 +8,20 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/lib/api";
-import type { AuthUser } from "@/lib/mock-data";
+import { loginUser, logoutUser, getMe } from "@/lib/api";
 
-const STORAGE_KEY = "sof-admin-user";
+export type AuthUser = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+};
 
 type AuthContextType = {
   user: AuthUser | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,28 +32,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setUser(JSON.parse(stored));
-    } catch {
-      // ignore
-    }
-    setIsLoading(false);
+    getMe()
+      .then((u) => setUser(u))
+      .catch(() => setUser(null))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const u = await loginUser(email, password, "admin");
+      const u = await loginUser(email, password);
       setUser(u);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
       router.push("/dashboard");
     },
-    [router]
+    [router],
   );
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await logoutUser();
     setUser(null);
-    localStorage.removeItem(STORAGE_KEY);
     router.push("/login");
   }, [router]);
 

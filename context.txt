@@ -1,0 +1,146 @@
+Student Opportunity Finder - Content Management Context
+Generated: 2026-04-07
+Focus: apps/admin-portal/src/app/dashboard/content-management/page.tsx
+
+============================================================
+EXECUTIVE SUMMARY
+============================================================
+
+The content-management page is wired to real Supabase data through apps/admin-portal/src/lib/api.ts.
+Edit Post actions are currently split between local UI state and persistence calls:
+  - Save: persists via updateContent() or createContent()
+  - Delete: persists via deleteContent() (soft delete by status="deleted")
+  - Status switch: currently local-only in page state and does NOT persist to DB yet
+
+Required behavior update:
+  1) Add double confirmation for Save Changes
+  2) Add double confirmation for status switch (pending/private/published)
+  3) Upgrade Delete to double confirmation
+
+
+============================================================
+1) FRONTEND MAPPING (CONTENT-MANAGEMENT)
+============================================================
+
+Primary files:
+  - apps/admin-portal/src/app/dashboard/content-management/page.tsx
+  - apps/admin-portal/src/components/edit-post-panel.tsx
+  - apps/admin-portal/src/lib/api.ts
+
+Current action paths:
+
+1.1 Save Changes button
+  Location:
+    - edit-post-panel.tsx footer button "Save Changes"
+  Flow:
+    - handleSave() in EditPostPanel builds updated ContentItem
+    - calls onSave(updated)
+    - page.tsx handleSave callback:
+      - if new item (no id): createContent(updated)
+      - else: updateContent(updated)
+      - updates local items[] state after success
+  Current confirmation:
+    - No confirmation modal before save
+
+1.2 Status switch button (Published/Pending/Private)
+  Location:
+    - edit-post-panel.tsx footer button (Eye/EyeOff + current status label)
+  Flow:
+    - onToggleStatus(item.id)
+    - page.tsx handleToggleStatus(id): cycles local status
+      published -> pending -> private -> published
+    - updates local items[] only
+  Current confirmation:
+    - No confirmation modal before status change
+  Persistence gap:
+    - updateContentStatus() is imported in page.tsx but not used
+    - status change is currently NOT persisted to Supabase
+
+1.3 Delete button
+  Location:
+    - edit-post-panel.tsx footer button "Delete"
+  Flow:
+    - click Delete -> sets confirmDelete=true
+    - shows modal "Delete Post?"
+    - confirm button calls onDelete(item.id)
+    - page.tsx handleDelete(id) -> deleteContent(id)
+    - deleteContent() performs soft delete in DB by updating status="deleted"
+  Current confirmation:
+    - Single confirmation modal exists
+
+
+============================================================
+2) BACKEND MAPPING (/backend)
+============================================================
+
+Relevant file:
+  - backend/routes/opportunities.js
+
+Available endpoints:
+  - GET /opportunities
+  - GET /opportunities/:id
+  - POST /opportunities (auth: organizer/admin)
+  - PUT /opportunities/:id (auth, owner/admin)
+  - DELETE /opportunities/:id (auth, owner/admin)
+
+Important integration note:
+  - admin-portal content-management currently uses Supabase directly via src/lib/api.ts
+  - it does NOT call backend/routes/opportunities.js endpoints right now
+
+Status vocabulary mismatch to watch:
+  - frontend admin content statuses: published, pending, private, deleted (soft delete)
+  - API translation in src/lib/api.ts maps pending <-> pending_review in DB
+  - backend route currently filters GET list with status='active'
+  - backend create route sets status='active'
+  - if content-management is moved to backend routes, status conventions must be unified first
+
+
+============================================================
+3) REQUIRED CHANGE SPEC (DOUBLE CONFIRMATION)
+============================================================
+
+3.1 Save Changes: add double confirmation
+  - Step 1: click "Save Changes" opens confirmation modal/dialog
+  - Step 2: explicit confirm action triggers onSave
+  - Recommended copy: "Are you sure you want to save these changes?"
+  - Optional: include changed-field summary in modal
+
+3.2 Status switch: add double confirmation with target state
+  - Step 1: click status button opens confirmation dialog showing:
+    - current status
+    - target status (next in cycle or user-selected)
+  - Step 2: explicit confirm action applies status change
+  - Ensure persistence by calling updateContentStatus(id, nextStatus)
+    before local state mutation (or optimistic update + rollback on error)
+
+3.3 Delete: upgrade from single to double confirmation
+  - Existing single modal is present; strengthen to double confirmation
+  - Suggested pattern:
+    - first modal confirmation
+    - second step requiring typed keyword (e.g. DELETE) or second confirm click
+  - only after second confirmation execute onDelete
+
+
+============================================================
+4) IMPLEMENTATION CHECKLIST (NEXT EDITS)
+============================================================
+
+Frontend:
+  - edit-post-panel.tsx
+    - add shared confirm dialog state for action type: save/status/delete
+    - add second-step confirmation state for delete
+    - wire button handlers to open confirmations, not execute immediately
+  - content-management/page.tsx
+    - update handleToggleStatus to call updateContentStatus(id, nextStatus)
+    - keep UI and server status synchronized; handle failure path
+
+Backend (if/when routing through /backend):
+  - backend/routes/opportunities.js
+    - align status model with admin portal statuses OR map consistently
+    - avoid hardcoded status='active' if admin needs pending/private/published visibility
+
+Testing points:
+  - Save: confirm required, cancel leaves data unchanged
+  - Status: confirm required, correct next status, persisted after refresh
+  - Delete: both confirmations required, removed/hidden after refresh
+  - Error handling: failed API update does not leave UI in inconsistent status
