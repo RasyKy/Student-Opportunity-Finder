@@ -240,16 +240,42 @@ export async function deleteContent(id: string): Promise<void> {
 // ─── Account Management ──────────────────────────────────────────────
 
 export async function fetchUserAccounts(): Promise<UserAccount[]> {
-  await delay(200);
-  return userAccounts;
+  const res = await fetch(`${API_URL}/api/organizers`, {
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch organizer accounts");
+  return res.json();
 }
 
 export async function updateUserStatus(
   id: string,
   status: UserAccount["status"],
-): Promise<UserAccount> {
-  await delay(300);
-  const user = userAccounts.find((u) => u.id === id);
-  if (!user) throw new Error("User not found");
-  return { ...user, status };
+): Promise<void> {
+  const res = await fetch(`${API_URL}/api/organizers/${id}/status`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ status }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to update status");
+  }
+}
+
+export async function updateUserFlag(
+  id: string,
+  flagged: boolean,
+  flagged_reason?: string,
+): Promise<void> {
+  const res = await fetch(`${API_URL}/api/organizers/${id}/flag`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ flagged, flagged_reason }),
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to update flag");
+  }
 }

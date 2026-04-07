@@ -52,14 +52,20 @@ export type ContentItem = {
 
 export type UserAccount = {
   id: string;
-  brandName: string;
-  contact: string;
-  postCount: number;
-  category: string;
-  documentStatus: "submitted" | "none";
-  submittedAt: string;
+  brand_name: string;
+  contact_email: string;
+  org_type: string;
+  website_url: string;
+  social_link: string | null;
+  post_count: number;
   status: "verified" | "pending" | "suspended";
   flagged: boolean;
+  flagged_reason: string | null;
+  created_at: string;
+  users: {
+    email: string;
+    name: string;
+  } | null;
 };
 
 // ─── Mock Data ───────────────────────────────────────────────────────
@@ -96,66 +102,9 @@ export const chartData: ChartDataPoint[] = [
   { month: "Aug", courses: 25, events: 14, scholarships: 11 },
 ];
 
-export const contentItems: ContentItem[] = [
-];
+export const contentItems: ContentItem[] = [];
 
-export const userAccounts: UserAccount[] = [
-  {
-    id: "1",
-    brandName: "Kirirom Institute of Technology",
-    contact: "kit@email.com",
-    postCount: 1,
-    category: "Technology",
-    documentStatus: "submitted",
-    submittedAt: "15 Jan 2026",
-    status: "verified",
-    flagged: false,
-  },
-  {
-    id: "2",
-    brandName: "Kirirom Institute of Technology",
-    contact: "website.com/asdf",
-    postCount: 3,
-    category: "Finance",
-    documentStatus: "none",
-    submittedAt: "1 Jan 2026",
-    status: "pending",
-    flagged: false,
-  },
-  {
-    id: "3",
-    brandName: "Kirirom Institute of Technology",
-    contact: "smth@gmail.com",
-    postCount: 5,
-    category: "Climate",
-    documentStatus: "none",
-    submittedAt: "15 Dec 2025",
-    status: "suspended",
-    flagged: true,
-  },
-  {
-    id: "4",
-    brandName: "Kirirom Institute of Technology",
-    contact: "a@yahoo.com",
-    postCount: 0,
-    category: "Social",
-    documentStatus: "submitted",
-    submittedAt: "1 Dec 2025",
-    status: "verified",
-    flagged: false,
-  },
-  {
-    id: "5",
-    brandName: "Kirirom Institute of Technology",
-    contact: "c@gmail.com",
-    postCount: 1,
-    category: "Technology",
-    documentStatus: "none",
-    submittedAt: "15 Nov 2025",
-    status: "pending",
-    flagged: false,
-  },
-];
+export const userAccounts: UserAccount[] = [];
 
 // ─── Mock Credentials ────────────────────────────────────────────────
 

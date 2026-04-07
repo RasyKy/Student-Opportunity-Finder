@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.js'
 import opportunityRoutes from './routes/opportunities.js'
 import userRoutes from './routes/users.js'
+import organizersRouter from './routes/organizers.js'
 
 dotenv.config()
 
@@ -32,6 +33,7 @@ app.use('/api/', apiLimiter)
 app.use('/api/auth', authRoutes)
 app.use('/api/opportunities', opportunityRoutes)
 app.use('/api/users', userRoutes)
+app.use('/api/organizers', organizersRouter)
 
 // Health check
 app.get('/health', (req, res) => {
