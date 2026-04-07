@@ -216,6 +216,7 @@ export default function ContentManagementPage() {
           const created = await createContent(updated);
           setItems((prev) => [created, ...prev]);
           setIsCreating(false);
+          setIsFullscreen(false);
           showToast("Post created", "Your new post has been saved.", "success");
         } else {
           await updateContent(updated);
@@ -224,13 +225,11 @@ export default function ContentManagementPage() {
           );
           showToast("Changes saved", "The post has been updated.", "success");
         }
-      } catch {
-        showToast(
-          "Save failed",
-          "Something went wrong. Please try again.",
-          "error",
-        );
-        throw new Error("save failed");
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Something went wrong.";
+        showToast("Save failed", msg, "error");
+        throw err;
       }
     },
     [showToast],
@@ -280,13 +279,11 @@ export default function ContentManagementPage() {
           setIsFullscreen(false);
         }
         showToast("Post deleted", "The post has been removed.", "success");
-      } catch {
-        showToast(
-          "Delete failed",
-          "Something went wrong. Please try again.",
-          "error",
-        );
-        throw new Error("delete failed");
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Something went wrong.";
+        showToast("Delete failed", msg, "error");
+        throw err;
       }
     },
     [selectedItemId, showToast],

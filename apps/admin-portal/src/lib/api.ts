@@ -113,28 +113,28 @@ export async function createContent(item: ContentItem): Promise<ContentItem> {
     .from("opportunities")
     .insert({
       title: item.title,
-      title_kh: item.title_kh,
-      organization: item.organization,
+      title_kh: item.title_kh || null,
+      organization: item.organization || null,
       type: item.type,
       status: "pending_review",
       subject_tags: item.subjectTags,
       start_date: parseDate(item.startDate),
       deadline: parseDate(item.deadline),
-      description: item.description,
-      description_kh: item.description_kh,
-      location: item.location,
-      application_link: item.application_link,
+      description: item.description || null,
+      description_kh: item.description_kh || null,
+      location: item.location || null,
+      application_link: item.application_link || null,
       is_free: item.is_free,
-      image_url: item.image_url,
-      language: item.language,
-      source_name: item.source_name,
-      source_platform: item.source_platform,
-      eligibility: item.eligibility,
+      image_url: item.image_url || null,
+      language: item.language || null,
+      source_name: item.source_name || null,
+      source_platform: item.source_platform || null,
+      eligibility: item.eligibility || null,
       target_group: item.target_group,
       format: ["online", "onsite", "hybrid", "unknown"].includes(item.format)
         ? item.format
         : "unknown",
-      contact_info: item.contact_info,
+      contact_info: item.contact_info || null,
     })
     .select()
     .single();

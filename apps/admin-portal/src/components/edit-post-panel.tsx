@@ -69,23 +69,30 @@ function InputField({
   value,
   onChange,
   placeholder,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  error?: string;
 }) {
   return (
     <div>
-      <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
+      <label
+        className={`mb-1.5 block text-xs font-semibold uppercase tracking-wide ${error ? "text-red-500" : "text-gray-500"}`}
+      >
         {label}
+        {error && (
+          <span className="ml-1.5 normal-case font-normal">— {error}</span>
+        )}
       </label>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
+        className={`w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 ${error ? "border-red-400 ring-1 ring-red-300 focus:ring-red-400" : "border-gray-200 focus:ring-violet-500"}`}
       />
     </div>
   );
@@ -192,6 +199,7 @@ export default function EditPostPanel({
   const [pendingStatus, setPendingStatus] = useState<
     ContentItem["status"] | null
   >(null);
+  const [titleError, setTitleError] = useState(false);
 
   // Unsaved changes detection
   const hasChanges = useMemo(() => {
@@ -278,6 +286,11 @@ export default function EditPostPanel({
   });
 
   const handleConfirmSave = async () => {
+    if (!title.trim()) {
+      setTitleError(true);
+      setConfirmAction(null);
+      return;
+    }
     setLoading(true);
     try {
       await onSave(buildUpdated());
@@ -418,7 +431,15 @@ export default function EditPostPanel({
         )}
 
         <div className="space-y-5">
-          <InputField label="Title" value={title} onChange={setTitle} />
+          <InputField
+            label="Title"
+            value={title}
+            onChange={(v) => {
+              setTitle(v);
+              if (titleError) setTitleError(false);
+            }}
+            error={titleError ? "Title is required" : undefined}
+          />
           <InputField
             label="Title (KH)"
             value={title_kh}
