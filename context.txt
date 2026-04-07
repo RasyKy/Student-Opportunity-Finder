@@ -1,412 +1,146 @@
-Student Opportunity Finder - Account Management Context
-Generated: 2026-04-06
-Focus: apps/admin-portal/src/app/dashboard/account-management/page.tsx
+Student Opportunity Finder - Content Management Context
+Generated: 2026-04-07
+Focus: apps/admin-portal/src/app/dashboard/content-management/page.tsx
 
 ============================================================
 EXECUTIVE SUMMARY
 ============================================================
 
-The account-management page is a verified/pending/suspended organizer account verification interface.
-Admins can search, filter, paginate, and approve/reject organizer registrations via a modal detail view.
+The content-management page is wired to real Supabase data through apps/admin-portal/src/lib/api.ts.
+Edit Post actions are currently split between local UI state and persistence calls:
+  - Save: persists via updateContent() or createContent()
+  - Delete: persists via deleteContent() (soft delete by status="deleted")
+  - Status switch: currently local-only in page state and does NOT persist to DB yet
 
-File: apps/admin-portal/src/app/dashboard/account-management/page.tsx
-Type: "use client" Next.js component (App Router, fully interactive)
-Route: /dashboard/account-management
-Protected by: Dashboard layout auth context
-
-
-============================================================
-1) COMPONENT STATE & INITIALIZATION
-============================================================
-
-1.1 State Variables
-  - accounts: UserAccount[]
-    - Main data source; fetched on mount from fetchUserAccounts() (currently mock).
-  - loading: boolean
-    - Indicates initial data fetch in progress; shows spinner during this state.
-  - search: string
-    - User-entered search query; filters by brandName, contact, or category (case-insensitive).
-  - filterStatus: "all" | "verified" | "pending" | "suspended"
-    - Dropdown filter; only displays accounts matching selected status.
-  - rowsPerPage: 5 | 10 | 15
-    - Pagination size selector; defaults to 5 rows per page.
-  - currentPage: number
-    - Current visible page in paginated table; resets to 1 when search/filter changes.
-  - selectedAccount: UserAccount | null
-    - The organizer row clicked to open detail modal; null when modal is closed.
-
-1.2 Initial Data Load
-  useEffect on mount:
-    - Calls fetchUserAccounts() (mocked in api.ts; calls await delay(200) then returns userAccounts[] from mock-data.ts).
-    - Sets loading=true initially, sets loading=false when data arrives.
-    - Mock data hardcoded in mock-data.ts with 5 sample organizers (IDs 1–5).
+Required behavior update:
+  1) Add double confirmation for Save Changes
+  2) Add double confirmation for status switch (pending/private/published)
+  3) Upgrade Delete to double confirmation
 
 
 ============================================================
-2) COMPUTED STATE (useMemo BLOCKS)
+1) FRONTEND MAPPING (CONTENT-MANAGEMENT)
 ============================================================
 
-2.1 Filtered List
-  const filtered = useMemo(() => {
-    - Filters accounts by:
-      1. Search query: brandName.includes(query) || contact.includes(query) || category.includes(query)
-      2. Status filter: filterStatus === "all" || account.status === filterStatus
-    - Re-computed whenever accounts[] or search or filterStatus changes.
-    - Output: filtered array of matching accounts.
-  }, [accounts, search, filterStatus])
+Primary files:
+  - apps/admin-portal/src/app/dashboard/content-management/page.tsx
+  - apps/admin-portal/src/components/edit-post-panel.tsx
+  - apps/admin-portal/src/lib/api.ts
 
-2.2 Paginated Slice
-  const paginated = useMemo(() => {
-    - Slices filtered[] to display only current page's rows.
-    - Calculation: start = (currentPage - 1) * rowsPerPage
-    - Output: subset of filtered array for current page (e.g., rows 0–4 if page 1 and rowsPerPage=5).
-  }, [filtered, currentPage, rowsPerPage])
+Current action paths:
 
-2.3 Total Pages
-  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage))
-    - Ensures totalPages is at least 1 (for empty results).
-    - Used to disable "next page" button.
+1.1 Save Changes button
+  Location:
+    - edit-post-panel.tsx footer button "Save Changes"
+  Flow:
+    - handleSave() in EditPostPanel builds updated ContentItem
+    - calls onSave(updated)
+    - page.tsx handleSave callback:
+      - if new item (no id): createContent(updated)
+      - else: updateContent(updated)
+      - updates local items[] state after success
+  Current confirmation:
+    - No confirmation modal before save
 
-2.4 Pending Count
-  const pendingCount = useMemo(() => 
-    accounts.filter(account => account.status === "pending").length
-  )
-    - Displays "X pending verifications" badge above table.
+1.2 Status switch button (Published/Pending/Private)
+  Location:
+    - edit-post-panel.tsx footer button (Eye/EyeOff + current status label)
+  Flow:
+    - onToggleStatus(item.id)
+    - page.tsx handleToggleStatus(id): cycles local status
+      published -> pending -> private -> published
+    - updates local items[] only
+  Current confirmation:
+    - No confirmation modal before status change
+  Persistence gap:
+    - updateContentStatus() is imported in page.tsx but not used
+    - status change is currently NOT persisted to Supabase
 
-2.5 Flagged Count
-  const flaggedCount = useMemo(() => 
-    accounts.filter(account => account.flagged).length
-  )
-    - Displays "X flagged account" badge above table.
-
-2.6 Selected Detail Lookup
-  const selectedDetails = selectedAccount ? accountModalDetails[selectedAccount.id] : null
-    - Maps selectedAccount.id to hardcoded modal detail object (website, contactName, contactEmail, documentName).
-    - accountModalDetails is a Record<string, {website, contactName, contactEmail, documentName}>.
-    - IDs "1"–"5" have predefined static metadata.
-
-
-============================================================
-3) SIDE EFFECTS & HANDLERS
-============================================================
-
-3.1 Reset Pagination
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, filterStatus, rowsPerPage])
-    - Resets to page 1 whenever search, status filter, or rows-per-page changes.
-    - Prevents user from being stuck on page 5 after applying a filter that only shows 2 rows.
-
-3.2 Escape Key to Close Modal
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setSelectedAccount(null);
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [])
-    - Adds global keyboard listener on mount.
-    - Pressing Escape closes the detail modal (sets selectedAccount=null).
-
-3.3 Update Account Status
-  const updateSelectedAccountStatus = (nextStatus: UserAccount["status"]) => {
-    if (!selectedAccount) return;
-    
-    // Update accounts array (immutable):
-    setAccounts((prev) =>
-      prev.map((account) =>
-        account.id === selectedAccount.id ? { ...account, status: nextStatus } : account
-      )
-    );
-    
-    // Update selectedAccount so modal reflects new status:
-    setSelectedAccount((prev) => (prev ? { ...prev, status: nextStatus } : prev));
-  }
-    - Invoked by "Approve & Notify" (→ verified) and "Reject" (→ suspended) buttons.
-    - Updates both the accounts array AND the selectedAccount to reflect the change immediately in modal.
-    - Changes do NOT persist to backend yet (TODO: hook up to updateUserStatus or backend API).
+1.3 Delete button
+  Location:
+    - edit-post-panel.tsx footer button "Delete"
+  Flow:
+    - click Delete -> sets confirmDelete=true
+    - shows modal "Delete Post?"
+    - confirm button calls onDelete(item.id)
+    - page.tsx handleDelete(id) -> deleteContent(id)
+    - deleteContent() performs soft delete in DB by updating status="deleted"
+  Current confirmation:
+    - Single confirmation modal exists
 
 
 ============================================================
-4) UI LAYOUT & SECTIONS
+2) BACKEND MAPPING (/backend)
 ============================================================
 
-4.1 Header Section
-  <header>
-    - Shows "Users" icon + "Account Management" title.
-    - Styled as horizontal bar with border-bottom.
+Relevant file:
+  - backend/routes/opportunities.js
 
-4.2 Top Stats Bar
-  - Left side: "Organizers [15]" chip (hardcoded displayedOrganizersCount = 15).
-  - Right side: Two alert badges:
-    - "CircleAlert icon + pending count pending verifications"
-    - "CircleAlert icon + flagged count flagged account"
+Available endpoints:
+  - GET /opportunities
+  - GET /opportunities/:id
+  - POST /opportunities (auth: organizer/admin)
+  - PUT /opportunities/:id (auth, owner/admin)
+  - DELETE /opportunities/:id (auth, owner/admin)
 
-4.3 Search & Filter Row
-  - Left: Search input
-    - Placeholder: "Search organizers..."
-    - Controlled: value={search}, onChange updates search state.
-    - Filters across brandName, contact, category.
-  - Right: Status dropdown
-    - Options: "All Status", "Verified", "Pending", "Suspended"
-    - Default: "all"
-    - onChange updates filterStatus state.
+Important integration note:
+  - admin-portal content-management currently uses Supabase directly via src/lib/api.ts
+  - it does NOT call backend/routes/opportunities.js endpoints right now
 
-4.4 Table (or Loading Spinner)
-  If loading:
-    - Shows centered animated spinner (h-8 w-8 border-4 gradient).
-  
-  If !loading && paginated.length > 0:
-    - Displays table with 7 columns:
-      1. Brand Name
-      2. Contact
-      3. Post (postCount)
-      4. Category
-      5. Document (documentStatus: "Submitted" or "No Document")
-      6. Submitted (submittedAt date)
-      7. Status (colored badge using statusColors map)
-    - Each row is clickable → onClick sets selectedAccount and opens modal.
-    - Row hover effect: bg-gray-50/70.
-    - Selected row highlight: bg-violet-50/60 (if selectedItemId === row.id).
-  
-  If !loading && filtered.length === 0:
-    - Displays "No organizer accounts found." centered in table body.
-
-4.5 Pagination Controls (Below Table)
-  Left side: "0 of {filtered.length} row(s) selected." (placeholder; no multi-select yet).
-  
-  Center/Right side:
-    - Rows per page dropdown: 5 / 10 / 15.
-    - Page display: "Page {currentPage} of {totalPages}".
-    - Previous/Next buttons:
-      - Disabled if currentPage === 1 (prev).
-      - Disabled if currentPage === totalPages (next).
-      - Each click adjusts currentPage by ±1 within bounds.
-
-4.6 Modal (Detail View)
-  Shown when: selectedAccount !== null && selectedDetails !== null
-  
-  Structure:
-    - Overlay: fixed inset-0, bg-black/35, click outside closes.
-    - Dialog: max-h-[90vh], max-w-3xl, white bg, rounded border, shadow.
-    - Click inside dialog does NOT close (event.stopPropagation).
-    - Escape key closes modal (handled by useEffect).
-  
-  Modal Content (2-column grid on md+):
-    Left Column:
-      - "ORGANIZATION DETAILS" header.
-      - Organization name (selectedAccount.brandName).
-      - Sub-sections (uppercase labels):
-        - WEBSITE: selectedDetails.website
-        - CONTACT NAME: selectedDetails.contactName
-        - CONTACT EMAIL: selectedDetails.contactEmail
-    
-    Right Column:
-      - "PROOF OF ASSOCIATION" header + close button (X icon).
-      - Document preview area:
-        - Gray box with FileText icon + selectedDetails.documentName.
-        - "Open in New Tab" button below (currently non-functional; href not wired).
-    
-    Footer (Buttons):
-      - Left: "Approve & Notify" (green #04A357)
-        - onClick → updateSelectedAccountStatus("verified")
-      - Right: "Reject" (red #D4183D)
-        - onClick → updateSelectedAccountStatus("suspended")
+Status vocabulary mismatch to watch:
+  - frontend admin content statuses: published, pending, private, deleted (soft delete)
+  - API translation in src/lib/api.ts maps pending <-> pending_review in DB
+  - backend route currently filters GET list with status='active'
+  - backend create route sets status='active'
+  - if content-management is moved to backend routes, status conventions must be unified first
 
 
 ============================================================
-5) DATA TYPES
+3) REQUIRED CHANGE SPEC (DOUBLE CONFIRMATION)
 ============================================================
 
-5.1 UserAccount Type (from mock-data.ts)
-  type UserAccount = {
-    id: string;                            // "1", "2", etc.
-    brandName: string;                     // "Kirirom Institute of Technology"
-    contact: string;                       // Email or URL or phone
-    postCount: number;                     // How many posts this organizer has created
-    category: string;                      // "Technology", "Finance", "Climate", "Social"
-    documentStatus: "submitted" | "none";  // Has proof of association
-    submittedAt: string;                   // Date string "15 Jan 2026"
-    status: "verified" | "pending" | "suspended";
-    flagged: boolean;                      // True if account has been flagged for review
-  };
+3.1 Save Changes: add double confirmation
+  - Step 1: click "Save Changes" opens confirmation modal/dialog
+  - Step 2: explicit confirm action triggers onSave
+  - Recommended copy: "Are you sure you want to save these changes?"
+  - Optional: include changed-field summary in modal
 
-5.2 Status Color Map
-  const statusColors: Record<UserAccount["status"], string> = {
-    verified: "bg-[#AFF4C6] text-gray-900",     // light green
-    pending: "bg-[#FFE8A3] text-gray-900",      // light yellow
-    suspended: "bg-[#D4183D] text-white",       // red (text white for contrast)
-  };
+3.2 Status switch: add double confirmation with target state
+  - Step 1: click status button opens confirmation dialog showing:
+    - current status
+    - target status (next in cycle or user-selected)
+  - Step 2: explicit confirm action applies status change
+  - Ensure persistence by calling updateContentStatus(id, nextStatus)
+    before local state mutation (or optimistic update + rollback on error)
 
-5.3 Modal Details Map
-  const accountModalDetails: Record<string, {website, contactName, contactEmail, documentName}> = {
-    "1": { website: "kit.edu.kh", contactName: "John Doe", ... },
-    "2": { website: "website.com/asdf", contactName: "Jane Smith", ... },
-    // etc.
-  };
-  - Hardcoded lookup table matching account IDs to verification details.
-  - Used to populate modal when selectedAccount is set.
+3.3 Delete: upgrade from single to double confirmation
+  - Existing single modal is present; strengthen to double confirmation
+  - Suggested pattern:
+    - first modal confirmation
+    - second step requiring typed keyword (e.g. DELETE) or second confirm click
+  - only after second confirmation execute onDelete
 
 
 ============================================================
-6) INTEGRATION WITH REST OF ADMIN PORTAL
+4) IMPLEMENTATION CHECKLIST (NEXT EDITS)
 ============================================================
 
-6.1 Parent Route Structure
-  /dashboard (layout.tsx)
-    ├── /dashboard/page.tsx (Dashboard view)
-    ├── /dashboard/content-management/page.tsx
-    └── /dashboard/account-management/page.tsx ← Account-management page
+Frontend:
+  - edit-post-panel.tsx
+    - add shared confirm dialog state for action type: save/status/delete
+    - add second-step confirmation state for delete
+    - wire button handlers to open confirmations, not execute immediately
+  - content-management/page.tsx
+    - update handleToggleStatus to call updateContentStatus(id, nextStatus)
+    - keep UI and server status synchronized; handle failure path
 
-6.2 Navigation
-  - Sidebar.tsx links to /dashboard/account-management.
-  - Active link highlight when pathname.startsWith("/dashboard/account-management").
+Backend (if/when routing through /backend):
+  - backend/routes/opportunities.js
+    - align status model with admin portal statuses OR map consistently
+    - avoid hardcoded status='active' if admin needs pending/private/published visibility
 
-6.3 Auth Context
-  - Dashboard layout checks useAuth() context and redirects to /login if not authenticated.
-  - Account-management page inherits auth protection from parent layout.
-
-6.4 API Integration
-  - Currently calls fetchUserAccounts() from lib/api.ts (mocked).
-  - Mock returns hardcoded userAccounts[] from mock-data.ts with 5 sample organizers.
-  - Status updates (approve/reject) are local state only; no backend call yet.
-
-6.5 TODOs / Next Steps
-  - Replace fetchUserAccounts with real API call (e.g., GET /api/users or backend endpoint).
-  - Implement status update backend call (e.g., PATCH /api/users/:id/status).
-  - Wire document detail view: "Open in New Tab" button should link to actual verification file.
-  - Add notification system: "Approve & Notify" should send email/notification to organizer.
-  - Replace hardcoded accountModalDetails with fetched details from backend.
-  - Implement row selection (checkbox column) for bulk operations.
-
-
-============================================================
-7) KEY UI PATTERNS & INTERACTIONS
-============================================================
-
-7.1 Search & Filter Flow
-  User types in search → setSearch(value) → filtered recalculates → paginated recalculates → currentPage resets to 1.
-  
-  Result: Table updates to show only matching rows from page 1.
-
-7.2 Pagination Flow
-  User clicks next page → setCurrentPage(+1) → paginated recalculates → table shows new rows.
-  
-  Edge case: If user searches and result fits on 1 page, "next" button is disabled.
-
-7.3 Modal Open/Close Flow
-  User clicks row:
-    1. onClick handler → setSelectedAccount(account)
-    2. Modal appears because selectedAccount !== null
-    3. selectedDetails = accountModalDetails[account.id] (lookup)
-    4. Modal displays organization + document details
-  
-  User clicks Escape:
-    1. Global onKeyDown handler fires
-    2. setSelectedAccount(null)
-    3. Modal disappears
-
-  User clicks outside modal:
-    1. Outer div onClick → setSelectedAccount(null)
-    2. Modal disappears
-
-7.4 Status Update Flow
-  User clicks "Approve & Notify" or "Reject" button → updateSelectedAccountStatus(nextStatus):
-    1. Immutably maps accounts array, changing selected account's status
-    2. Immutably updates selectedAccount so modal reflects change immediately
-    3. Both state updates happen synchronously
-    4. Modal buttons remain functional; can click again to flip status back (currently)
-
-
-============================================================
-8) STYLING NOTES
-============================================================
-
-- Tailwind CSS with custom color palette (violet for primary, green #04A357 for approve, red #D4183D for reject).
-- Responsive: Most sections use md: breakpoints (grid-cols-2 on md+).
-- Status badges use inline-flex with px/rounded-full for pill shape.
-- Table uses sticky header effect via thead styling.
-- Modal uses max-w-3xl and max-h-[90vh] to prevent overflow; content inside is overflow-y-auto.
-- Close button uses -mt-1 -mr-1 negative margin for precise alignment in modal corner.
-
-
-============================================================
-9) CURRENT MOCK DATA SAMPLE
-============================================================
-
-Mock accounts from mock-data.ts:
-  [
-    {
-      id: "1",
-      brandName: "Kirirom Institute of Technology",
-      contact: "kit@email.com",
-      postCount: 1,
-      category: "Technology",
-      documentStatus: "submitted",
-      submittedAt: "15 Jan 2026",
-      status: "verified",
-      flagged: false
-    },
-    {
-      id: "2",
-      brandName: "Kirirom Institute of Technology",
-      contact: "website.com/asdf",
-      postCount: 3,
-      category: "Finance",
-      documentStatus: "none",
-      submittedAt: "1 Jan 2026",
-      status: "pending",
-      flagged: false
-    },
-    // ... more records
-  ]
-
-Mock modal details from accountModalDetails:
-  {
-    "1": {
-      website: "kit.edu.kh",
-      contactName: "John Doe",
-      contactEmail: "john@kit.edu.kh",
-      documentName: "KIT-verify.pdf"
-    },
-    // ... more records
-  }
-
-
-============================================================
-10) FILE STRUCTURE & DEPENDENCIES
-============================================================
-
-File: apps/admin-portal/src/app/dashboard/account-management/page.tsx
-
-Imports:
-  - React hooks: useEffect, useMemo, useState
-  - Icons from lucide-react: Users, Search, ChevronDown, ChevronLeft, ChevronRight, CircleAlert, FileText, ExternalLink, X
-  - fetchUserAccounts from "@/lib/api" (mocked data fetcher)
-  - UserAccount type from "@/lib/mock-data"
-
-Parent Layout:
-  - apps/admin-portal/src/app/dashboard/layout.tsx (auth check + sidebar)
-
-Related Files:
-  - apps/admin-portal/src/lib/api.ts (fetchUserAccounts implementation)
-  - apps/admin-portal/src/lib/mock-data.ts (UserAccount type + mock userAccounts[])
-  - apps/admin-portal/src/context/auth-context.tsx (useAuth hook)
-  - apps/admin-portal/src/components/sidebar.tsx (navigation)
-
-
-============================================================
-SUMMARY FOR DEVELOPMENT
-============================================================
-
-The account-management page implements a full-featured organizer verification admin panel.
-It demonstrates:
-  - State management patterns (search, filter, pagination)
-  - Computed state (useMemo for derived views)
-  - Modal interaction patterns (escape key, click outside, selection flow)
-  - Data transformation (selected account → modal details lookup)
-  - Local state updates (status changes without backend sync yet)
-
-Next phase: Wire status updates to backend API and replace mock data with real database queries.
+Testing points:
+  - Save: confirm required, cancel leaves data unchanged
+  - Status: confirm required, correct next status, persisted after refresh
+  - Delete: both confirmations required, removed/hidden after refresh
+  - Error handling: failed API update does not leave UI in inconsistent status
