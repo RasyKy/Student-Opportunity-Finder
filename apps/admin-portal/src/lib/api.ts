@@ -12,12 +12,10 @@ import { supabase } from "./supabase";
 
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 // ─── Auth ────────────────────────────────────────────────────────────
 
 export async function loginUser(email: string, password: string) {
-  const res = await fetch(`${API_URL}/api/auth/login`, {
+  const res = await fetch(`/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -30,14 +28,14 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function logoutUser() {
-  await fetch(`${API_URL}/api/auth/logout`, {
+  await fetch(`/api/auth/logout`, {
     method: "POST",
     credentials: "include",
   });
 }
 
 export async function getMe() {
-  const res = await fetch(`${API_URL}/api/auth/me`, {
+  const res = await fetch(`/api/auth/me`, {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Not authenticated");
@@ -240,7 +238,7 @@ export async function deleteContent(id: string): Promise<void> {
 // ─── Account Management ──────────────────────────────────────────────
 
 export async function fetchUserAccounts(): Promise<UserAccount[]> {
-  const res = await fetch(`${API_URL}/api/organizers`, {
+  const res = await fetch(`/api/organizers`, {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to fetch organizer accounts");
@@ -251,7 +249,7 @@ export async function updateUserStatus(
   id: string,
   status: UserAccount["status"],
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/api/organizers/${id}/status`, {
+  const res = await fetch(`/api/organizers/${id}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -268,7 +266,7 @@ export async function updateUserFlag(
   flagged: boolean,
   flagged_reason?: string,
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/api/organizers/${id}/flag`, {
+  const res = await fetch(`/api/organizers/${id}/flag`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

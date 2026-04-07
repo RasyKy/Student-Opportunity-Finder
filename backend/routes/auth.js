@@ -8,7 +8,7 @@ const COOKIE_NAME = "sof_admin_token";
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
+  sameSite: "lax",
   maxAge: 60 * 60 * 1000, // 1 hour
   path: "/",
 };
@@ -147,7 +147,7 @@ router.get("/me", async (req, res) => {
 
     const { data: profile, error: profileError } = await supabaseAdmin
       .from("users")
-      .select("id, email, first_name, last_name, role")
+      .select("id, email, name, role")
       .eq("id", user.id)
       .single();
 
