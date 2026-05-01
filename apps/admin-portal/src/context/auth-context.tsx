@@ -13,6 +13,8 @@ import { loginUser, signupUser } from "@/lib/api";
 import type { AuthUser } from "@/lib/mock-data";
 
 const STORAGE_KEY = "sof-admin-user";
+const ORGANIZER_PORTAL_URL =
+  process.env.NEXT_PUBLIC_ORGANIZER_PORTAL_URL ?? "http://localhost:3001";
 
 type AuthContextType = {
   user: AuthUser | null;
@@ -44,6 +46,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const u = await loginUser(email, password, role);
       setUser(u);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+      if (role === "organizer") {
+        window.location.assign(ORGANIZER_PORTAL_URL);
+        return;
+      }
+
       router.push("/dashboard");
     },
     [router]
@@ -54,6 +61,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const u = await signupUser(name, email, password, role);
       setUser(u);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+      if (role === "organizer") {
+        window.location.assign(ORGANIZER_PORTAL_URL);
+        return;
+      }
+
       router.push("/dashboard");
     },
     [router]
