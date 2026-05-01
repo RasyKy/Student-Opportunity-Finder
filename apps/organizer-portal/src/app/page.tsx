@@ -1,3 +1,5 @@
+const ADMIN_PORTAL_URL = process.env.NEXT_PUBLIC_ADMIN_PORTAL_URL || "http://localhost:3000";
+
 const steps = [
   {
     title: "Create Account",
@@ -193,12 +195,12 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-3 text-sm font-semibold">
-            <a className="rounded-full px-4 py-2 text-slate-600 transition hover:bg-slate-100" href="#login">
+            <a className="rounded-full px-4 py-2 text-slate-600 transition hover:bg-slate-100" href={`${ADMIN_PORTAL_URL}/login?role=organizer`}>
               Login
             </a>
             <a
               className="rounded-full bg-gradient-to-r from-indigo-700 to-violet-700 px-5 py-2.5 text-white shadow-lg shadow-indigo-500/25 transition hover:translate-y-[-1px] hover:shadow-xl hover:shadow-indigo-500/30"
-              href="#signup"
+              href={`${ADMIN_PORTAL_URL}/signup?role=organizer`}
             >
               Sign Up
             </a>
@@ -227,7 +229,7 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a
                 className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-700 to-violet-700 px-6 py-4 text-base font-semibold text-white shadow-[0_14px_30px_rgba(79,70,229,0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_35px_rgba(79,70,229,0.3)]"
-                href="#signup"
+                href={`${ADMIN_PORTAL_URL}/signup?role=organizer`}
               >
                 Request Organizer Account
               </a>
@@ -338,7 +340,7 @@ export default function Home() {
           </p>
           <a
             className="mt-8 inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 text-base font-semibold text-indigo-800 shadow-lg shadow-black/10 transition hover:-translate-y-0.5"
-            href="#signup"
+            href={`${ADMIN_PORTAL_URL}/signup?role=organizer`}
           >
             Get Started Today
           </a>

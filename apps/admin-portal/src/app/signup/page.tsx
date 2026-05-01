@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/auth-context";
 import Link from "next/link";
 
@@ -12,6 +12,16 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const roleParam = urlParams.get("role");
+      if (roleParam === "organizer") {
+        setRole("organizer");
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,7 +172,7 @@ export default function SignupPage() {
 
           <p className="mt-6 text-center text-sm text-gray-500">
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-violet-600 hover:underline">
+            <Link href={`/login${role === "organizer" ? "?role=organizer" : ""}`} className="font-medium text-violet-600 hover:underline">
               Login
             </Link>
           </p>

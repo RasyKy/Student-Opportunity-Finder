@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(u);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
       if (role === "organizer") {
-        window.location.assign(ORGANIZER_PORTAL_URL);
+        window.location.assign(`${ORGANIZER_PORTAL_URL}/dashboard/verification?name=${encodeURIComponent(u.name)}`);
         return;
       }
 
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(u);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
       if (role === "organizer") {
-        window.location.assign(ORGANIZER_PORTAL_URL);
+        window.location.assign(`${ORGANIZER_PORTAL_URL}/dashboard/verification?name=${encodeURIComponent(u.name)}`);
         return;
       }
 
