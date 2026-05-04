@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EventFlow Organizer Portal",
+  title: "Organizer Portal",
   description: "A polished organizer landing page for connecting with students and scaling events.",
 };
 
