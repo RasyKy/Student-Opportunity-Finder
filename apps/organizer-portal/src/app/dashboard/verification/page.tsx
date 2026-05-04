@@ -1,14 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { 
-  CheckBadgeIcon, 
-  ArrowRightIcon, 
-  SparklesIcon,
-  ChartBarIcon,
-  ShieldCheckIcon 
-} from '@heroicons/react/24/solid';
-import { 
+import {
   CheckCircle, 
   ArrowRight, 
   Zap, 
