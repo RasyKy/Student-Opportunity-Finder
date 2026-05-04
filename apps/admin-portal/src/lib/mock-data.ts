@@ -25,8 +25,9 @@ export type ChartDataPoint = {
 export type ContentItem = {
   id: string;
   title: string;
+  title_kh: string;
   organization: string;
-  type: "course" | "event" | "scholarship";
+  type: "course" | "event" | "scholarship" | "internship" | "job";
   status: "published" | "pending" | "private";
   source: "scraped" | "organizer" | "internal";
   flagged: boolean;
@@ -35,6 +36,18 @@ export type ContentItem = {
   startDate: string;
   deadline: string;
   description: string;
+  description_kh: string;
+  location: string;
+  application_link: string;
+  is_free: boolean;
+  image_url: string;
+  language: string;
+  source_name: string;
+  source_platform: string;
+  eligibility: string;
+  target_group: string[];
+  format: "online" | "onsite" | "hybrid" | "unknown" | "";
+  contact_info: string;
 };
 
 export type UserAccount = {
@@ -91,11 +104,6 @@ export const chartData: ChartDataPoint[] = [
 ];
 
 export const contentItems: ContentItem[] = [
-  { id: "1", title: "KIT Code Camp", organization: "Kirirom Institute of Technology", type: "course", status: "published", source: "scraped", flagged: false, createdAt: "2026-01-15", subjectTags: ["Software Engineering", "Fullstack Development"], startDate: "2026-10-02", deadline: "2026-10-03", description: "" },
-  { id: "2", title: "KIT Code Camp", organization: "Kirirom Institute of Technology", type: "event", status: "pending", source: "organizer", flagged: false, createdAt: "2026-01-01", subjectTags: ["Software Engineering"], startDate: "2026-02-01", deadline: "2026-01-25", description: "" },
-  { id: "3", title: "KIT Code Camp", organization: "Kirirom Institute of Technology", type: "event", status: "private", source: "internal", flagged: false, createdAt: "2025-12-15", subjectTags: ["Data Science"], startDate: "2026-01-10", deadline: "2026-01-05", description: "" },
-  { id: "4", title: "KIT Code Camp", organization: "Kirirom Institute of Technology", type: "course", status: "private", source: "scraped", flagged: false, createdAt: "2025-12-01", subjectTags: ["Web Development"], startDate: "2026-01-15", deadline: "2026-01-10", description: "" },
-  { id: "5", title: "KIT Code Camp", organization: "Kirirom Institute of Technology", type: "course", status: "pending", source: "organizer", flagged: true, createdAt: "2025-11-15", subjectTags: ["Mobile Development"], startDate: "2025-11-20", deadline: "2025-11-18", description: "" },
 ];
 
 export const userAccounts: UserAccount[] = [
