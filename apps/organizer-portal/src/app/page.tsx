@@ -78,10 +78,10 @@ function DashboardMockup() {
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-cyan-300/80">
-                EventFlow Dashboard
+                SOF Dashboard
               </p>
               <h3 className="mt-1 text-2xl font-semibold">
-                Professional Event Dashboard
+                Organizer Dashboard
               </h3>
             </div>
             <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export default function Home() {
         {/* ── Navbar ── */}
         <header className="flex items-center justify-between py-3">
           <div className="flex items-center gap-8">
-            <p className="text-lg font-bold tracking-tight text-slate-900">EventFlow</p>
+            <p className="text-lg font-bold tracking-tight text-slate-900">SOF</p>
 
             <nav className="hidden items-center gap-6 text-sm font-medium text-slate-500 md:flex">
               <a className="border-b-2 border-indigo-600 pb-0.5 text-slate-900" href="#platform">
@@ -289,7 +289,7 @@ export default function Home() {
             Advanced Platform Features
           </span>
           <h2 className="mt-5 max-w-lg text-4xl font-black tracking-[-0.05em] text-slate-950 sm:text-5xl">
-            Why Choose Indigo Vista?
+            Why Choose SOF?
           </h2>
 
           <div className="mt-10 space-y-6">
@@ -336,7 +336,7 @@ export default function Home() {
             Ready to transform your engagement strategy?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/70">
-            Join 500+ organizations already reaching thousands of students daily on Indigo Vista.
+            Join 500+ organizations already reaching thousands of students daily on SOF.
           </p>
           <a
             className="mt-8 inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 text-base font-semibold text-indigo-800 shadow-lg shadow-black/10 transition hover:-translate-y-0.5"
@@ -350,7 +350,7 @@ export default function Home() {
       {/* ── Footer ── */}
       <footer className="border-t border-indigo-100/80 px-4 py-5 text-sm text-slate-500 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2024 EventFlow Organizer Portal. All rights reserved.</p>
+          <p>© 2025 SOF Organizer Portal. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-6">
             <a className="transition hover:text-slate-900" href="#privacy">
               Privacy Policy
