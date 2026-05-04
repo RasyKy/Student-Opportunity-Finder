@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState, useMemo, useCallback } from "react";
 import {
   FileText,
@@ -9,6 +8,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  CheckCircle2,
 } from "lucide-react";
 import {
   fetchContentItems,
@@ -35,7 +35,6 @@ function formatDate(dateStr: string) {
   });
 }
 
-/** Check if a post has potential duplicates among other items */
 function checkDuplicate(item: ContentItem, allItems: ContentItem[]): boolean {
   return allItems.some(
     (other) =>
@@ -47,23 +46,45 @@ function checkDuplicate(item: ContentItem, allItems: ContentItem[]): boolean {
 }
 
 // ─── Toast ──────────────────────────────────────────────────────────
+type ToastVariant = "success" | "error" | "warning";
+
 function Toast({
   message,
   description,
+  variant,
   onDismiss,
 }: {
   message: string;
   description: string;
+  variant: ToastVariant;
   onDismiss: () => void;
 }) {
   useEffect(() => {
-    const t = setTimeout(onDismiss, 6000);
+    const t = setTimeout(onDismiss, 5000);
     return () => clearTimeout(t);
   }, [onDismiss]);
 
-  return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-start gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-lg max-w-sm animate-[slideUp_0.3s_ease-out]">
+  const icon =
+    variant === "success" ? (
+      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+    ) : variant === "error" ? (
       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+    ) : (
+      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+    );
+
+  const borderColor =
+    variant === "success"
+      ? "border-green-100"
+      : variant === "error"
+        ? "border-red-100"
+        : "border-amber-100";
+
+  return (
+    <div
+      className={`fixed bottom-6 right-6 z-50 flex items-start gap-3 rounded-lg border ${borderColor} bg-white px-4 py-3 shadow-lg max-w-sm animate-[slideUp_0.3s_ease-out]`}
+    >
+      {icon}
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900">{message}</p>
         <p className="text-xs text-gray-500">{description}</p>
@@ -91,7 +112,7 @@ export default function ContentManagementPage() {
     "all" | ContentItem["source"]
   >("all");
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Edit panel
@@ -103,7 +124,15 @@ export default function ContentManagementPage() {
   const [toast, setToast] = useState<{
     message: string;
     description: string;
+    variant: ToastVariant;
   } | null>(null);
+
+  const showToast = useCallback(
+    (message: string, description: string, variant: ToastVariant) => {
+      setToast({ message, description, variant });
+    },
+    [],
+  );
 
   useEffect(() => {
     fetchContentItems().then((data) => {
@@ -117,7 +146,6 @@ export default function ContentManagementPage() {
     [items, selectedItemId],
   );
 
-  // Pre-compute duplicates
   const duplicateIds = useMemo(() => {
     const ids = new Set<string>();
     for (const item of items) {
@@ -130,13 +158,13 @@ export default function ContentManagementPage() {
     ? selectedItem.flagged && duplicateIds.has(selectedItem.id)
     : false;
 
-  // Toast when opening a duplicate
   useEffect(() => {
     if (isDuplicate && selectedItem) {
-      setToast({
-        message: "Possible Duplicate",
-        description: "Your preferences have been updated",
-      });
+      showToast(
+        "Possible Duplicate",
+        "This post may already exist with matching title, org, and type.",
+        "warning",
+      );
     }
   }, [isDuplicate, selectedItem?.id]);
 
@@ -170,7 +198,6 @@ export default function ContentManagementPage() {
     currentPage * rowsPerPage,
   );
 
-  // Handlers
   const handleRowClick = useCallback((id: string) => {
     setSelectedItemId(id);
     setIsCreating(false);
@@ -182,18 +209,31 @@ export default function ContentManagementPage() {
     setIsFullscreen(false);
   }, []);
 
-  const handleSave = useCallback(async (updated: ContentItem) => {
-    if (!updated.id) {
-      const created = await createContent(updated);
-      setItems((prev) => [created, ...prev]);
-      setIsCreating(false);
-    } else {
-      await updateContent(updated);
-      setItems((prev) =>
-        prev.map((item) => (item.id === updated.id ? updated : item)),
-      );
-    }
-  }, []);
+  const handleSave = useCallback(
+    async (updated: ContentItem) => {
+      try {
+        if (!updated.id) {
+          const created = await createContent(updated);
+          setItems((prev) => [created, ...prev]);
+          setIsCreating(false);
+          setIsFullscreen(false);
+          showToast("Post created", "Your new post has been saved.", "success");
+        } else {
+          await updateContent(updated);
+          setItems((prev) =>
+            prev.map((item) => (item.id === updated.id ? updated : item)),
+          );
+          showToast("Changes saved", "The post has been updated.", "success");
+        }
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Something went wrong.";
+        showToast("Save failed", msg, "error");
+        throw err;
+      }
+    },
+    [showToast],
+  );
 
   const handleToggleFullscreen = useCallback(() => {
     setIsFullscreen((prev) => !prev);
@@ -231,30 +271,59 @@ export default function ContentManagementPage() {
 
   const handleDelete = useCallback(
     async (id: string) => {
-      await deleteContent(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      if (selectedItemId === id) {
-        setSelectedItemId(null);
-        setIsFullscreen(false);
+      try {
+        await deleteContent(id);
+        setItems((prev) => prev.filter((item) => item.id !== id));
+        if (selectedItemId === id) {
+          setSelectedItemId(null);
+          setIsFullscreen(false);
+        }
+        showToast("Post deleted", "The post has been removed.", "success");
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Something went wrong.";
+        showToast("Delete failed", msg, "error");
+        throw err;
       }
     },
-    [selectedItemId],
+    [selectedItemId, showToast],
   );
 
-  const handleToggleStatus = useCallback((id: string) => {
-    setItems((prev) =>
-      prev.map((item) => {
-        if (item.id !== id) return item;
-        const next: ContentItem["status"] =
-          item.status === "published"
-            ? "pending"
-            : item.status === "pending"
-              ? "private"
-              : "published";
-        return { ...item, status: next };
-      }),
-    );
-  }, []);
+  const handleToggleStatus = useCallback(
+    async (id: string, nextStatus: ContentItem["status"]) => {
+      // Optimistic update
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, status: nextStatus } : item,
+        ),
+      );
+      try {
+        await updateContentStatus(id, nextStatus);
+        showToast("Status updated", `Post is now ${nextStatus}.`, "success");
+      } catch {
+        // Rollback on failure
+        setItems((prev) =>
+          prev.map((item) => {
+            if (item.id !== id) return item;
+            const rollback: ContentItem["status"] =
+              nextStatus === "published"
+                ? "private"
+                : nextStatus === "pending"
+                  ? "published"
+                  : "pending";
+            return { ...item, status: rollback };
+          }),
+        );
+        showToast(
+          "Status update failed",
+          "Could not update status. Please try again.",
+          "error",
+        );
+        throw new Error("status update failed");
+      }
+    },
+    [showToast],
+  );
 
   const handleDismissToast = useCallback(() => setToast(null), []);
 
@@ -542,6 +611,7 @@ export default function ContentManagementPage() {
         <Toast
           message={toast.message}
           description={toast.description}
+          variant={toast.variant}
           onDismiss={handleDismissToast}
         />
       )}
