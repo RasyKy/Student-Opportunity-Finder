@@ -14,10 +14,10 @@ router.post(
       .isLength({ min: 6 })
       .withMessage("Password must be at least 6 characters"),
     body("name").notEmpty().trim().escape(),
-    body("brand_name").notEmpty().trim().escape(),
-    body("website_url").isURL().withMessage("Enter a valid website URL"),
-    body("contact_email").isEmail().withMessage("Enter a valid contact email"),
-    body("org_type").notEmpty().withMessage("Organization type is required"),
+    body("org_name").notEmpty().trim().escape(),
+        body("website_url").isURL().withMessage("Enter a valid website URL"),
+        body("official_email").isEmail().withMessage("Enter a valid email address"),
+        body("category").notEmpty().withMessage("Organization category is required"),
     body("social_link")
       .optional({ checkFalsy: true })
       .isURL()
@@ -29,15 +29,15 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
+        const {
       email,
       password,
       name,
-      brand_name,
+      org_name,
       website_url,
-      contact_email,
+      official_email,
       social_link,
-      org_type,
+      category,
     } = req.body;
 
     try {
@@ -70,16 +70,16 @@ router.post(
       }
 
       // 3. Insert into organizer_profiles
-      const { error: profileError } = await supabaseAdmin
+            const { error: profileError } = await supabaseAdmin
         .from("organizer_profiles")
         .insert({
           user_id: userId,
-          brand_name,
+          org_name,
           website_url,
-          contact_email,
+          official_email,
           social_link: social_link || null,
-          org_type,
-          status: "pending",
+          category,
+          verification_status: "pending",
         });
 
       if (profileError) {
@@ -103,18 +103,18 @@ router.get("/", authenticate, authorize(["admin"]), async (req, res) => {
   try {
     const { data, error } = await supabaseAdmin
       .from("organizer_profiles")
-      .select(
+            .select(
         `
         id,
         user_id,
-        brand_name,
+        org_name,
         website_url,
-        contact_email,
+        official_email,
         social_link,
-        org_type,
-        status,
+        category,
+        verification_status,
         flagged,
-        flagged_reason,
+        rejection_reason,
         created_at,
         users (
           email,
@@ -128,7 +128,18 @@ router.get("/", authenticate, authorize(["admin"]), async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
 
-    res.json(data);
+    // Map DB columns to frontend expected format
+    const mapped = (data ?? []).map((row) => ({
+      ...row,
+      brand_name: row.org_name,
+      contact_email: row.official_email,
+      org_type: row.category,
+      status: row.verification_status,
+      flagged_reason: row.rejection_reason,
+      post_count: 0,
+    }));
+
+    res.json(mapped);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -148,9 +159,9 @@ router.patch(
         return res.status(400).json({ error: "Invalid status value" });
       }
 
-      const { data, error } = await supabaseAdmin
+            const { data, error } = await supabaseAdmin
         .from("organizer_profiles")
-        .update({ status })
+        .update({ verification_status: status })
         .eq("id", req.params.id)
         .select()
         .single();
@@ -175,7 +186,15 @@ router.patch(
         .update({ role: roleMap[status] })
         .eq("id", data.user_id);
 
-      res.json(data);
+      res.json({
+        ...data,
+        brand_name: data.org_name,
+        contact_email: data.official_email,
+        org_type: data.category,
+        status: data.verification_status,
+        flagged_reason: data.rejection_reason,
+        post_count: 0,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -196,11 +215,11 @@ router.patch(
         return res.status(400).json({ error: "flagged must be a boolean" });
       }
 
-      const { data, error } = await supabaseAdmin
+            const { data, error } = await supabaseAdmin
         .from("organizer_profiles")
         .update({
           flagged,
-          flagged_reason: flagged ? (flagged_reason ?? null) : null,
+          rejection_reason: flagged ? (flagged_reason ?? null) : null,
         })
         .eq("id", req.params.id)
         .select()
@@ -214,7 +233,15 @@ router.patch(
         return res.status(404).json({ error: "Organizer not found" });
       }
 
-      res.json(data);
+      res.json({
+        ...data,
+        brand_name: data.org_name,
+        contact_email: data.official_email,
+        org_type: data.category,
+        status: data.verification_status,
+        flagged_reason: data.rejection_reason,
+        post_count: 0,
+      });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

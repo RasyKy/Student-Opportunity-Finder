@@ -47,15 +47,14 @@ router.post(
         return res.status(400).json({ error: authError.message });
       }
 
-      const { data: profile, error: profileError } = await supabaseAdmin
+            const { data: profile, error: profileError } = await supabaseAdmin
         .from("users")
         .insert([
           {
             id: authUser.user.id,
             email,
-            account_type: accountType,
-            first_name: firstName,
-            last_name: lastName,
+            name: `${firstName} ${lastName}`,
+            role: accountType,
             created_at: new Date().toISOString(),
           },
         ])

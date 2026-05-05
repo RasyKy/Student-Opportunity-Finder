@@ -299,7 +299,7 @@ export default function AccountManagementPage() {
         )}
       </div>
 
-      {selectedAccount && (
+            {selectedAccount && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4"
           onClick={() => setSelectedAccount(null)}
@@ -308,159 +308,184 @@ export default function AccountManagementPage() {
             role="dialog"
             aria-modal="true"
             aria-label="Organizer verification details"
-            className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl"
+            className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="grid gap-5 border-b border-gray-200 p-4 md:grid-cols-2 md:p-5">
-              <section>
-                <div className="mb-1 flex items-center justify-between">
-                  <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500 md:text-sm">
-                    ORGANIZATION DETAILS
-                  </h2>
-                </div>
-                <p className="text-xl font-semibold leading-tight text-gray-900 md:text-2xl">
-                  {selectedAccount.brand_name}
-                </p>
+            {/* ── Close button (top-right) ── */}
+            <button
+              type="button"
+              className="absolute right-4 top-4 z-10 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+              onClick={() => setSelectedAccount(null)}
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
 
-                <div className="mt-5 space-y-4">
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      WEBSITE
-                    </h3>
+            {/* ── Scrollable body ── */}
+            <div className="flex-1 overflow-y-auto px-8 pb-6 pt-8">
+              {/* Header: Organization name + Status */}
+              <div className="flex items-center justify-between gap-4 border-b border-gray-100 pb-6">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                  {selectedAccount.brand_name}
+                </h2>
+                <span
+                  className={`shrink-0 rounded-full px-3.5 py-1 text-xs font-semibold ${statusColors[selectedAccount.status]}`}
+                >
+                  {selectedAccount.status.charAt(0).toUpperCase() +
+                    selectedAccount.status.slice(1)}
+                </span>
+              </div>
+
+              {/* Data grid */}
+              <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
+                {/* Official Email */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Official Email
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900 break-all">
+                    {selectedAccount.contact_email}
+                  </p>
+                </div>
+
+                {/* Account Email (from auth) */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Account Email
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900 break-all">
+                    {selectedAccount.users?.email ?? "-"}
+                  </p>
+                </div>
+
+                {/* Website */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Website
+                  </p>
+                  <a
+                    href={selectedAccount.website_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 hover:underline"
+                  >
+                    {selectedAccount.website_url}
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                  </a>
+                </div>
+
+                {/* Social Link */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Social Link
+                  </p>
+                  {selectedAccount.social_link ? (
                     <a
-                      href={selectedAccount.website_url}
+                      href={selectedAccount.social_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-1 inline-flex items-center gap-1 text-base font-medium text-violet-600 hover:underline md:text-lg"
+                      className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 hover:underline"
                     >
-                      {selectedAccount.website_url}
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      {selectedAccount.social_link}
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
                     </a>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      CONTACT EMAIL
-                    </h3>
-                    <p className="mt-1 break-all text-base font-medium leading-tight text-gray-900 md:text-lg">
-                      {selectedAccount.contact_email}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      ORG TYPE
-                    </h3>
-                    <p className="mt-1 text-base font-medium leading-tight text-gray-900 md:text-lg">
-                      {selectedAccount.org_type}
-                    </p>
-                  </div>
-
-                  {selectedAccount.social_link && (
-                    <div>
-                      <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                        SOCIAL LINK
-                      </h3>
-                      <a
-                        href={selectedAccount.social_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-1 inline-flex items-center gap-1 text-base font-medium text-violet-600 hover:underline md:text-lg"
-                      >
-                        {selectedAccount.social_link}
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
-                    </div>
+                  ) : (
+                    <p className="mt-1 text-sm font-medium text-gray-400">—</p>
                   )}
-
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      ACCOUNT EMAIL
-                    </h3>
-                    <p className="mt-1 break-all text-base font-medium leading-tight text-gray-900 md:text-lg">
-                      {selectedAccount.users?.email ?? "-"}
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              <section>
-                <div className="mb-3 flex items-start justify-between">
-                  <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500 md:text-sm">
-                    ACCOUNT INFO
-                  </h2>
-                  <button
-                    type="button"
-                    className="-mt-1 -mr-1 rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
-                    onClick={() => setSelectedAccount(null)}
-                    aria-label="Close verification popup"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      NAME
-                    </h3>
-                    <p className="mt-1 text-base font-medium leading-tight text-gray-900 md:text-lg">
-                      {selectedAccount.users?.name ?? "-"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      STATUS
-                    </h3>
-                    <span
-                      className={`mt-1 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusColors[selectedAccount.status]}`}
-                    >
-                      {selectedAccount.status.charAt(0).toUpperCase() +
-                        selectedAccount.status.slice(1)}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 md:text-sm">
-                      SUBMITTED
-                    </h3>
-                    <p className="mt-1 text-base font-medium leading-tight text-gray-900 md:text-lg">
-                      {formatDate(selectedAccount.created_at)}
-                    </p>
-                  </div>
-
-                  {selectedAccount.flagged &&
-                    selectedAccount.flagged_reason && (
-                      <div>
-                        <h3 className="text-xs font-medium uppercase tracking-wide text-red-500 md:text-sm">
-                          FLAG REASON
-                        </h3>
-                        <p className="mt-1 text-base font-medium leading-tight text-red-600 md:text-lg">
-                          {selectedAccount.flagged_reason}
-                        </p>
-                      </div>
-                    )}
+                {/* Organization Category */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Organization Category
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {selectedAccount.org_type}
+                  </p>
                 </div>
-              </section>
+
+                {/* Owner Name */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Owner Name
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {selectedAccount.users?.name ?? "-"}
+                  </p>
+                </div>
+
+                {/* Submitted */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Submitted
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {formatDate(selectedAccount.created_at)}
+                  </p>
+                </div>
+
+                {/* Posts */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Total Posts
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {selectedAccount.post_count}
+                  </p>
+                </div>
+
+                {/* Flag Reason - full width if present */}
+                {selectedAccount.flagged && selectedAccount.flagged_reason && (
+                  <div className="col-span-full rounded-lg border border-red-100 bg-red-50/50 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-red-500">
+                      Flag Reason
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-red-600">
+                      {selectedAccount.flagged_reason}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 md:p-5">
-              <button
-                type="button"
-                className="rounded-lg bg-[#04A357] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#03914D]"
-                onClick={() => updateSelectedAccountStatus("verified")}
-              >
-                Approve &amp; Notify
-              </button>
-
-              <button
-                type="button"
-                className="rounded-lg bg-[#D4183D] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#BF1537]"
-                onClick={() => updateSelectedAccountStatus("suspended")}
-              >
-                Reject
-              </button>
+                        {/* ── Action Footer (context-aware) ── */}
+            <div className="flex items-center justify-end gap-3 border-t border-gray-100 bg-gray-50/80 px-8 py-4">
+              {selectedAccount.status === "pending" && (
+                <>
+                  <button
+                    type="button"
+                    className="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition-all hover:bg-red-50 hover:border-red-300"
+                    onClick={() => updateSelectedAccountStatus("suspended")}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-lg bg-[#04A357] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#03914D] hover:shadow-md active:scale-[0.98]"
+                    onClick={() => updateSelectedAccountStatus("verified")}
+                  >
+                    Approve &amp; Notify
+                  </button>
+                </>
+              )}
+              {selectedAccount.status === "verified" && (
+                <button
+                  type="button"
+                  className="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-600 shadow-sm transition-all hover:bg-red-50 hover:border-red-300"
+                  onClick={() => updateSelectedAccountStatus("suspended")}
+                >
+                  Suspend Account
+                </button>
+              )}
+              {selectedAccount.status === "suspended" && (
+                <button
+                  type="button"
+                  className="rounded-lg bg-[#04A357] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#03914D] hover:shadow-md active:scale-[0.98]"
+                  onClick={() => updateSelectedAccountStatus("verified")}
+                >
+                  Reinstate Account
+                </button>
+              )}
             </div>
           </div>
         </div>
