@@ -2,7 +2,7 @@ const steps = [
   {
     title: "Create Account",
     description:
-      "Register your organization profile with our intuitive onboarding wizard in under two minutes.",
+      "Set up your organization's workspace and invite your team in under two minutes.",
     accent: "bg-indigo-600",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
@@ -13,7 +13,7 @@ const steps = [
   {
     title: "Submit Verification",
     description:
-      "Our trust team reviews your credentials to ensure a safe, high-quality ecosystem for all students.",
+      "We verify all credentials to maintain a high-trust, brand-safe environment for our student network.",
     accent: "bg-amber-500",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
@@ -24,7 +24,7 @@ const steps = [
   {
     title: "Start Posting Events",
     description:
-      "Launch your first campaign and watch your engagement grow with our real-time marketing tools.",
+      "Launch your first campaign and track reach, RSVPs, and engagement with our real-time analytics.",
     accent: "bg-violet-600",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
@@ -56,9 +56,9 @@ const features = [
     ),
   },
   {
-    title: "Ethical Sourcing",
+    title: "Secure & Verified",
     description:
-      "A privacy-first platform that ensures data integrity and ethical interaction standards for all users.",
+      "A trusted, privacy-first platform that ensures your data is protected and your brand is represented safely.",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
         <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
@@ -66,6 +66,10 @@ const features = [
     ),
   },
 ];
+
+
+
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 function DashboardMockup() {
   return (
@@ -75,12 +79,8 @@ function DashboardMockup() {
         <div className="overflow-hidden rounded-[1.6rem] bg-slate-950 p-4 text-slate-100 shadow-[0_10px_30px_rgba(15,23,42,0.35)] ring-1 ring-white/10">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-cyan-300/80">
-                SOF Dashboard
-              </p>
-              <h3 className="mt-1 text-2xl font-semibold">
-                Organizer Dashboard
-              </h3>
+              <p className="text-xs uppercase tracking-[0.3em] text-cyan-300/80">SOF Dashboard</p>
+              <h3 className="mt-1 text-2xl font-semibold">Organizer Dashboard</h3>
             </div>
             <div className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
@@ -88,7 +88,6 @@ function DashboardMockup() {
               <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
             </div>
           </div>
-
           <div className="mt-4 grid gap-3">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
               <div className="flex items-center justify-between text-xs text-slate-300">
@@ -96,18 +95,15 @@ function DashboardMockup() {
                 <span>+24% this month</span>
               </div>
               <div className="mt-3 grid grid-cols-12 gap-1.5">
-                {[22, 36, 28, 44, 54, 66, 52, 70, 84, 68, 76, 92].map(
-                  (value, index) => (
-                    <div
-                      key={`${value}-${index}`}
-                      className="rounded-t-lg bg-gradient-to-t from-cyan-400 to-indigo-400"
-                      style={{ height: `${value}px` }}
-                    />
-                  ),
-                )}
+                {[22, 36, 28, 44, 54, 66, 52, 70, 84, 68, 76, 92].map((value, index) => (
+                  <div
+                    key={`${value}-${index}`}
+                    className="rounded-t-lg bg-gradient-to-t from-cyan-400 to-indigo-400"
+                    style={{ height: `${value}px` }}
+                  />
+                ))}
               </div>
             </div>
-
             <div className="grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
                 <div className="flex items-center justify-between text-xs text-slate-300">
@@ -115,15 +111,8 @@ function DashboardMockup() {
                   <span>04 live</span>
                 </div>
                 <div className="mt-3 space-y-2">
-                  {[
-                    "Career fair reminders",
-                    "Mentor sign-up drive",
-                    "Weekend workshop push",
-                  ].map((item, index) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-2 rounded-xl bg-white/6 px-3 py-2 text-sm text-slate-200"
-                    >
+                  {["Career fair reminders", "Mentor sign-up drive", "Weekend workshop push"].map((item, index) => (
+                    <div key={item} className="flex items-center gap-2 rounded-xl bg-white/6 px-3 py-2 text-sm text-slate-200">
                       <span className="h-2.5 w-2.5 rounded-full bg-cyan-400" />
                       <span className="flex-1">{item}</span>
                       <span className="text-xs text-slate-400">0{index + 1}</span>
@@ -131,31 +120,18 @@ function DashboardMockup() {
                   ))}
                 </div>
               </div>
-
               <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-3">
                 <p className="text-xs text-slate-300">Live Response</p>
                 <div className="mt-3 space-y-3">
-                  {[
-                    ["Reach", "82%"],
-                    ["CTR", "19%"],
-                    ["RSVP", "1.4k"],
-                  ].map(([label, value]) => (
+                  {[["Reach", "82%"], ["CTR", "19%"], ["RSVP", "1.4k"]].map(([label, value]) => (
                     <div key={label}>
                       <div className="mb-1 flex items-center justify-between text-xs text-slate-300">
-                        <span>{label}</span>
-                        <span>{value}</span>
+                        <span>{label}</span><span>{value}</span>
                       </div>
                       <div className="h-2 rounded-full bg-white/10">
                         <div
                           className="h-2 rounded-full bg-gradient-to-r from-fuchsia-400 via-indigo-400 to-cyan-400"
-                          style={{
-                            width:
-                              value === "82%"
-                                ? "82%"
-                                : value === "19%"
-                                  ? "64%"
-                                  : "90%",
-                          }}
+                          style={{ width: value === "82%" ? "82%" : value === "19%" ? "64%" : "90%" }}
                         />
                       </div>
                     </div>
@@ -167,91 +143,88 @@ function DashboardMockup() {
         </div>
       </div>
     </div>
-  );
+  )
 }
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (user) {
+    const { data: userData } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (userData?.role === 'organizer' || userData?.role === 'admin') {
+      redirect('/dashboard')
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(129,140,248,0.16),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(251,191,36,0.16),_transparent_24%),linear-gradient(180deg,_#faf8ff_0%,_#f6f5ff_42%,_#ffffff_100%)] text-slate-900">
-      <section className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+      <section className="mx-auto flex w-full max-w-7xl flex-col gap-16 px-4 pb-16 pt-6 sm:px-6 lg:px-8 min-h-[90vh]">
         {/* ── Navbar ── */}
-        <header className="flex items-center justify-between py-3">
-          <div className="flex items-center gap-8">
+        <header className="flex items-center justify-between py-2">
+          <div className="flex items-center gap-10">
             <p className="text-lg font-bold tracking-tight text-slate-900">SOF</p>
-
-            <nav className="hidden items-center gap-6 text-sm font-medium text-slate-500 md:flex">
-              <a className="border-b-2 border-indigo-600 pb-0.5 text-slate-900" href="#platform">
-                Platform
-              </a>
-              <a className="transition hover:text-slate-900" href="#pricing">
-                Pricing
-              </a>
-              <a className="transition hover:text-slate-900" href="#resources">
-                Resources
-              </a>
+            <nav className="hidden items-center gap-7 text-sm font-medium text-slate-500 md:flex">
+              <a className="text-slate-900 font-semibold transition hover:text-indigo-600" href="#platform">Platform</a>
+              <a className="transition hover:text-slate-900" href="#pricing">Pricing</a>
+              <a className="transition hover:text-slate-900" href="#resources">Resources</a>
             </nav>
           </div>
-
-          <div className="flex items-center gap-3 text-sm font-semibold">
-            <a className="rounded-full px-4 py-2 text-slate-600 transition hover:bg-slate-100" href={`/dashboard`}>
-              Login
-            </a>
-            <a
-              className="rounded-full bg-gradient-to-r from-indigo-700 to-violet-700 px-5 py-2.5 text-white shadow-lg shadow-indigo-500/25 transition hover:translate-y-[-1px] hover:shadow-xl hover:shadow-indigo-500/30"
-              href={`/dashboard`}
-            >
-              Sign Up
-            </a>
-          </div>
+          <GoogleSignInButton className="rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50">
+            Log In
+          </GoogleSignInButton>
         </header>
 
         {/* ── Hero ── */}
-        <section className="grid items-center gap-14 pb-10 pt-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8 lg:pt-12">
-          <div className="max-w-2xl">
-            <span className="inline-flex rounded-full border border-amber-300/70 bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-900">
-              For Community Leaders
-            </span>
-
-            <h1 className="mt-5 max-w-xl text-5xl font-black leading-[0.95] tracking-[-0.05em] text-slate-950 sm:text-6xl lg:text-7xl">
-              Amplify Your Impact.
-              <span className="mt-2 block bg-gradient-to-r from-indigo-700 via-violet-700 to-cyan-600 bg-clip-text text-transparent">
-                Reach More Students.
+        <section className="grid items-center gap-12 pb-12 pt-4 lg:grid-cols-[1fr_1fr] lg:gap-16 lg:pt-8">
+          {/* Left: Text */}
+          <div className="flex flex-col items-start">
+            <h1 className="max-w-lg text-5xl font-black leading-[1.02] tracking-[-0.04em] text-slate-950 sm:text-6xl">
+              Post Opportunities.
+              <span className="mt-1 block bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-500 bg-clip-text text-transparent">
+                Reach the Right Students.
               </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-xl">
-              The definitive platform for organizers to connect with the next generation.
-              Professional tools for event scaling, ethical engagement, and deep-dive analytics.
+            <p className="mt-6 max-w-md text-[17px] leading-relaxed text-slate-500">
+              Post internships, events, and courses to reach thousands of Cambodian students in minutes.
             </p>
 
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <a
-                className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-700 to-violet-700 px-6 py-4 text-base font-semibold text-white shadow-[0_14px_30px_rgba(79,70,229,0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_35px_rgba(79,70,229,0.3)]"
-                href={`/dashboard`}
-              >
-                Request Organizer Account
-              </a>
-              <a
-                className="inline-flex items-center justify-center rounded-2xl border border-indigo-200 bg-white px-6 py-4 text-base font-semibold text-indigo-700 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50"
-                href="#resources"
-              >
-                View Case Studies
-              </a>
-            </div>
+            <GoogleSignInButton className="mt-8 inline-flex items-center justify-center gap-2.5 rounded-2xl bg-indigo-600 px-7 py-4 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(79,70,229,0.28)] transition hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-[0_12px_28px_rgba(79,70,229,0.35)] active:translate-y-0">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#fff"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff" opacity=".85"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#fff" opacity=".7"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff" opacity=".85"/>
+              </svg>
+              Create Organizer Account
+            </GoogleSignInButton>
+
+            <p className="mt-4 text-[13px] text-slate-400">
+              Free to join · Verified organizations only
+            </p>
           </div>
 
-          <div className="lg:justify-self-end">
+          {/* Right: Dashboard mockup */}
+          <div className="flex items-center justify-center lg:justify-end">
             <DashboardMockup />
           </div>
         </section>
       </section>
 
       {/* ── Streamlined Onboarding ── */}
-      <section className="border-y border-indigo-100/70 bg-[linear-gradient(180deg,#f4f1ff_0%,#ede9ff_100%)] py-20">
+      <section className="border-y border-indigo-100/70 bg-[linear-gradient(180deg,#f4f1ff_0%,#ede9ff_100%)] pt-10 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-black tracking-[-0.04em] text-indigo-800 sm:text-5xl">
-              Streamlined Onboarding
+            <h2 className="text-balance text-4xl font-black tracking-[-0.04em] text-indigo-800 sm:text-5xl">
+              Start reaching students today.
             </h2>
             <p className="mt-3 text-lg text-slate-600">
               From idea to impact in three simple steps.
@@ -331,24 +304,21 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
         <div className="rounded-[2.25rem] bg-[linear-gradient(135deg,#2f1a9a_0%,#3d1db7_38%,#4a2bd6_100%)] px-6 py-16 text-center text-white shadow-[0_30px_80px_rgba(63,34,170,0.3)] sm:px-12">
           <h2 className="mx-auto max-w-3xl text-4xl font-black tracking-[-0.04em] sm:text-5xl">
-            Ready to transform your engagement strategy?
+            Ready to post your first opportunity?
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/70">
-            Join 500+ organizations already reaching thousands of students daily on SOF.
+            Join the fastest-growing platform connecting organizations with Cambodian students.
           </p>
-          <a
-            className="mt-8 inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 text-base font-semibold text-indigo-800 shadow-lg shadow-black/10 transition hover:-translate-y-0.5"
-            href={`/dashboard`}
-          >
-            Get Started Today
-          </a>
+          <GoogleSignInButton className="mt-8 inline-flex items-center justify-center rounded-2xl bg-white px-7 py-4 text-base font-semibold text-indigo-800 shadow-lg shadow-black/10 transition hover:-translate-y-0.5">
+            Create Organizer Account
+          </GoogleSignInButton>
         </div>
       </section>
 
       {/* ── Footer ── */}
       <footer className="border-t border-indigo-100/80 px-4 py-5 text-sm text-slate-500 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2025 SOF Organizer Portal. All rights reserved.</p>
+          <p>© 2026 SOF Organizer Portal. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-6">
             <a className="transition hover:text-slate-900" href="#privacy">
               Privacy Policy

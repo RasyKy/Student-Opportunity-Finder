@@ -56,3 +56,8 @@ supabase/functions/.import_map.json
 android/
 ios/
 *.sync
+
+# Markdown (ignore all .md except README.md)
+*.md
+!README.md
+!readme.md
