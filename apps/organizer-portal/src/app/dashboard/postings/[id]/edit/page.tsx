@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Send, Save, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Save, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import TagPicker from '@/components/TagPicker';
 
@@ -20,13 +20,16 @@ const TYPES = [
   { label: 'Other',                   value: 'other' },
 ];
 
-export default function CreateOpportunityPage() {
+export default function EditOpportunityPage() {
   const router = useRouter();
+  const { id } = useParams<{ id: string }>();
+
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [orgName, setOrgName] = useState('');
-  const [userId, setUserId] = useState<string | null>(null);
 
+  const [postStatus, setPostStatus] = useState('private');
   const [type, setType] = useState('internship');
   const [location, setLocation] = useState('Remote');
   const [title, setTitle] = useState('');
@@ -40,53 +43,86 @@ export default function CreateOpportunityPage() {
   const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
-    async function init() {
+    async function load() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      setUserId(user.id);
-      const { data: profile } = await supabase
-        .from('organizer_profiles')
-        .select('org_name')
-        .eq('user_id', user.id)
-        .single();
-      setOrgName(profile?.org_name ?? '');
-    }
-    init();
-  }, []);
+      if (!user) { router.push('/'); return; }
 
-  async function submit(status: 'published' | 'private') {
+      const [{ data: posting }, { data: profile }] = await Promise.all([
+        supabase
+          .from('opportunities')
+          .select('*')
+          .eq('id', id)
+          .eq('created_by', user.id)
+          .single(),
+        supabase
+          .from('organizer_profiles')
+          .select('org_name')
+          .eq('user_id', user.id)
+          .single(),
+      ]);
+
+      if (!posting) { router.push('/dashboard/postings'); return; }
+
+      setPostStatus(posting.status ?? 'private');
+      setTitle(posting.title ?? '');
+      setType(posting.type ?? 'internship');
+      setLocation(posting.location ?? 'Remote');
+      setDescription(posting.description ?? '');
+      setApplicationLink(posting.application_link ?? '');
+      setContactInfo(posting.contact_info ?? '');
+      setDeadline(posting.deadline ?? '');
+      setStartDate(posting.start_date ?? '');
+      setEndDate(posting.end_date ?? '');
+      setEligibility(posting.eligibility ?? '');
+      setTags(posting.subject_tags ?? []);
+      setOrgName(profile?.org_name ?? '');
+      setFetching(false);
+    }
+    load();
+  }, [id, router]);
+
+  async function handleSave() {
     if (!title.trim()) { setError('Title is required.'); return; }
-    if (!userId) return;
 
     setLoading(true);
     setError(null);
 
     const supabase = createClient();
-    const { error: insertError } = await supabase.from('opportunities').insert({
-      title: title.trim(),
-      type,
-      organization: orgName,
-      location,
-      description: description.trim() || null,
-      application_link: applicationLink.trim() || null,
-      contact_info: contactInfo.trim() || null,
-      deadline: deadline || null,
-      start_date: startDate || null,
-      end_date: endDate || null,
-      eligibility: eligibility.trim() || null,
-      subject_tags: tags.length > 0 ? tags : null,
-      created_by: userId,
-      status,
-    });
+    const { error: updateError } = await supabase
+      .from('opportunities')
+      .update({
+        title: title.trim(),
+        type,
+        status: postStatus,
+        location,
+        description: description.trim() || null,
+        application_link: applicationLink.trim() || null,
+        contact_info: contactInfo.trim() || null,
+        deadline: deadline || null,
+        start_date: startDate || null,
+        end_date: endDate || null,
+        eligibility: eligibility.trim() || null,
+        subject_tags: tags.length > 0 ? tags : null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
 
-    if (insertError) {
-      setError(insertError.message);
+    if (updateError) {
+      setError('Failed to save changes. Please try again.');
       setLoading(false);
       return;
     }
 
     router.push('/dashboard/postings');
+  }
+
+  if (fetching) {
+    return (
+      <div className="flex items-center justify-center h-48">
+        <div className="w-6 h-6 rounded-full border-2 border-[#3B329C]/20 border-t-[#3B329C] animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -96,12 +132,44 @@ export default function CreateOpportunityPage() {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Create New Posting</h1>
-          <p className="text-slate-500 text-[14px] mt-0.5">Fill out the details below to post a new opportunity</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Edit Posting</h1>
+          <p className="text-slate-500 text-[14px] mt-0.5">Update the details for this opportunity</p>
         </div>
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 space-y-8">
+
+        {/* Status */}
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
+          <div>
+            <p className="text-[13px] font-bold text-slate-700">Visibility</p>
+            <p className="text-[12px] text-slate-400 mt-0.5">
+              {postStatus === 'published' ? 'This posting is live and visible to students.' : 'This posting is private and not visible to students.'}
+            </p>
+          </div>
+          <div className="flex rounded-xl border border-slate-200 overflow-hidden shrink-0">
+            <button
+              type="button"
+              onClick={() => setPostStatus('private')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-[13px] font-bold transition-all ${
+                postStatus === 'private' ? 'bg-slate-700 text-white' : 'bg-white text-slate-400 hover:bg-slate-50'
+              }`}
+            >
+              <EyeOff className="w-3.5 h-3.5" />
+              Private
+            </button>
+            <button
+              type="button"
+              onClick={() => setPostStatus('published')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-[13px] font-bold transition-all ${
+                postStatus === 'published' ? 'bg-[#3B329C] text-white' : 'bg-white text-slate-400 hover:bg-slate-50'
+              }`}
+            >
+              <Eye className="w-3.5 h-3.5" />
+              Published
+            </button>
+          </div>
+        </div>
 
         {/* Type */}
         <div className="space-y-3">
@@ -131,7 +199,6 @@ export default function CreateOpportunityPage() {
             type="text"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            placeholder="e.g. Summer Engineering Internship 2025"
             className="w-full bg-slate-50/50 border border-slate-100 rounded-xl px-4 py-3.5 text-[14px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B329C]/10 focus:border-[#3B329C] transition-all"
           />
         </div>
@@ -145,7 +212,6 @@ export default function CreateOpportunityPage() {
             readOnly
             className="w-full md:w-80 bg-slate-50/80 border border-slate-100 rounded-xl px-4 py-3.5 text-[14px] text-slate-400 font-medium focus:outline-none"
           />
-          <p className="text-[11px] text-slate-400">Auto-filled from your profile</p>
         </div>
 
         {/* Location */}
@@ -174,7 +240,6 @@ export default function CreateOpportunityPage() {
             rows={6}
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="Describe the opportunity, responsibilities, and what students can expect..."
             className="w-full bg-slate-50/50 border border-slate-100 rounded-xl px-4 py-3.5 text-[14px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B329C]/10 focus:border-[#3B329C] transition-all resize-none"
           />
         </div>
@@ -191,7 +256,7 @@ export default function CreateOpportunityPage() {
           />
         </div>
 
-        {/* Application link + Contact info */}
+        {/* Application link + Contact */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             <label className="text-[12px] font-bold text-slate-400 uppercase tracking-wider">Application / Registration URL</label>
@@ -199,7 +264,6 @@ export default function CreateOpportunityPage() {
               type="url"
               value={applicationLink}
               onChange={e => setApplicationLink(e.target.value)}
-              placeholder="https://example.com/apply"
               className="w-full bg-slate-50/50 border border-slate-100 rounded-xl px-4 py-3.5 text-[14px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B329C]/10 focus:border-[#3B329C] transition-all"
             />
           </div>
@@ -209,7 +273,6 @@ export default function CreateOpportunityPage() {
               type="text"
               value={contactInfo}
               onChange={e => setContactInfo(e.target.value)}
-              placeholder="e.g. hr@company.com or +855 12 345 678"
               className="w-full bg-slate-50/50 border border-slate-100 rounded-xl px-4 py-3.5 text-[14px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3B329C]/10 focus:border-[#3B329C] transition-all"
             />
           </div>
@@ -268,24 +331,15 @@ export default function CreateOpportunityPage() {
         )}
 
         {/* Actions */}
-        <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
+        <div className="pt-6 border-t border-slate-50 flex justify-end">
           <button
             type="button"
             disabled={loading}
-            onClick={() => submit('private')}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-100 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-all disabled:opacity-50"
-          >
-            <Save className="w-4 h-4" />
-            Save as Private
-          </button>
-          <button
-            type="button"
-            disabled={loading}
-            onClick={() => submit('published')}
+            onClick={handleSave}
             className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#3B329C] hover:bg-[#2D2580] text-white font-bold text-[14px] shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
           >
-            <Send className="w-4 h-4" />
-            {loading ? 'Publishing…' : 'Publish'}
+            <Save className="w-4 h-4" />
+            {loading ? 'Saving…' : 'Save Changes'}
           </button>
         </div>
       </div>

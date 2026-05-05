@@ -1,142 +1,180 @@
 "use client";
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import {
-  CheckCircle, 
-  ArrowRight, 
-  Zap, 
-  BarChart3, 
-  ShieldCheck,
-  LifeBuoy
+  AlertTriangle, ArrowRight, Mail, Globe, ImageIcon,
+  CheckCircle2, ShieldCheck, Clock, XCircle, RotateCcw,
 } from 'lucide-react';
 
+const REQUIREMENTS = [
+  {
+    icon: Mail,
+    title: 'Official organization email',
+    desc: 'A work email tied to your domain — no Gmail, Yahoo, or personal providers.',
+  },
+  {
+    icon: Globe,
+    title: 'Website or social media page',
+    desc: 'A link to your official website, LinkedIn page, or primary social presence.',
+  },
+  {
+    icon: ImageIcon,
+    title: 'Logo and profile details',
+    desc: 'Your organization name, category, and logo for your public profile.',
+  },
+];
+
+type VerificationStatus = 'pending' | 'verified' | 'rejected' | null;
+
 export default function VerificationPage() {
+  const [status, setStatus] = useState<VerificationStatus>(null);
+  const [rejectionReason, setRejectionReason] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStatus() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('organizer_profiles')
+        .select('verification_status, rejection_reason')
+        .eq('user_id', user.id)
+        .single();
+
+      setStatus((data?.verification_status as VerificationStatus) ?? null);
+      setRejectionReason(data?.rejection_reason ?? null);
+      setLoading(false);
+    }
+    fetchStatus();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-48">
+        <div className="w-6 h-6 rounded-full border-2 border-[#3B329C]/20 border-t-[#3B329C] animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-12 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-      {/* Welcome Header */}
-      <div className="max-w-3xl">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-[11px] font-black uppercase tracking-wider mb-6">
-          <Zap className="w-3 h-3" />
-          Onboarding Process
-        </div>
-        <h1 className="text-[48px] font-black leading-[1.1] text-slate-900 tracking-tight">
-          Verify your Organization to <span className="text-[#3B329C]">Start Posting.</span>
-        </h1>
-        <p className="mt-6 text-[18px] text-slate-500 leading-relaxed max-w-2xl font-medium">
-          Unlock the full potential of SOF. Verified organizations get priority placement, advanced analytics, and the trusted verification badge.
-        </p>
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-700">
+      <div>
+        <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mb-1">Dashboard</p>
+        <h1 className="text-2xl font-bold text-slate-900">Organization Verification</h1>
       </div>
 
-      {/* Hero Action Card */}
-      <div className="relative rounded-[40px] bg-[#3B329C] p-12 overflow-hidden shadow-2xl shadow-indigo-200 min-h-[420px] flex flex-col justify-center group">
-        {/* Abstract background elements */}
-        <div className="absolute top-0 right-0 w-[60%] h-full bg-gradient-to-br from-white/10 to-transparent rounded-full -mr-32 -mt-32 blur-3xl group-hover:scale-110 transition-transform duration-1000" />
-        <div className="absolute bottom-0 left-[20%] w-[40%] h-[60%] bg-indigo-400/20 rounded-full blur-3xl" />
-        
-        <div className="relative z-10 max-w-xl">
-          <div className="w-16 h-16 rounded-[20px] bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white mb-8">
-            <CheckCircle className="w-8 h-8" />
+      {/* Status banner — varies by state */}
+      {status === 'verified' && (
+        <div className="bg-white border border-emerald-200 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+          <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-5 h-5 text-emerald-500" />
           </div>
-          <h2 className="text-[44px] font-black text-white leading-[1.1] tracking-tight mb-8">
-            Ready to reach <br />
-            <span className="text-amber-400">10,000+ students</span>?
-          </h2>
-          <p className="text-indigo-100 text-[17px] leading-relaxed mb-10 max-w-[460px] font-medium opacity-90">
-            Our verification process is designed to be seamless. Submit your documents once and gain permanent access to the student ecosystem.
-          </p>
-          <Link href="/dashboard/verification/registration">
-            <button className="group flex items-center gap-4 bg-white text-[#3B329C] hover:bg-indigo-50 px-10 py-5 rounded-[20px] font-black transition-all shadow-xl shadow-black/10 active:scale-95 text-[16px]">
+          <div>
+            <p className="text-[14px] font-bold text-slate-900">Your organization is verified</p>
+            <p className="text-[13px] text-slate-500 mt-0.5">
+              You have full access to post opportunities and manage your listings.
+            </p>
+          </div>
+          <span className="ml-auto shrink-0 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[12px] font-bold border border-emerald-100">
+            Verified
+          </span>
+        </div>
+      )}
+
+      {status === 'pending' && (
+        <div className="bg-white border border-amber-200 rounded-3xl p-6 shadow-sm flex items-center gap-5">
+          <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+            <Clock className="w-5 h-5 text-amber-500" />
+          </div>
+          <div>
+            <p className="text-[14px] font-bold text-slate-900">Verification under review</p>
+            <p className="text-[13px] text-slate-500 mt-0.5">
+              Your submission is being reviewed. This typically takes 1–2 business days.
+            </p>
+          </div>
+          <span className="ml-auto shrink-0 px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-[12px] font-bold border border-amber-100">
+            Pending
+          </span>
+        </div>
+      )}
+
+      {status === 'rejected' && (
+        <div className="bg-white border border-red-200 rounded-3xl p-6 shadow-sm space-y-4">
+          <div className="flex items-center gap-5">
+            <div className="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
+              <XCircle className="w-5 h-5 text-red-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-bold text-slate-900">Verification not approved</p>
+              <p className="text-[13px] text-slate-500 mt-0.5">
+                {rejectionReason ?? 'Your submission did not meet our requirements. Please review and resubmit.'}
+              </p>
+            </div>
+            <Link href="/dashboard/verification/registration" className="shrink-0">
+              <button className="flex items-center gap-2 bg-[#3B329C] hover:bg-[#2D2580] text-white px-4 py-2.5 rounded-xl font-bold text-[13px] transition-all whitespace-nowrap">
+                <RotateCcw className="w-3.5 h-3.5" />
+                Resubmit
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {status === null && (
+        <div className="bg-white border border-amber-200 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center gap-5">
+          <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-5 h-5 text-amber-500" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-bold text-slate-900">Action Required: Complete your profile verification</p>
+            <p className="text-[13px] text-slate-500 mt-0.5 leading-relaxed">
+              Verification is required before you can post opportunities. This keeps our student community safe and ensures all listings come from legitimate organizations.
+            </p>
+          </div>
+          <Link href="/dashboard/verification/registration" className="shrink-0">
+            <button className="flex items-center gap-2 bg-[#3B329C] hover:bg-[#2D2580] text-white px-5 py-2.5 rounded-xl font-bold text-[14px] shadow-lg shadow-indigo-200 transition-all hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap">
               Start Verification
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </Link>
         </div>
+      )}
 
-        {/* Floating Badge Mockup */}
-        <div className="absolute right-12 top-1/2 -translate-y-1/2 hidden lg:block">
-           <div className="w-[300px] bg-white/10 backdrop-blur-md border border-white/20 rounded-[32px] p-8 rotate-3 hover:rotate-0 transition-transform duration-700">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-indigo-600 shadow-lg">
-                  <CheckCircle className="w-6 h-6" />
+      {/* Requirements checklist — only shown when not yet verified */}
+      {status !== 'verified' && (
+        <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
+          <div className="mb-5">
+            <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mb-1">Before You Begin</p>
+            <h2 className="text-[15px] font-bold text-slate-900">Verification Requirements</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {REQUIREMENTS.map((req) => (
+              <div key={req.title} className="flex flex-col gap-3 p-4 rounded-xl bg-slate-50/70 border border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div className="w-8 h-8 rounded-lg bg-white border border-slate-100 flex items-center justify-center shadow-sm">
+                    <req.icon className="w-4 h-4 text-slate-500" />
+                  </div>
+                  <CheckCircle2 className="w-4 h-4 text-slate-300" />
                 </div>
                 <div>
-                  <div className="h-2.5 w-24 bg-white/40 rounded-full mb-2" />
-                  <div className="h-2 w-16 bg-white/20 rounded-full" />
+                  <p className="text-[13px] font-bold text-slate-800">{req.title}</p>
+                  <p className="text-[12px] text-slate-400 mt-1 leading-relaxed">{req.desc}</p>
                 </div>
               </div>
-              <div className="space-y-3">
-                <div className="h-2 w-full bg-white/10 rounded-full" />
-                <div className="h-2 w-full bg-white/10 rounded-full" />
-                <div className="h-2 w-2/3 bg-white/10 rounded-full" />
-              </div>
-           </div>
-        </div>
-      </div>
-
-      {/* Benefits Grid */}
-      <div className="space-y-10">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <h3 className="text-[24px] font-black text-slate-900 tracking-tight">Verification Perks</h3>
-            <p className="text-slate-400 font-bold text-[14px]">Everything you get as a trusted partner</p>
+            ))}
           </div>
-          <div className="h-px flex-1 bg-slate-100 mx-10 hidden md:block" />
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Unlimited Postings",
-              desc: "Share as many opportunities as you want without any restrictions.",
-              icon: Zap,
-              color: "bg-amber-50 text-amber-600"
-            },
-            {
-              title: "Rich Analytics",
-              desc: "See exactly how students interact with your posts and optimize reach.",
-              icon: BarChart3,
-              color: "bg-indigo-50 text-indigo-600"
-            },
-            {
-              title: "Verified Badge",
-              desc: "Build instant trust with the community through our official checkmark.",
-              icon: ShieldCheck,
-              color: "bg-emerald-50 text-emerald-600"
-            }
-          ].map((benefit, i) => (
-            <div key={i} className="bg-white rounded-[32px] p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300">
-              <div className={`w-14 h-14 rounded-2xl ${benefit.color} flex items-center justify-center mb-8 shadow-sm`}>
-                <benefit.icon className="w-7 h-7" />
-              </div>
-              <h4 className="text-[19px] font-black text-slate-900 mb-3 tracking-tight">{benefit.title}</h4>
-              <p className="text-[15px] text-slate-500 leading-relaxed font-medium">
-                {benefit.desc}
-              </p>
-            </div>
-          ))}
+          <p className="mt-5 text-[12px] text-slate-400 flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            Verification typically takes 1–2 business days after submission.
+          </p>
         </div>
-      </div>
-
-      {/* Support Footer */}
-      <div className="bg-slate-900 rounded-[32px] p-10 flex flex-col md:flex-row items-center justify-between gap-8 text-white">
-        <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-indigo-400">
-            <LifeBuoy className="w-8 h-8" />
-          </div>
-          <div className="space-y-1 text-center md:text-left">
-            <h4 className="text-[18px] font-black tracking-tight">Need help with verification?</h4>
-            <p className="text-white/50 font-medium text-[15px]">Our dedicated support team is available 24/7 to assist you.</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4 w-full md:w-auto">
-          <button className="flex-1 md:flex-none px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-all text-[14px]">
-            View FAQ
-          </button>
-          <button className="flex-1 md:flex-none px-8 py-4 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-black transition-all shadow-xl shadow-indigo-500/20 text-[14px]">
-            Contact Support
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

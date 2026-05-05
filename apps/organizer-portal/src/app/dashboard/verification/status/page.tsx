@@ -14,16 +14,12 @@ import {
 import { createClient } from '@/lib/supabase/client';
 
 interface Profile {
+  verification_status: string;
   rejection_reason: string | null;
 }
 
-interface UserData {
-  verification_status: string;
-  organizer_profiles: Profile[] | null;
-}
-
 export default function VerificationStatusPage() {
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -33,19 +29,19 @@ export default function VerificationStatusPage() {
       if (!user) return
 
       const { data } = await supabase
-        .from('users')
-        .select('verification_status, organizer_profiles(rejection_reason)')
-        .eq('id', user.id)
+        .from('organizer_profiles')
+        .select('verification_status, rejection_reason')
+        .eq('user_id', user.id)
         .single()
 
-      setUserData(data)
+      setProfile(data)
       setLoading(false)
     }
     load()
   }, [])
 
-  const status = userData?.verification_status ?? 'pending'
-  const rejectionReason = userData?.organizer_profiles?.[0]?.rejection_reason
+  const status = profile?.verification_status ?? 'pending'
+  const rejectionReason = profile?.rejection_reason
 
   const isRejected = status === 'rejected'
 

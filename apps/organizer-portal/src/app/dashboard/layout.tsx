@@ -23,7 +23,8 @@ const PRE_VERIFICATION_PATHS = [
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
+  const [orgName, setOrgName] = useState('');
 
   useEffect(() => {
     async function checkVerification() {
@@ -33,11 +34,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       const { data: profile } = await supabase
         .from('organizer_profiles')
-        .select('verification_status')
+        .select('verification_status, org_name')
         .eq('user_id', user.id)
         .single()
 
       setIsVerified(profile?.verification_status === 'verified')
+      setOrgName(profile?.org_name ?? user.user_metadata?.full_name ?? user.email ?? '')
     }
     checkVerification()
   }, [])
@@ -109,7 +111,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-8 space-y-2">
           {navItems.map((item) => {
-            const locked = item.requiresVerification && !isVerified;
+            const locked = item.requiresVerification && isVerified === false;
             const isActive = !locked && (pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href)));
 
             if (locked) {
@@ -166,7 +168,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </div>
             <div>
               <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">Company</p>
-              <h2 className="text-[15px] font-bold text-slate-900">Kirirom Institute of Technology</h2>
+              <h2 className="text-[15px] font-bold text-slate-900">{orgName || '—'}</h2>
             </div>
           </div>
 
