@@ -120,6 +120,31 @@ export default function ContentManagementPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
+  // Unsaved-changes guard
+  const [panelHasChanges, setPanelHasChanges] = useState(false);
+  const [pendingNavAction, setPendingNavAction] = useState<
+    { type: "row"; id: string } | { type: "new" } | null
+  >(null);
+
+  const handlePanelDirtyChange = useCallback((dirty: boolean) => {
+    setPanelHasChanges(dirty);
+  }, []);
+
+  const handleDiscardAndNavigate = useCallback(() => {
+    if (!pendingNavAction) return;
+    setPanelHasChanges(false);
+    if (pendingNavAction.type === "row") {
+      setSelectedItemId(pendingNavAction.id);
+      setIsCreating(false);
+      setIsFullscreen(false);
+    } else {
+      setIsCreating(true);
+      setSelectedItemId(null);
+      setIsFullscreen(true);
+    }
+    setPendingNavAction(null);
+  }, [pendingNavAction]);
+
   // Toast
   const [toast, setToast] = useState<{
     message: string;
@@ -199,14 +224,19 @@ export default function ContentManagementPage() {
   );
 
   const handleRowClick = useCallback((id: string) => {
+    if (panelHasChanges && id !== selectedItemId) {
+      setPendingNavAction({ type: "row", id });
+      return;
+    }
     setSelectedItemId(id);
     setIsCreating(false);
     setIsFullscreen(false);
-  }, []);
+  }, [panelHasChanges, selectedItemId]);
 
   const handleClosePanel = useCallback(() => {
     setSelectedItemId(null);
     setIsFullscreen(false);
+    setPanelHasChanges(false);
   }, []);
 
   const handleSave = useCallback(
@@ -252,7 +282,9 @@ export default function ContentManagementPage() {
       createdAt: "",
       subjectTags: [],
       startDate: "",
+      endDate: "",
       deadline: "",
+      price_range: "",
       description: "",
       description_kh: "",
       location: "",
@@ -411,6 +443,10 @@ export default function ContentManagementPage() {
               <button
                 type="button"
                 onClick={() => {
+                  if (panelHasChanges) {
+                    setPendingNavAction({ type: "new" });
+                    return;
+                  }
                   setIsCreating(true);
                   setSelectedItemId(null);
                   setIsFullscreen(true);
@@ -601,6 +637,7 @@ export default function ContentManagementPage() {
               onToggleStatus={handleToggleStatus}
               isDuplicate={isDuplicate}
               isNew={isCreating}
+              onDirtyChange={handlePanelDirtyChange}
             />
           </div>
         )}
@@ -614,6 +651,42 @@ export default function ContentManagementPage() {
           variant={toast.variant}
           onDismiss={handleDismissToast}
         />
+      )}
+
+      {/* Unsaved changes navigation guard */}
+      {pendingNavAction && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setPendingNavAction(null)}
+        >
+          <div
+            className="w-80 rounded-xl bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-base font-semibold text-gray-900">
+              Unsaved changes
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              You have unsaved changes that will be lost if you continue.
+            </p>
+            <div className="mt-5 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setPendingNavAction(null)}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Keep editing
+              </button>
+              <button
+                type="button"
+                onClick={handleDiscardAndNavigate}
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+              >
+                Discard
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

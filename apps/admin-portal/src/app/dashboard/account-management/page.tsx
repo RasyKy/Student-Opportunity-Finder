@@ -45,8 +45,8 @@ export default function AccountManagementPage() {
     return accounts.filter((a) => {
       const query = search.toLowerCase();
       const matchSearch =
-        a.brand_name.toLowerCase().includes(query) ||
-        a.contact_email.toLowerCase().includes(query) ||
+        a.org_name.toLowerCase().includes(query) ||
+        a.contact_name.toLowerCase().includes(query) ||
         a.org_type.toLowerCase().includes(query);
       const matchStatus = filterStatus === "all" || a.status === filterStatus;
       return matchSearch && matchStatus;
@@ -131,11 +131,11 @@ export default function AccountManagementPage() {
           <div className="flex flex-wrap items-center gap-2">
             <div className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700">
               <CircleAlert className="h-3.5 w-3.5 text-[#D18D00]" />
-              <span>{pendingCount} pending verifications</span>
+              <span>{pendingCount} pending {pendingCount === 1 ? "verification" : "verifications"}</span>
             </div>
             <div className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700">
               <CircleAlert className="h-3.5 w-3.5 text-[#D23030]" />
-              <span>{flaggedCount} flagged account</span>
+              <span>{flaggedCount} flagged {flaggedCount === 1 ? "account" : "accounts"}</span>
             </div>
           </div>
         </div>
@@ -183,10 +183,10 @@ export default function AccountManagementPage() {
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/60">
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
-                    Brand Name
+                    Organization
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
-                    Contact Email
+                    Contact
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-600">
                     Posts
@@ -210,10 +210,11 @@ export default function AccountManagementPage() {
                     onClick={() => setSelectedAccount(account)}
                   >
                     <td className="px-4 py-2.5 text-sm text-gray-900">
-                      {account.brand_name}
+                      {account.org_name}
                     </td>
                     <td className="px-4 py-2.5 text-sm text-gray-700">
-                      {account.contact_email}
+                      <span>{account.contact_name}</span>
+                      <span className="ml-1 text-xs text-gray-400">{account.contact_title}</span>
                     </td>
                     <td className="px-4 py-2.5 text-sm text-gray-700">
                       {account.post_count}
@@ -326,7 +327,7 @@ export default function AccountManagementPage() {
               {/* Header: Organization name + Status */}
               <div className="flex items-center justify-between gap-4 border-b border-gray-100 pb-6">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-                  {selectedAccount.brand_name}
+                  {selectedAccount.org_name}
                 </h2>
                 <span
                   className={`shrink-0 rounded-full px-3.5 py-1 text-xs font-semibold ${statusColors[selectedAccount.status]}`}
@@ -338,13 +339,23 @@ export default function AccountManagementPage() {
 
               {/* Data grid */}
               <div className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
-                {/* Official Email */}
+                {/* Contact Name */}
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Official Email
+                    Contact Name
                   </p>
-                  <p className="mt-1 text-sm font-medium text-gray-900 break-all">
-                    {selectedAccount.contact_email}
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {selectedAccount.contact_name}
+                  </p>
+                </div>
+
+                {/* Contact Title */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Contact Title
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {selectedAccount.contact_title}
                   </p>
                 </div>
 
@@ -358,20 +369,34 @@ export default function AccountManagementPage() {
                   </p>
                 </div>
 
+                {/* Organization Type */}
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    Organization Type
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-gray-900">
+                    {selectedAccount.org_type}
+                  </p>
+                </div>
+
                 {/* Website */}
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
                     Website
                   </p>
-                  <a
-                    href={selectedAccount.website_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 hover:underline"
-                  >
-                    {selectedAccount.website_url}
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                  </a>
+                  {selectedAccount.website_url ? (
+                    <a
+                      href={selectedAccount.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 hover:underline"
+                    >
+                      {selectedAccount.website_url}
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                    </a>
+                  ) : (
+                    <p className="mt-1 text-sm font-medium text-gray-400">—</p>
+                  )}
                 </div>
 
                 {/* Social Link */}
@@ -394,20 +419,10 @@ export default function AccountManagementPage() {
                   )}
                 </div>
 
-                {/* Organization Category */}
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Organization Category
-                  </p>
-                  <p className="mt-1 text-sm font-medium text-gray-900">
-                    {selectedAccount.org_type}
-                  </p>
-                </div>
-
                 {/* Owner Name */}
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                    Owner Name
+                    Account Name
                   </p>
                   <p className="mt-1 text-sm font-medium text-gray-900">
                     {selectedAccount.users?.name ?? "-"}
@@ -434,14 +449,32 @@ export default function AccountManagementPage() {
                   </p>
                 </div>
 
-                {/* Flag Reason - full width if present */}
-                {selectedAccount.flagged && selectedAccount.flagged_reason && (
+                {/* Document */}
+                {selectedAccount.document_url && (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                      Document
+                    </p>
+                    <a
+                      href={selectedAccount.document_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 hover:underline"
+                    >
+                      View document
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                    </a>
+                  </div>
+                )}
+
+                {/* Rejection Reason - full width if present */}
+                {selectedAccount.flagged && selectedAccount.rejection_reason && (
                   <div className="col-span-full rounded-lg border border-red-100 bg-red-50/50 p-4">
                     <p className="text-xs font-semibold uppercase tracking-wider text-red-500">
                       Flag Reason
                     </p>
                     <p className="mt-1 text-sm font-medium text-red-600">
-                      {selectedAccount.flagged_reason}
+                      {selectedAccount.rejection_reason}
                     </p>
                   </div>
                 )}

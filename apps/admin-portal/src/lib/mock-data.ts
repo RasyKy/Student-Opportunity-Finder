@@ -48,19 +48,23 @@ export type ContentItem = {
   target_group: string[];
   format: "online" | "onsite" | "hybrid" | "unknown" | "";
   contact_info: string;
+  endDate: string;
+  price_range: string;
 };
 
 export type UserAccount = {
   id: string;
-  brand_name: string;
-  contact_email: string;
+  org_name: string;
   org_type: string;
-  website_url: string;
+  contact_name: string;
+  contact_title: string;
+  website_url: string | null;
   social_link: string | null;
+  document_url: string | null;
   post_count: number;
   status: "verified" | "pending" | "suspended";
   flagged: boolean;
-  flagged_reason: string | null;
+  rejection_reason: string | null;
   created_at: string;
   users: {
     email: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   X,
   Maximize2,
@@ -24,6 +24,7 @@ type EditPostPanelProps = {
     nextStatus: ContentItem["status"],
   ) => Promise<void>;
   isDuplicate: boolean;
+  onDirtyChange?: (dirty: boolean) => void;
 };
 
 type ConfirmAction = "save" | "status" | "delete-1" | "delete-2" | "close";
@@ -64,18 +65,28 @@ function formatDateForAPI(dateStr: string) {
   return `${year}-${month}-${day}`;
 }
 
+function isValidDate(s: string): boolean {
+  if (!s) return true;
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return false;
+  const [d, m, y] = s.split("/").map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
+}
+
 function InputField({
   label,
   value,
   onChange,
   placeholder,
   error,
+  disabled,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   error?: string;
+  disabled?: boolean;
 }) {
   return (
     <div>
@@ -92,6 +103,51 @@ function InputField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        disabled={disabled}
+        className={`w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 ${error ? "border-red-400 ring-1 ring-red-300 focus:ring-red-400" : "border-gray-200 focus:ring-violet-500"} ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      />
+    </div>
+  );
+}
+
+function DateField({
+  label,
+  value,
+  onChange,
+  error,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  error?: string;
+}) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 8);
+    let formatted = digits;
+    if (digits.length > 4) {
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+    } else if (digits.length > 2) {
+      formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    }
+    onChange(formatted);
+  };
+
+  return (
+    <div>
+      <label
+        className={`mb-1.5 block text-xs font-semibold uppercase tracking-wide ${error ? "text-red-500" : "text-gray-500"}`}
+      >
+        {label}
+        {error && (
+          <span className="ml-1.5 normal-case font-normal">— {error}</span>
+        )}
+      </label>
+      <input
+        type="text"
+        value={value}
+        onChange={handleChange}
+        placeholder="DD/MM/YYYY"
+        maxLength={10}
         className={`w-full rounded-lg border bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 ${error ? "border-red-400 ring-1 ring-red-300 focus:ring-red-400" : "border-gray-200 focus:ring-violet-500"}`}
       />
     </div>
@@ -161,6 +217,7 @@ export default function EditPostPanel({
   onDelete,
   onToggleStatus,
   isDuplicate,
+  onDirtyChange,
 }: EditPostPanelProps) {
   // Form state
   const [title, setTitle] = useState(item.title);
@@ -171,6 +228,7 @@ export default function EditPostPanel({
   const [startDate, setStartDate] = useState(
     formatDateForInput(item.startDate),
   );
+  const [endDate, setEndDate] = useState(formatDateForInput(item.endDate));
   const [deadline, setDeadline] = useState(formatDateForInput(item.deadline));
   const [type, setType] = useState(item.type);
   const [description, setDescription] = useState(item.description);
@@ -189,6 +247,7 @@ export default function EditPostPanel({
   const [targetGroupInput, setTargetGroupInput] = useState("");
   const [format, setFormat] = useState(item.format);
   const [contact_info, setContactInfo] = useState(item.contact_info);
+  const [price_range, setPriceRange] = useState(item.price_range);
 
   // Confirmation + async state
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(
@@ -200,6 +259,9 @@ export default function EditPostPanel({
     ContentItem["status"] | null
   >(null);
   const [titleError, setTitleError] = useState(false);
+  const [startDateError, setStartDateError] = useState("");
+  const [endDateError, setEndDateError] = useState("");
+  const [deadlineError, setDeadlineError] = useState("");
 
   // Unsaved changes detection
   const hasChanges = useMemo(() => {
@@ -209,7 +271,9 @@ export default function EditPostPanel({
       organization !== item.organization ||
       JSON.stringify(subjectTags) !== JSON.stringify(item.subjectTags) ||
       startDate !== formatDateForInput(item.startDate) ||
+      endDate !== formatDateForInput(item.endDate) ||
       deadline !== formatDateForInput(item.deadline) ||
+      price_range !== item.price_range ||
       type !== item.type ||
       description !== item.description ||
       description_kh !== item.description_kh ||
@@ -231,7 +295,9 @@ export default function EditPostPanel({
     organization,
     subjectTags,
     startDate,
+    endDate,
     deadline,
+    price_range,
     type,
     description,
     description_kh,
@@ -248,6 +314,20 @@ export default function EditPostPanel({
     contact_info,
     item,
   ]);
+
+  useEffect(() => {
+    onDirtyChange?.(hasChanges);
+  }, [hasChanges, onDirtyChange]);
+
+  useEffect(() => {
+    if (!hasChanges) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasChanges]);
 
   const handleConfirmStatus = async () => {
     if (!pendingStatus) return;
@@ -268,7 +348,9 @@ export default function EditPostPanel({
     organization,
     subjectTags,
     startDate: formatDateForAPI(startDate),
+    endDate: formatDateForAPI(endDate),
     deadline: formatDateForAPI(deadline),
+    price_range,
     type,
     description,
     description_kh,
@@ -285,12 +367,16 @@ export default function EditPostPanel({
     contact_info,
   });
 
+  const handleSaveClick = () => {
+    let valid = true;
+    if (!title.trim()) { setTitleError(true); valid = false; }
+    if (!isValidDate(startDate)) { setStartDateError("use DD/MM/YYYY"); valid = false; }
+    if (!isValidDate(endDate)) { setEndDateError("use DD/MM/YYYY"); valid = false; }
+    if (!isValidDate(deadline)) { setDeadlineError("use DD/MM/YYYY"); valid = false; }
+    if (valid) setConfirmAction("save");
+  };
+
   const handleConfirmSave = async () => {
-    if (!title.trim()) {
-      setTitleError(true);
-      setConfirmAction(null);
-      return;
-    }
     setLoading(true);
     try {
       await onSave(buildUpdated());
@@ -467,18 +553,24 @@ export default function EditPostPanel({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <InputField
+          <div className="grid grid-cols-3 gap-4">
+            <DateField
               label="Start Date"
               value={startDate}
-              onChange={setStartDate}
-              placeholder="DD/MM/YYYY"
+              onChange={(v) => { setStartDate(v); if (startDateError) setStartDateError(""); }}
+              error={startDateError}
             />
-            <InputField
-              label="Deadline"
+            <DateField
+              label="End Date"
+              value={endDate}
+              onChange={(v) => { setEndDate(v); if (endDateError) setEndDateError(""); }}
+              error={endDateError}
+            />
+            <DateField
+              label="Application Deadline"
               value={deadline}
-              onChange={setDeadline}
-              placeholder="DD/MM/YYYY"
+              onChange={(v) => { setDeadline(v); if (deadlineError) setDeadlineError(""); }}
+              error={deadlineError}
             />
           </div>
 
@@ -487,40 +579,46 @@ export default function EditPostPanel({
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
                 Type
               </label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value as ContentItem["type"])}
-                className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
-              >
-                {typeOptions.map((opt) => (
-                  <option key={opt} value={opt.toLowerCase()}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value as ContentItem["type"])}
+                  className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-8 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
+                >
+                  {typeOptions.map((opt) => (
+                    <option key={opt} value={opt.toLowerCase()}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+              </div>
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500">
                 Format
               </label>
-              <select
-                value={format}
-                onChange={(e) =>
-                  setFormat(
-                    e.target.value as
-                      | "online"
-                      | "onsite"
-                      | "hybrid"
-                      | "unknown",
-                  )
-                }
-                className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
-              >
-                <option value="unknown">Unknown</option>
-                <option value="online">Online</option>
-                <option value="onsite">Onsite</option>
-                <option value="hybrid">Hybrid</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={format}
+                  onChange={(e) =>
+                    setFormat(
+                      e.target.value as
+                        | "online"
+                        | "onsite"
+                        | "hybrid"
+                        | "unknown",
+                    )
+                  }
+                  className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-8 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-violet-500"
+                >
+                  <option value="unknown">Unknown</option>
+                  <option value="online">Online</option>
+                  <option value="onsite">Onsite</option>
+                  <option value="hybrid">Hybrid</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+              </div>
             </div>
           </div>
 
@@ -556,6 +654,14 @@ export default function EditPostPanel({
           </div>
 
           <InputField
+            label="Price Range"
+            value={is_free ? "Free" : price_range}
+            onChange={setPriceRange}
+            placeholder="e.g. $50–$200"
+            disabled={is_free}
+          />
+
+          <InputField
             label="Eligibility"
             value={eligibility}
             onChange={setEligibility}
@@ -580,7 +686,7 @@ export default function EditPostPanel({
             value={application_link}
             onChange={setApplicationLink}
           />
-          <LinkField
+          <InputField
             label="Contact Info"
             value={contact_info}
             onChange={setContactInfo}
@@ -860,7 +966,7 @@ export default function EditPostPanel({
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => setConfirmAction("save")}
+            onClick={handleSaveClick}
             disabled={!hasChanges && !isNew}
             className="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed"
           >

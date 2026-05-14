@@ -15,9 +15,13 @@ router.post(
       .withMessage("Password must be at least 6 characters"),
     body("name").notEmpty().trim().escape(),
     body("org_name").notEmpty().trim().escape(),
-        body("website_url").isURL().withMessage("Enter a valid website URL"),
-        body("official_email").isEmail().withMessage("Enter a valid email address"),
-        body("category").notEmpty().withMessage("Organization category is required"),
+    body("org_type").notEmpty().withMessage("Organization type is required"),
+    body("contact_name").notEmpty().trim().escape(),
+    body("contact_title").notEmpty().trim().escape(),
+    body("website_url")
+      .optional({ checkFalsy: true })
+      .isURL()
+      .withMessage("Enter a valid website URL"),
     body("social_link")
       .optional({ checkFalsy: true })
       .isURL()
@@ -29,15 +33,16 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-        const {
+    const {
       email,
       password,
       name,
       org_name,
+      org_type,
+      contact_name,
+      contact_title,
       website_url,
-      official_email,
       social_link,
-      category,
     } = req.body;
 
     try {
@@ -70,15 +75,16 @@ router.post(
       }
 
       // 3. Insert into organizer_profiles
-            const { error: profileError } = await supabaseAdmin
+      const { error: profileError } = await supabaseAdmin
         .from("organizer_profiles")
         .insert({
           user_id: userId,
           org_name,
-          website_url,
-          official_email,
+          org_type,
+          contact_name,
+          contact_title,
+          website_url: website_url || null,
           social_link: social_link || null,
-          category,
           verification_status: "pending",
         });
 
@@ -103,15 +109,17 @@ router.get("/", authenticate, authorize(["admin"]), async (req, res) => {
   try {
     const { data, error } = await supabaseAdmin
       .from("organizer_profiles")
-            .select(
+      .select(
         `
         id,
         user_id,
         org_name,
+        org_type,
+        contact_name,
+        contact_title,
         website_url,
-        official_email,
         social_link,
-        category,
+        document_url,
         verification_status,
         flagged,
         rejection_reason,
@@ -128,14 +136,9 @@ router.get("/", authenticate, authorize(["admin"]), async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
 
-    // Map DB columns to frontend expected format
     const mapped = (data ?? []).map((row) => ({
       ...row,
-      brand_name: row.org_name,
-      contact_email: row.official_email,
-      org_type: row.category,
       status: row.verification_status,
-      flagged_reason: row.rejection_reason,
       post_count: 0,
     }));
 
@@ -186,15 +189,7 @@ router.patch(
         .update({ role: roleMap[status] })
         .eq("id", data.user_id);
 
-      res.json({
-        ...data,
-        brand_name: data.org_name,
-        contact_email: data.official_email,
-        org_type: data.category,
-        status: data.verification_status,
-        flagged_reason: data.rejection_reason,
-        post_count: 0,
-      });
+      res.json({ ...data, status: data.verification_status, post_count: 0 });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -233,15 +228,7 @@ router.patch(
         return res.status(404).json({ error: "Organizer not found" });
       }
 
-      res.json({
-        ...data,
-        brand_name: data.org_name,
-        contact_email: data.official_email,
-        org_type: data.category,
-        status: data.verification_status,
-        flagged_reason: data.rejection_reason,
-        post_count: 0,
-      });
+      res.json({ ...data, status: data.verification_status, post_count: 0 });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

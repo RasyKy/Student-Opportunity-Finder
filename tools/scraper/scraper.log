@@ -529,3 +529,11 @@
 2026-04-07 08:29:30,193 [INFO]   Incremental scrape | limit=200 | min_id=20679
 2026-04-07 08:29:30,673 [INFO]   No new messages for Romduol Scholars Challenge.
 2026-04-07 08:29:31,790 [INFO] Run complete | sources=14 | saved=18 | errors=0 | duration=27.7s
+2026-05-06 13:27:45,251 [INFO] Already ran today, exiting.
+2026-05-11 10:48:42,722 [INFO] Already ran today, exiting.
+2026-05-11 17:12:36,346 [INFO] Already ran today, exiting.
+2026-05-12 10:21:35,134 [INFO] Already ran today, exiting.
+2026-05-12 14:58:16,504 [INFO] Already ran today, exiting.
+2026-05-12 19:58:38,354 [INFO] Already ran today, exiting.
+2026-05-13 14:33:53,657 [INFO] Already ran today, exiting.
+2026-05-14 12:34:38,027 [INFO] Already ran today, exiting.

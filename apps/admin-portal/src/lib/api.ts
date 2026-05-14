@@ -68,8 +68,8 @@ export async function fetchContentItems(): Promise<ContentItem[]> {
       `
   id, title, title_kh, organization, type, status,
   source_platform, source_name, created_at, subject_tags,
-  start_date, deadline, description, description_kh,
-  location, application_link, is_free, image_url,
+  start_date, end_date, deadline, description, description_kh,
+  location, application_link, is_free, price_range, image_url,
   language, eligibility, target_group, format, contact_info
 `,
     )
@@ -91,7 +91,9 @@ export async function fetchContentItems(): Promise<ContentItem[]> {
     createdAt: row.created_at ?? "",
     subjectTags: row.subject_tags ?? [],
     startDate: row.start_date ?? "",
+    endDate: row.end_date ?? "",
     deadline: row.deadline ?? "",
+    price_range: row.price_range ?? "",
     description: row.description ?? "",
     description_kh: row.description_kh ?? "",
     location: row.location ?? "",
@@ -118,8 +120,10 @@ export async function createContent(item: ContentItem): Promise<ContentItem> {
       type: item.type,
       status: "pending_review",
       subject_tags: item.subjectTags,
-      start_date: parseDate(item.startDate),
-      deadline: parseDate(item.deadline),
+      start_date: item.startDate || null,
+      end_date: item.endDate || null,
+      deadline: item.deadline || null,
+      price_range: item.price_range || null,
       description: item.description || null,
       description_kh: item.description_kh || null,
       location: item.location || null,
@@ -143,12 +147,6 @@ export async function createContent(item: ContentItem): Promise<ContentItem> {
   return { ...item, id: String(data.id) };
 }
 
-const parseDate = (dateStr: string) => {
-  if (!dateStr) return null;
-  const [day, month, year] = dateStr.split("/");
-  if (!day || !month || !year) return null;
-  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-};
 
 export async function updateContent(item: ContentItem): Promise<ContentItem> {
   const dbStatus = item.status === "pending" ? "pending_review" : item.status;
@@ -161,8 +159,10 @@ export async function updateContent(item: ContentItem): Promise<ContentItem> {
       type: item.type,
       status: dbStatus,
       subject_tags: item.subjectTags,
-      start_date: parseDate(item.startDate),
-      deadline: parseDate(item.deadline),
+      start_date: item.startDate || null,
+      end_date: item.endDate || null,
+      deadline: item.deadline || null,
+      price_range: item.price_range,
       description: item.description,
       description_kh: item.description_kh,
       location: item.location,
@@ -209,7 +209,9 @@ export async function updateContentStatus(
     createdAt: data.created_at ?? "",
     subjectTags: data.subject_tags ?? [],
     startDate: data.start_date ?? "",
+    endDate: data.end_date ?? "",
     deadline: data.deadline ?? "",
+    price_range: data.price_range ?? "",
     title_kh: data.title_kh ?? "",
     description_kh: data.description_kh ?? "",
     location: data.location ?? "",
