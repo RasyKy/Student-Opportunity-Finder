@@ -61,9 +61,12 @@ export async function middleware(request: NextRequest) {
     .eq('user_id', user.id)
     .maybeSingle()
 
-  // If no profile exists, redirect to verification
+  // If no profile exists, allow verification pages through; redirect everything else
   if (profileError || !profile) {
-    return NextResponse.redirect(new URL('/dashboard/verification', request.url))
+    if (!request.nextUrl.pathname.startsWith('/dashboard/verification')) {
+      return NextResponse.redirect(new URL('/dashboard/verification', request.url))
+    }
+    return supabaseResponse
   }
 
   const isVerified = profile.verification_status === 'verified'

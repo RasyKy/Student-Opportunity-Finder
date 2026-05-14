@@ -25,13 +25,26 @@ export async function GET(request: Request) {
           .eq('id', user.id)
           .single()
 
-        if (existing?.role !== 'admin') {
-          await admin.from('users').upsert({
-            id: user.id,
-            email: user.email,
-            role: 'organizer',
-            name: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? '',
-          }, { onConflict: 'id' })
+        if (existing?.role === 'admin') {
+          return NextResponse.redirect(`${origin}/dashboard`)
+        }
+
+        await admin.from('users').upsert({
+          id: user.id,
+          email: user.email,
+          role: 'organizer',
+          name: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? '',
+        }, { onConflict: 'id' })
+
+        // If no profile or form was never submitted (org_name is required on submit)
+        const { data: profile } = await admin
+          .from('organizer_profiles')
+          .select('org_name')
+          .eq('user_id', user.id)
+          .maybeSingle()
+
+        if (!profile?.org_name) {
+          return NextResponse.redirect(`${origin}/dashboard/verification/registration`)
         }
       }
 
