@@ -35,7 +35,7 @@ const TAG_GROUPS = [
   },
   {
     title: "Target Audience",
-    tags: ["Open to All", "High School Student", "Undergraduate", "Postgraduate", "Recent Graduate", "Women in STEM", "Youth (Under 18)"],
+    tags: ["Open to All", "High School Student", "Undergraduate", "Postgraduate", "Recent Graduate", "Women in STEM", "Youth (Under 18)", "Professional"],
   },
   {
     title: "Format",

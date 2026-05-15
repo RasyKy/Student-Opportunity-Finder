@@ -4,7 +4,10 @@
       "Bash(Get-ChildItem -Path \"c:\\\\KIT - Software Engineering\\\\Year 3\\\\IC Internship\\\\SOF\\\\student-opportunity-finder\" -Directory)",
       "Bash(Select-Object Name)",
       "Bash(rtk ls *)",
-      "Bash(rtk grep *)"
+      "Bash(rtk grep *)",
+      "Bash(python retag.py --dry-run)",
+      "Bash(rtk pip *)",
+      "Bash(python retag.py)"
     ]
   }
 }

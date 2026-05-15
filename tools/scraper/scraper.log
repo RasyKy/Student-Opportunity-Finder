@@ -537,3 +537,47 @@
 2026-05-12 19:58:38,354 [INFO] Already ran today, exiting.
 2026-05-13 14:33:53,657 [INFO] Already ran today, exiting.
 2026-05-14 12:34:38,027 [INFO] Already ran today, exiting.
+2026-05-15 08:50:34,282 [INFO] Starting scrape run for 14 source(s).
+2026-05-15 08:50:34,739 [INFO] --- Processing: Career Kickstart ---
+2026-05-15 08:50:34,794 [INFO]   Incremental scrape | limit=200 | min_id=1233
+2026-05-15 08:50:35,501 [INFO]   Saved 12 messages. Checkpoint: 1245
+2026-05-15 08:50:36,511 [INFO] --- Processing: AUPP Community for Southeast Asian Studies (CSEAS) ---
+2026-05-15 08:50:36,562 [INFO]   Incremental scrape | limit=200 | min_id=155
+2026-05-15 08:50:36,815 [INFO]   No new messages for AUPP Community for Southeast Asian Studies (CSEAS).
+2026-05-15 08:50:37,964 [INFO] --- Processing: AmCam Exchange ---
+2026-05-15 08:50:38,076 [INFO]   Incremental scrape | limit=200 | min_id=52
+2026-05-15 08:50:38,629 [INFO]   Saved 4 messages. Checkpoint: 56
+2026-05-15 08:50:39,711 [INFO] --- Processing: Expert Education & Visa Services Cambodia ---
+2026-05-15 08:50:39,763 [INFO]   Incremental scrape | limit=200 | min_id=2244
+2026-05-15 08:50:40,773 [INFO]   Saved 67 messages. Checkpoint: 2312
+2026-05-15 08:50:41,775 [INFO] --- Processing: Internship Hub (Cambodia) ---
+2026-05-15 08:50:41,829 [INFO]   Incremental scrape | limit=200 | min_id=312
+2026-05-15 08:50:42,424 [INFO]   Saved 16 messages. Checkpoint: 330
+2026-05-15 08:50:43,432 [INFO] --- Processing: Romduol Scholars Challenge ---
+2026-05-15 08:50:43,533 [INFO]   Incremental scrape | limit=200 | min_id=20703
+2026-05-15 08:50:44,979 [INFO]   Saved 175 messages. Checkpoint: 21225
+2026-05-15 08:50:46,028 [INFO] --- Processing: Techo Startup Center ---
+2026-05-15 08:50:46,145 [INFO]   Incremental scrape | limit=200 | min_id=11230
+2026-05-15 08:50:47,785 [INFO]   Saved 173 messages. Checkpoint: 11403
+2026-05-15 08:50:48,800 [INFO] --- Processing: Entrepreneurship Network ---
+2026-05-15 08:50:48,853 [INFO]   Incremental scrape | limit=200 | min_id=1383
+2026-05-15 08:50:49,367 [INFO]   Saved 18 messages. Checkpoint: 1401
+2026-05-15 08:50:50,367 [INFO] --- Processing: DataU Academy ---
+2026-05-15 08:50:50,422 [INFO]   Incremental scrape | limit=200 | min_id=665
+2026-05-15 08:50:50,948 [INFO]   Saved 6 messages. Checkpoint: 671
+2026-05-15 08:50:51,949 [INFO] --- Processing: NICC - National Incubation Center of Cambodia ---
+2026-05-15 08:50:52,005 [INFO]   Incremental scrape | limit=200 | min_id=9935
+2026-05-15 08:50:52,804 [INFO]   Saved 49 messages. Checkpoint: 9987
+2026-05-15 08:50:53,817 [INFO] --- Processing: STEM Education Organization for Cambodia (STEMEOC) ---
+2026-05-15 08:50:53,878 [INFO]   Incremental scrape | limit=200 | min_id=1062
+2026-05-15 08:50:54,322 [INFO]   Saved 4 messages. Checkpoint: 1066
+2026-05-15 08:50:55,332 [INFO] --- Processing: DGY News ---
+2026-05-15 08:50:55,403 [INFO]   Incremental scrape | limit=200 | min_id=3826
+2026-05-15 08:50:55,963 [INFO]   Saved 35 messages. Checkpoint: 3866
+2026-05-15 08:50:56,974 [INFO] --- Processing: small labs ---
+2026-05-15 08:50:57,036 [INFO]   Incremental scrape | limit=200 | min_id=145
+2026-05-15 08:50:57,641 [INFO]   Saved 1 messages. Checkpoint: 146
+2026-05-15 08:50:58,655 [INFO] --- Processing: Open Development Cambodia Organixation (ODC) ---
+2026-05-15 08:50:58,707 [INFO]   Incremental scrape | limit=200 | min_id=383
+2026-05-15 08:50:59,329 [INFO]   Saved 2 messages. Checkpoint: 385
+2026-05-15 08:51:00,331 [INFO] Run complete | sources=14 | saved=562 | errors=0 | duration=27.7s

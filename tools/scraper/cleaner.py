@@ -56,10 +56,76 @@ KHMER_DIGIT_MAP      = str.maketrans("០១២៣៤៥៦៧៨៩", "01234567
 ZERO_WIDTH_CHARS     = re.compile(r"[\u200b\u200c\u200d\ufeff]")
 MIN_TEXT_LENGTH      = 80
 CONFIDENCE_THRESHOLD = 0.5
-PROMPT_VERSION       = "1.3"
+PROMPT_VERSION       = "1.4"
 
 _TRANSIENT_ERRORS = (ConnectionError, TimeoutError, OSError)
 
+
+# ── Valid tag lists (must match TagPicker.tsx exactly) ────────────────────────
+VALID_SUBJECT_TAGS = [
+    # Opportunity Type
+    "Internship", "Volunteering", "Course", "Event", "Competition & Hackathon",
+    "Fellowship", "Exchange Program",
+    # Technology
+    "Software Development", "Web Development", "Data & Mathematics", "Cybersecurity",
+    "Mobile Development", "AI & Machine Learning", "Cloud Computing", "UI/UX Design",
+    # Business
+    "Entrepreneurship", "Marketing", "Finance", "Management", "Accounting",
+    "Human Resources", "E-commerce", "Tourism & Hospitality", "Logistics & Supply Chain",
+    # Social Sciences
+    "Social Work", "Community Development", "Public Policy", "Law", "Education",
+    "Psychology", "Sociology",
+    # Arts & Media
+    "Graphic Design", "Photography", "Journalism", "Film & Media", "Music & Performance",
+    # Science & Health
+    "Medicine", "Public Health", "Biology", "Agriculture", "Environment & Sustainability",
+    "Chemistry", "Nursing",
+    # Engineering
+    "Civil Engineering", "Electrical Engineering", "Mechanical Engineering",
+    "Architecture", "Industrial Engineering",
+    # Skills
+    "Marketing & Social Media", "Writing & Translation", "Public Speaking",
+    "Photography & Videography", "Event Planning", "Project Management",
+    "Community Organizing",
+    # Target Audience
+    "Open to All", "High School Student", "Undergraduate", "Postgraduate",
+    "Recent Graduate", "Women in STEM", "Youth (Under 18)", "Professional",
+    # Format
+    "Online", "In-person", "Hybrid", "Self-Paced",
+]
+
+VALID_TARGET_TAGS = [
+    "Open to All", "High School Student", "Undergraduate", "Postgraduate",
+    "Recent Graduate", "Women in STEM", "Youth (Under 18)", "Professional",
+]
+
+MAX_SUBJECT_TAGS = 10
+
+_OPPORTUNITY_TYPE_TAGS = {
+    "Internship", "Volunteering", "Course", "Event", "Competition & Hackathon",
+    "Fellowship", "Exchange Program",
+}
+_TARGET_AUDIENCE_TAGS = set(VALID_TARGET_TAGS)
+_FORMAT_TAGS = {"Online", "In-person", "Hybrid", "Self-Paced"}
+_PRIORITY_TAGS = _OPPORTUNITY_TYPE_TAGS | _TARGET_AUDIENCE_TAGS | _FORMAT_TAGS
+
+
+def clean_tags(tags: list | None) -> list | None:
+    if not tags:
+        return tags
+
+    # "Open to All" is exclusive — drop all other audience tags
+    if "Open to All" in tags:
+        tags = [t for t in tags if t not in _TARGET_AUDIENCE_TAGS or t == "Open to All"]
+
+    # Cap at MAX_SUBJECT_TAGS, keeping required-category tags first
+    if len(tags) > MAX_SUBJECT_TAGS:
+        priority = [t for t in tags if t in _PRIORITY_TAGS]
+        domain   = [t for t in tags if t not in _PRIORITY_TAGS]
+        slots    = MAX_SUBJECT_TAGS - len(priority)
+        tags     = priority + domain[:max(slots, 0)]
+
+    return tags
 
 # ── Schema ────────────────────────────────────────────────────────────────────
 EXTRACTION_SCHEMA = {
@@ -81,9 +147,9 @@ EXTRACTION_SCHEMA = {
         "end_date":         {"type": "string"},
         "contact_info":     {"type": "string"},
         "application_link": {"type": "string"},
-        "subject_tags":     {"type": "array", "items": {"type": "string"}},
+        "subject_tags":     {"type": "array", "items": {"type": "string", "enum": VALID_SUBJECT_TAGS}},
         "eligibility":      {"type": "string"},
-        "target_group":     {"type": "array", "items": {"type": "string"}},
+        "target_group":     {"type": "array", "items": {"type": "string", "enum": VALID_TARGET_TAGS}},
         "language":         {"type": "string", "enum": ["en", "kh", "mixed"]},
         "confidence":       {"type": "number"},
         "needs_review":     {"type": "boolean"}
@@ -113,15 +179,23 @@ _SHARED_EXTRACTION_RULES = """\
 - title_kh: Khmer title, translate from English if needed.
 - description: Write 6-8 sentences in English. Cover what the opportunity is, who it is for (eligibility: age, nationality, year of study), available roles or tracks, what participants gain (benefits, certificate, experience), format (online/onsite/hybrid), and any notable requirements. Only include what is explicitly stated in the post. Do NOT repeat deadline, location, or application link.
 - description_kh: Same content as description, written in Khmer.
-- subject_tags: choose only from this fixed list, select all that apply:
-  scholarship, internship, volunteer, event, workshop, seminar, training,
-  course, bootcamp, competition, job, exchange, grant, conference, hackathon,
-  leadership, environment, technology, health, education, arts, law, business,
-  community, research, sports, media, agriculture, finance
+- subject_tags: choose ONLY from the exact strings below (case-sensitive). Do NOT invent, paraphrase, or use any tag not in this list. Return at most 10 tags total.
+  REQUIRED — always include at least one tag from each of these three groups:
+    Opportunity Type — Internship, Volunteering, Course, Event, Competition & Hackathon, Fellowship, Exchange Program
+    Target Audience — Open to All, High School Student, Undergraduate, Postgraduate, Recent Graduate, Women in STEM, Youth (Under 18), Professional
+    (if "Open to All" applies, do NOT also add other audience tags — it is exclusive)
+    Format — Online, In-person, Hybrid, Self-Paced
+  REQUIRED — include at least one broad domain tag that fits, then add specific tags within that domain:
+    Technology — Software Development, Web Development, Data & Mathematics, Cybersecurity, Mobile Development, AI & Machine Learning, Cloud Computing, UI/UX Design
+    Business — Entrepreneurship, Marketing, Finance, Management, Accounting, Human Resources, E-commerce, Tourism & Hospitality, Logistics & Supply Chain
+    Social Sciences — Social Work, Community Development, Public Policy, Law, Education, Psychology, Sociology
+    Arts & Media — Graphic Design, Photography, Journalism, Film & Media, Music & Performance
+    Science & Health — Medicine, Public Health, Biology, Agriculture, Environment & Sustainability, Chemistry, Nursing
+    Engineering — Civil Engineering, Electrical Engineering, Mechanical Engineering, Architecture, Industrial Engineering
+    Skills — Marketing & Social Media, Writing & Translation, Public Speaking, Photography & Videography, Event Planning, Project Management, Community Organizing
 - eligibility: a single plain-text sentence describing who can apply, exactly as stated in the post (e.g. "Open to Cambodian youth aged 18-24", "Women only", "University students in their final year"). Return null if not explicitly stated.
-- target_group: choose only from this fixed list, select all that apply:
-  university_students, high_school, women, youth, professionals,
-  graduates, cambodians_only, open_to_all, team_required
+- target_group: choose ONLY from the exact strings below (case-sensitive). Select all that apply. Do NOT invent or use any value not in this list:
+  Open to All, High School Student, Undergraduate, Postgraduate, Recent Graduate, Women in STEM, Youth (Under 18), Professional
   Return null if not explicitly stated in the post."""
 
 SYSTEM_PROMPT = f"""\
@@ -398,38 +472,6 @@ def upload_image_to_storage(image_bytes: bytes, raw_post_id: int) -> str | None:
     return public_url
 
 
-# ── Tag normalization ─────────────────────────────────────────────────────────
-TAG_SYNONYMS = {
-    "workshop":    ["workshop", "workshops"],
-    "seminar":     ["seminar", "seminars"],
-    "training":    ["training", "trainings"],
-    "course":      ["course", "courses", "class", "classes"],
-    "scholarship": ["scholarship", "scholarships", "grant", "grants", "fellowship", "fellowships"],
-    "internship":  ["internship", "internships", "intern"],
-    "volunteer":   ["volunteer", "volunteering", "volunteers", "voluntary"],
-    "event":       ["event", "events"],
-    "competition": ["competition", "competitions", "contest", "contests"],
-    "bootcamp":    ["bootcamp", "boot camp", "bootcamps"],
-    "job":         ["job", "jobs", "hiring", "vacancy", "vacancies", "career"],
-    "exchange":    ["exchange", "exchanges", "student exchange"],
-}
-
-_TAG_LOOKUP = {variant: canonical for canonical, variants in TAG_SYNONYMS.items() for variant in variants}
-
-
-def normalize_tags(tags: list | None) -> list | None:
-    if not tags:
-        return tags
-    seen   = set()
-    result = []
-    for tag in tags:
-        normalized = _TAG_LOOKUP.get(tag.lower().strip(), tag.lower().strip())
-        if normalized not in seen:
-            seen.add(normalized)
-            result.append(normalized)
-    return result
-
-
 # ── Result merging & DB record ────────────────────────────────────────────────
 def merge_results(rule_result: dict, ai_result: dict) -> dict:
     merged = {**ai_result}
@@ -437,7 +479,7 @@ def merge_results(rule_result: dict, ai_result: dict) -> dict:
         merged["application_link"] = rule_result["application_link"]
     if rule_result.get("contact_info"):
         merged["contact_info"] = rule_result["contact_info"]
-    merged["subject_tags"] = normalize_tags(merged.get("subject_tags"))
+    merged["subject_tags"] = clean_tags(merged.get("subject_tags"))
     return merged
 
 
@@ -558,7 +600,7 @@ async def process_queue():
                         }).eq("id", item_id).execute()
 
                     merged = {**ai_result}
-                    merged["subject_tags"] = normalize_tags(merged.get("subject_tags"))
+                    merged["subject_tags"] = clean_tags(merged.get("subject_tags"))
 
                 else:
                     raw_text = item.get("raw_payload", {}).get("text", "")
