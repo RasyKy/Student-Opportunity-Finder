@@ -35,6 +35,11 @@ const typeOptions = [
   "Scholarship",
   "Internship",
   "Job",
+  "Competition",
+  "Volunteer",
+  "Bootcamp",
+  "Program",
+  "Other",
 ] as const;
 
 const STATUS_LABEL: Record<ContentItem["status"], string> = {

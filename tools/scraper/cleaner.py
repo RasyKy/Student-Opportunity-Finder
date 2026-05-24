@@ -7,10 +7,10 @@ import asyncio
 import logging
 import unicodedata
 from datetime import datetime, timezone
+import base64
 from PIL import Image
-from google import genai
-from google.genai import types
-from google.api_core import exceptions
+from openai import OpenAI
+import openai
 from supabase import create_client
 from dotenv import load_dotenv
 from telethon import TelegramClient
@@ -46,8 +46,11 @@ _require_env("GOOGLE_API_KEY")
 _require_env("API_ID")
 _require_env("API_HASH")
 
-supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
-gemini   = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
+supabase      = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
+openai_client = OpenAI(
+    api_key=os.getenv("GOOGLE_API_KEY"),
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 
 SESSION_PATH   = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scraper_session")
 STORAGE_BUCKET = "opportunity-images"
@@ -56,7 +59,7 @@ KHMER_DIGIT_MAP      = str.maketrans("០១២៣៤៥៦៧៨៩", "01234567
 ZERO_WIDTH_CHARS     = re.compile(r"[\u200b\u200c\u200d\ufeff]")
 MIN_TEXT_LENGTH      = 80
 CONFIDENCE_THRESHOLD = 0.5
-PROMPT_VERSION       = "1.4"
+PROMPT_VERSION       = "1.5"
 
 _TRANSIENT_ERRORS = (ConnectionError, TimeoutError, OSError)
 
@@ -307,7 +310,14 @@ def pre_extract_rules(text: str) -> dict:
 
 
 # ── AI calls ──────────────────────────────────────────────────────────────────
-def _prepare_image_for_gemini(image_bytes: bytes, mime_type: str) -> tuple[bytes, str]:
+_OPENAI_MODEL = "gemini-2.5-flash-lite"
+_OPENAI_RESPONSE_FORMAT = {
+    "type": "json_schema",
+    "json_schema": {"name": "opportunity_extraction", "schema": EXTRACTION_SCHEMA},
+}
+
+
+def _prepare_image(image_bytes: bytes, mime_type: str) -> tuple[bytes, str]:
     try:
         img = Image.open(io.BytesIO(image_bytes))
         needs_convert = mime_type != "image/jpeg" or img.format == "PNG" or len(image_bytes) > 1_500_000
@@ -320,7 +330,7 @@ def _prepare_image_for_gemini(image_bytes: bytes, mime_type: str) -> tuple[bytes
             buf = io.BytesIO()
             img.save(buf, format="JPEG", quality=85, optimize=True)
             converted = buf.getvalue()
-            log.info(f"Image prepared for Gemini: {len(image_bytes) // 1024}KB {mime_type} -> {len(converted) // 1024}KB image/jpeg")
+            log.info(f"Image prepared: {len(image_bytes) // 1024}KB {mime_type} -> {len(converted) // 1024}KB image/jpeg")
             return converted, "image/jpeg"
     except Exception as e:
         log.warning(f"Image preparation failed, using original: {e}")
@@ -328,82 +338,57 @@ def _prepare_image_for_gemini(image_bytes: bytes, mime_type: str) -> tuple[bytes
 
 
 @retry(
-    wait=wait_exponential(multiplier=2, min=5, max=45),
-    stop=stop_after_attempt(3),
-    retry=retry_if_exception_type((exceptions.ResourceExhausted, exceptions.ServiceUnavailable))
+    wait=wait_exponential(multiplier=2, min=10, max=120),
+    stop=stop_after_attempt(5),
+    retry=retry_if_exception_type((openai.RateLimitError, openai.APIStatusError))
 )
-def call_gemini(text: str) -> dict | None:
-    response = gemini.models.generate_content(
-        model="gemini-2.5-flash-lite",
-        contents=f"Parse this opportunity post:\n\n{text}",
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            response_mime_type="application/json",
-            response_schema=EXTRACTION_SCHEMA,
-            temperature=0,
-        )
+def call_openai(text: str) -> dict | None:
+    response = openai_client.chat.completions.create(
+        model=_OPENAI_MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user",   "content": f"Parse this opportunity post:\n\n{text}"},
+        ],
+        response_format=_OPENAI_RESPONSE_FORMAT,
+        temperature=0,
     )
     try:
-        if not response.text:
-            log.debug(f"Gemini response: candidates={response.candidates}, prompt_feedback={getattr(response, 'prompt_feedback', None)}")
-            log.warning("Gemini returned empty response")
+        content = response.choices[0].message.content
+        if not content:
+            log.warning("OpenAI returned empty response")
             return None
-        return json.loads(response.text)
-    except (json.JSONDecodeError, AttributeError):
+        return json.loads(content)
+    except (json.JSONDecodeError, AttributeError, IndexError):
         return None
 
 
 @retry(
-    wait=wait_exponential(multiplier=2, min=5, max=45),
-    stop=stop_after_attempt(3),
-    retry=retry_if_exception_type((exceptions.ResourceExhausted, exceptions.ServiceUnavailable))
+    wait=wait_exponential(multiplier=2, min=10, max=120),
+    stop=stop_after_attempt(5),
+    retry=retry_if_exception_type((openai.RateLimitError, openai.APIStatusError))
 )
-def call_gemini_vision(image_bytes: bytes, mime_type: str = "image/jpeg") -> dict | None:
-    image_bytes, mime_type = _prepare_image_for_gemini(image_bytes, mime_type)
-    response = gemini.models.generate_content(
-        model="gemini-2.5-flash-lite",
-        contents=[
-            types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-            "Extract and parse this opportunity flyer."
+def call_openai_vision(image_bytes: bytes, mime_type: str = "image/jpeg") -> dict | None:
+    image_bytes, mime_type = _prepare_image(image_bytes, mime_type)
+    b64 = base64.b64encode(image_bytes).decode()
+    response = openai_client.chat.completions.create(
+        model=_OPENAI_MODEL,
+        messages=[
+            {"role": "system", "content": OCR_SYSTEM_PROMPT},
+            {"role": "user", "content": [
+                {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64}"}},
+                {"type": "text",      "text": "Extract and parse this opportunity flyer."},
+            ]},
         ],
-        config=types.GenerateContentConfig(
-            system_instruction=OCR_SYSTEM_PROMPT,
-            response_mime_type="application/json",
-            response_schema=EXTRACTION_SCHEMA,
-            temperature=0,
-        )
+        response_format=_OPENAI_RESPONSE_FORMAT,
+        temperature=0,
     )
     try:
-        if not response.text:
-            finish_reason = None
-            if response.candidates:
-                finish_reason = str(response.candidates[0].finish_reason)
-            if finish_reason and "RECITATION" in finish_reason:
-                log.warning("Gemini Vision RECITATION block — falling back to free-text OCR")
-                return _call_gemini_vision_freetext_fallback(image_bytes, mime_type)
-            log.warning(f"Gemini Vision returned empty response (finish_reason={finish_reason})")
+        content = response.choices[0].message.content
+        if not content:
+            log.warning("OpenAI Vision returned empty response")
             return None
-        return json.loads(response.text)
-    except (json.JSONDecodeError, AttributeError):
-        return None
-
-
-def _call_gemini_vision_freetext_fallback(image_bytes: bytes, mime_type: str) -> dict | None:
-    try:
-        response = gemini.models.generate_content(
-            model="gemini-2.5-flash-lite",
-            contents=[
-                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-                "Extract all visible text from this image exactly as written."
-            ]
-        )
-        if not response.text:
-            return None
-        extracted_text = response.text.strip()
-        log.info(f"Fallback OCR extracted {len(extracted_text)} chars, parsing as text...")
-        return call_gemini(extracted_text)
-    except Exception as e:
-        log.error(f"Fallback OCR failed: {e}")
+        return json.loads(content)
+    except (json.JSONDecodeError, AttributeError, IndexError):
         return None
 
 
@@ -516,7 +501,7 @@ def build_db_record(merged: dict, raw_post_id: int, source: dict, image_url: str
 def log_extraction(raw_post_id: int, confidence: float):
     supabase.table("extraction_log").insert({
         "raw_post_id":    raw_post_id,
-        "model":          "gemini-2.5-flash-lite",
+        "model":          _OPENAI_MODEL,
         "prompt_version": PROMPT_VERSION,
         "confidence":     confidence,
         "extracted_at":   datetime.now(timezone.utc).isoformat(),
@@ -576,11 +561,11 @@ async def process_queue():
                         log.warning(f"Failed {item_id}: could not download image")
                         continue
 
-                    ai_result = await asyncio.to_thread(call_gemini_vision, image_bytes)
+                    ai_result = await asyncio.to_thread(call_openai_vision, image_bytes)
                     if not ai_result:
                         supabase.table("raw_opportunities").update({
                             "processing_status": "skipped",
-                            "skip_reason":       "gemini_vision_unreadable"
+                            "skip_reason":       "vision_unreadable"
                         }).eq("id", item_id).execute()
                         log.warning(f"Skipped {item_id}: Gemini Vision could not read image")
                         continue
@@ -625,9 +610,14 @@ async def process_queue():
 
                     rule_result = pre_extract_rules(cleaned)
 
-                    ai_result = await asyncio.to_thread(call_gemini, cleaned)
+                    ai_result = await asyncio.to_thread(call_openai, cleaned)
                     if not ai_result:
-                        raise ValueError("AI returned no result")
+                        supabase.table("raw_opportunities").update({
+                            "processing_status": "failed",
+                            "error_message":     "ai_empty_response"
+                        }).eq("id", item_id).execute()
+                        log.warning(f"Skipped {item_id}: AI returned empty response")
+                        continue
 
                     if not ai_result.get("is_opportunity", False):
                         supabase.table("raw_opportunities").update({
@@ -692,6 +682,8 @@ async def process_queue():
                     "processing_status": "failed",
                     "error_message":     str(e)
                 }).eq("id", item_id).execute()
+
+            await asyncio.sleep(2)
 
 
 if __name__ == "__main__":

@@ -7,7 +7,19 @@
       "Bash(rtk grep *)",
       "Bash(python retag.py --dry-run)",
       "Bash(rtk pip *)",
-      "Bash(python retag.py)"
+      "Bash(python retag.py)",
+      "WebFetch(domain:ai.google.dev)",
+      "WebFetch(domain:api-docs.deepseek.com)",
+      "WebFetch(domain:openai.com)",
+      "WebFetch(domain:groq.com)",
+      "WebFetch(domain:together.ai)",
+      "Bash(\"venv\\\\Scripts\\\\pip.exe\" install *)",
+      "Bash(rtk tsc *)",
+      "Bash(rtk lint *)",
+      "Bash(rtk npx *)",
+      "Bash(rtk next *)",
+      "Bash(del \"\\\\\\\\.\\\\c:\\\\KIT - Software Engineering\\\\Year 3\\\\IC Internship\\\\SOF\\\\student-opportunity-finder\\\\apps\\\\admin-portal\\\\nul\")",
+      "PowerShell(Get-ChildItem \"c:\\\\KIT - Software Engineering\\\\Year 3\\\\IC Internship\\\\SOF\\\\student-opportunity-finder\\\\apps\\\\admin-portal\\\\\" -Force | Where-Object { $_.Name -eq \"nul\" })"
     ]
   }
 }

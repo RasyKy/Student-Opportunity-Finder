@@ -27,7 +27,7 @@ export type ContentItem = {
   title: string;
   title_kh: string;
   organization: string;
-  type: "course" | "event" | "scholarship" | "internship" | "job";
+  type: "course" | "event" | "scholarship" | "internship" | "job" | "competition" | "volunteer" | "bootcamp" | "program" | "other";
   status: "published" | "pending" | "private";
   source: "scraped" | "organizer" | "internal";
   flagged: boolean;
